@@ -8,26 +8,6 @@
   </ul>
 </nav>
 
-<main class="main">
-  <div class="background">
-    <div class="login-form">
-      <h1>Hello General</h1>
-      <p>Your troops are waiting for you 🫵🏻</p>
-      <form (ngSubmit)="login()">
-        <div>
-          <label for="mailUser">Correo</label>
-          <input type="text" id="mailUser" [(ngModel)]="mailUser" name="mailUser" required>
-        </div>
-        <div>
-          <label for="passwordHash">Contraseña</label>
-          <input type="password" id="passwordHash" [(ngModel)]="passwordHash" name="passwordHash" required>
-        </div>
-        <button type="submit">Iniciar Sesión</button>
-      </form>
-    </div>
-  </div>
-</main>
-
 <router-outlet></router-outlet>
 
 <footer>

@@ -1,0 +1,59 @@
+/* Barra de navegación */
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav ul p {
+  padding: 14px 16px;
+  color: white;
+  text-align: center;
+}
+
+nav ul li {
+  float: left;
+}
+
+nav ul li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+nav ul li a:hover {
+  background-color: #575757;
+  color: #00FF7F;
+}
+
+/* Pie de página */
+footer {
+  background: #333;
+  color: #FFF;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+footer .social-icons {
+  margin: 10px 0;
+}
+
+footer .social-icons a {
+  margin: 0 10px;
+  color: #FFF;
+  text-decoration: none;
+  font-size: 20px;
+  transition: color 0.3s;
+}
+
+footer .social-icons a:hover {
+  color: #00FF7F;
+}
