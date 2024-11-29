@@ -1,0 +1,8 @@
+<p>battle works!</p>
+
+<button (click)="fight()">Start Battle</button>
+
+<div *ngIf="battleResult">
+  <p>Winner: {{battleResult.winner.nameUser}}</p>
+  <p>Battle Date: {{battleResult.battleDate | date}}</p>
+</div>

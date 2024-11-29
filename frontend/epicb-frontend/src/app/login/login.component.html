@@ -1,0 +1,11 @@
+<form (ngSubmit)="login()">
+  <div>
+    <label for="mailUser">Correo</label>
+    <input type="text" id="mailUser" [(ngModel)]="mailUser" name="mailUser" required>
+  </div>
+  <div>
+    <label for="passwordHash">Contraseña</label>
+    <input type="password" id="passwordHash" [(ngModel)]="passwordHash" name="passwordHash" required>
+  </div>
+  <button type="submit">Iniciar Sesión</button>
+</form>

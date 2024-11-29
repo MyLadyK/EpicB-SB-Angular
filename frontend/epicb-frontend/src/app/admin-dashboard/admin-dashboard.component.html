@@ -1,0 +1,25 @@
+<h1>Panel de Administración</h1>
+
+<h2>Gestión de Usuarios</h2>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Correo</th>
+    <th>Rol</th>
+    <th>Acciones</th>
+  </tr>
+  <tr *ngFor="let user of users">
+    <td>{{ user.idUser }}</td>
+    <td>{{ user.nameUser }}</td>
+    <td>{{ user.mailUser }}</td>
+    <td>{{ user.role }}</td>
+    <td>
+      <button (click)="banUser(user.idUser, '7d')">Banear 7 Días</button>
+      <button (click)="banUser(user.idUser, 'forever')">Banear Permanentemente</button>
+    </td>
+  </tr>
+</table>
+
+<h2>Gestión de Personajes</h2>
+<app-character-management></app-character-management>
