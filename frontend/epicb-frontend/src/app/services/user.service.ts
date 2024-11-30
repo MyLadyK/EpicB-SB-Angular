@@ -7,7 +7,7 @@ import { User } from '../model/user'; // Importa el modelo User definido en el f
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8081/api/users'; // URL de tu API backend
+  private apiUrl = 'http://localhost:8081/api/users'; // URL API backend
 
   constructor(private http: HttpClient) { }
 

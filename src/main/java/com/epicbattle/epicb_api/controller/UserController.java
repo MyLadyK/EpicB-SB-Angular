@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -22,8 +20,13 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
-        User registeredUser = userService.registerUser(userDto);
-        return ResponseEntity.ok(registeredUser);
+        try {
+            User registeredUser = userService.registerUser(userDto);
+            return ResponseEntity.ok(registeredUser);
+        } catch (Exception e) {
+            e.printStackTrace();  // Imprimir el error en los logs del servidor
+            return ResponseEntity.status(500).body(null);  // Devolver un status 500 en caso de error
+        }
     }
 
     @GetMapping("/{id}")
@@ -46,4 +49,3 @@ public class UserController {
         userService.deleteUser(id);
     }
 }
-

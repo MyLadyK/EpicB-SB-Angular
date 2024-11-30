@@ -15,6 +15,7 @@ import java.util.List;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("USER")
 
 @Data
 @NoArgsConstructor
