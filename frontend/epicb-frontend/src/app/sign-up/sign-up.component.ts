@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
 
@@ -23,7 +23,7 @@ export class SignUpComponent {
     pointUser: 0
   };
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   register() {
     this.userService.register(this.user).subscribe(
@@ -31,6 +31,7 @@ export class SignUpComponent {
         console.log('Usuario registrado con éxito', response);
         alert('Usuario Registrado')
         // Redirigir a algún sitio
+        this.router.navigate([`/profile/${response.idUser}`])
       },
       error => {
         console.error('Error al registrar nuevo usuario', error);

@@ -19,6 +19,10 @@ export class UserService {
     return this.http.get<User[]>(this.apiUrl);
   }
 
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
+  }
+
   banUser(userId: number, duration: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/ban`, { userId, duration });
   }
