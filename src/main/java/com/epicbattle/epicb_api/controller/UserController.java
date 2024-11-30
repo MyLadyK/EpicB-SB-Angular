@@ -1,5 +1,6 @@
 package com.epicbattle.epicb_api.controller;
 
+import com.epicbattle.epicb_api.dto.UserDto;
 import com.epicbattle.epicb_api.model.User;
 import com.epicbattle.epicb_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -17,8 +21,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
+        User registeredUser = userService.registerUser(userDto);
+        return ResponseEntity.ok(registeredUser);
     }
 
     @GetMapping("/{id}")
@@ -40,5 +45,5 @@ public class UserController {
     public void deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
     }
-
 }
+
