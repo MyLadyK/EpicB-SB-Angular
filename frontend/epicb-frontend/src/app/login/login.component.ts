@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
-import { RouterModule } from '@angular/router'
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -17,17 +17,17 @@ export class LoginComponent {
   mailUser: string = '';
   passwordHash: string = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   login() {
     this.authService.authenticate(this.mailUser, this.passwordHash).subscribe(
       response => {
         if (response.role === 'ADMIN') {
           // Redirigir a la página de administración
-          console.log('Admin login successful');
+          this.router.navigate(['/admin-dashboard']);
         } else {
           // Redirigir a la página de usuario regular
-          console.log('User login successful');
+          this.router.navigate([`/profile/${response.idUser}`]);
         }
       },
       error => {

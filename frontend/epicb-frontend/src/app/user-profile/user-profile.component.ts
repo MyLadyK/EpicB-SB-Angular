@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router'; // Asegúrate de importar RouterModule
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [],
+  imports: [RouterModule], // Importa RouterModule para las rutas
   templateUrl: './user-profile.component.html',
-  styleUrl: './user-profile.component.css'
+  styleUrls: ['./user-profile.component.css'] // Corrige el nombre de la propiedad
 })
-
 export class UserProfileComponent implements OnInit {
   user: User = {
     idUser: 0,

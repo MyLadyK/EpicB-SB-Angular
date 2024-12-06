@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository <User, Integer> {
-    User findByNameUser (String nameUser);
-    ; User findByMailUserAndPasswordHash(String mailUser, String passwordHash);
+public interface UserRepository extends JpaRepository<User, Integer> {
+    User findByNameUser(String nameUser);
+    User findByMailUserAndPasswordHash(String mailUser, String passwordHash);
+    User findByMailUser(String mailUser);  // Simplificación del método
 }

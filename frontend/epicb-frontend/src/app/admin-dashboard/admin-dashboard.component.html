@@ -1,25 +1,42 @@
 <h1>Panel de Administración</h1>
 
-<h2>Gestión de Usuarios</h2>
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Correo</th>
-    <th>Rol</th>
-    <th>Acciones</th>
-  </tr>
-  <tr *ngFor="let user of users">
-    <td>{{ user.idUser }}</td>
-    <td>{{ user.nameUser }}</td>
-    <td>{{ user.mailUser }}</td>
-    <td>{{ user.role }}</td>
-    <td>
-      <button (click)="banUser(user.idUser, '7d')">Banear 7 Días</button>
-      <button (click)="banUser(user.idUser, 'forever')">Banear Permanentemente</button>
-    </td>
-  </tr>
-</table>
+<div class="admin-dashboard-container">
+  <div class="dashboard-section">
+    <h2>Admin Dashboard</h2>
+    <button (click)="navigateToCharacterManagement()">Gestionar Personajes</button>
+    <button (click)="navigateToUserManagement()">Gestionar Usuarios</button>
+  </div>
 
-<h2>Gestión de Personajes</h2>
-<app-character-management></app-character-management>
+  <div class="dashboard-section">
+    <h2>Gestión de Usuarios</h2>
+    <table class="user-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.idUser }}</td>
+        <td>{{ user.nameUser }}</td>
+        <td>{{ user.mailUser }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button (click)="banUser(user.idUser, '7d')">Banear 7 Días</button>
+          <button (click)="banUser(user.idUser, 'forever')">Banear Permanentemente</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="dashboard-section">
+    <h2>Gestión de Personajes</h2>
+    <app-character-management></app-character-management>
+  </div>
+</div>
+

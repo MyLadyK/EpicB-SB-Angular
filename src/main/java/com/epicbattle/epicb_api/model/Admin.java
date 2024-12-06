@@ -6,5 +6,5 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue("ADMIN")
 public class Admin extends User {
-    // Consider adding specific fields or methods for the Admin class if needed.
+    // Propiedades específicas de Admin (si hay alguna)
 }

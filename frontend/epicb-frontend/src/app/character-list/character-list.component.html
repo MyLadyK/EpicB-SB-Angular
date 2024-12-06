@@ -1,0 +1,20 @@
+<div class="character-list-container">
+  <h2>Listado de Personajes</h2>
+  <ul>
+    <li *ngFor="let character of characters">
+      <img [src]="character.imageUrl" alt="{{ character.nameCharacter }}">
+      <div class="character-details">
+        <p><strong>Nombre:</strong> {{ character.nameCharacter }}</p>
+        <p><strong>Salud:</strong> {{ character.healthCharacter }}</p>
+        <p><strong>Ataque:</strong> {{ character.attackCharacter }}</p>
+        <p><strong>Defensa:</strong> {{ character.defenseCharacter }}</p>
+        <p><strong>Velocidad:</strong> {{ character.speedCharacter }}</p>
+        <p><strong>Resistencia:</strong> {{ character.staminaCharacter }}</p>
+        <p><strong>Inteligencia:</strong> {{ character.intelligenceCharacter }}</p>
+        <p><strong>Especial:</strong> {{ character.specialCharacter }}</p>
+        <p><strong>Categoría:</strong> {{ character.categoryCharacter }}</p>
+        <p><strong>Universo:</strong> {{ character.universeCharacter }}</p>
+      </div>
+    </li>
+  </ul>
+</div>
