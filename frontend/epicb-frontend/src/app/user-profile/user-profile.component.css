@@ -3,15 +3,15 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Ocupa toda la altura de la ventana */
-  background: linear-gradient(to right, #ff512f, #dd2476); /* Fondo degradado */
+  height: 100vh;
+  background: linear-gradient(to right, #ff512f, #dd2476);
 }
 
 .user-profile-box {
   max-width: 600px;
   width: 100%;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.7); /* Fondo del perfil */
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
   color: white;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -19,7 +19,7 @@
 
 .user-profile-box h2 {
   text-align: center;
-  color: #61dafb;
+  color: #00FF7F;
   margin-bottom: 20px;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .profile-details strong {
-  color: #61dafb;
+  color: #00FF7F;
 }
 
 @media (max-width: 768px) {

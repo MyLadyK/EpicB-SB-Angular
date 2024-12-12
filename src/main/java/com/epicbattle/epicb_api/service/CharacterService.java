@@ -3,11 +3,10 @@ package com.epicbattle.epicb_api.service;
 import com.epicbattle.epicb_api.exception.GlobalExceptionHandler;
 import com.epicbattle.epicb_api.model.Character;
 import com.epicbattle.epicb_api.repository.CharacterRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 @Service
 public class CharacterService {
@@ -18,9 +17,9 @@ public class CharacterService {
         this.characterRepository = characterRepository;
     }
 
-    // Implementar paginación, lo que solicita resultados en "páginas" y no todos a la vez.
-    public Page<Character> getAllCharacters(Pageable pageable) {
-        return characterRepository.findAll(pageable);
+    // Devuelve todos los personajes sin paginación
+    public List<Character> getAllCharacters() {
+        return characterRepository.findAll();
     }
 
     public Character createCharacter(Character character) {
@@ -56,4 +55,3 @@ public class CharacterService {
         return ResponseEntity.ok("Personaje eliminado");
     }
 }
-

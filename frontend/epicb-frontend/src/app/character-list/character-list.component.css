@@ -10,7 +10,7 @@
 
 .character-list-container h2 {
   text-align: center;
-  color: #61dafb;
+  color: #00FF7F;
   margin-bottom: 20px;
 }
 
@@ -41,5 +41,5 @@
 }
 
 .character-details strong {
-  color: #61dafb;
+  color: #00FF7F;
 }

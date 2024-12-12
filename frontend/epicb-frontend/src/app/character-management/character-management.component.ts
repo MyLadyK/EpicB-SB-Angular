@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; //
+import { FormsModule } from '@angular/forms';
 import { CharacterFormComponent } from '../character-form/character-form.component';
 import { CharacterService } from '../services/character.service';
 import { Character } from '../model/character';

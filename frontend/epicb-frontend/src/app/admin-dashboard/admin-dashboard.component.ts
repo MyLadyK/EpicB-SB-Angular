@@ -7,7 +7,7 @@ import { User } from '../model/user';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule, CharacterManagementComponent], // Asegúrate de que CharacterManagementComponent está incluido
+  imports: [CommonModule, RouterModule, CharacterManagementComponent],
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
@@ -15,6 +15,8 @@ import { User } from '../model/user';
 })
 export class AdminDashboardComponent implements OnInit {
   users: User[] = [];
+  isUserManagementVisible = false;
+  isCharacterManagementVisible = false;
 
   constructor(private userService: UserService, private router: Router) { }
 
@@ -46,10 +48,12 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   navigateToCharacterManagement() {
-    this.router.navigate(['/character-management']);
+    this.isUserManagementVisible = false;
+    this.isCharacterManagementVisible = true;
   }
 
   navigateToUserManagement() {
-    this.router.navigate(['/user-management']);
+    this.isCharacterManagementVisible = false;
+    this.isUserManagementVisible = true;
   }
 }

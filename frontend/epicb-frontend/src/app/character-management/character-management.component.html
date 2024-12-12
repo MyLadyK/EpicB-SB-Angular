@@ -1,69 +1,78 @@
-<h2>Gestión de Personajes</h2>
+<div class="character-management-container">
+  <h2>Gestión de Personajes</h2>
 
-<app-character-form *ngIf="!isEditMode" (characterAdded)="loadCharacters()"></app-character-form>
+  <app-character-form *ngIf="!isEditMode" (characterAdded)="loadCharacters()"></app-character-form>
 
-<form *ngIf="isEditMode && selectedCharacter" (ngSubmit)="updateCharacter()">
-  <div>
-    <label for="nameCharacter">Nombre</label>
-    <input type="text" id="nameCharacter" [(ngModel)]="selectedCharacter!.nameCharacter" name="nameCharacter" required>
-  </div>
-  <div>
-    <label for="healthCharacter">Salud</label>
-    <input type="number" id="healthCharacter" [(ngModel)]="selectedCharacter!.healthCharacter" name="healthCharacter" required>
-  </div>
-  <div>
-    <label for="attackCharacter">Ataque</label>
-    <input type="number" id="attackCharacter" [(ngModel)]="selectedCharacter!.attackCharacter" name="attackCharacter" required>
-  </div>
-  <div>
-    <label for="defenseCharacter">Defensa</label>
-    <input type="number" id="defenseCharacter" [(ngModel)]="selectedCharacter!.defenseCharacter" name="defenseCharacter" required>
-  </div>
-  <div>
-    <label for="speedCharacter">Velocidad</label>
-    <input type="number" id="speedCharacter" [(ngModel)]="selectedCharacter!.speedCharacter" name="speedCharacter" required>
-  </div>
-  <div>
-    <label for="staminaCharacter">Resistencia</label>
-    <input type="number" id="staminaCharacter" [(ngModel)]="selectedCharacter!.staminaCharacter" name="staminaCharacter" required>
-  </div>
-  <div>
-    <label for="intelligenceCharacter">Inteligencia</label>
-    <input type="number" id="intelligenceCharacter" [(ngModel)]="selectedCharacter!.intelligenceCharacter" name="intelligenceCharacter" required>
-  </div>
-  <div>
-    <label for="specialCharacter">Especial</label>
-    <input type="number" id="specialCharacter" [(ngModel)]="selectedCharacter!.specialCharacter" name="specialCharacter" required>
-  </div>
-  <div>
-    <label for="categoryCharacter">Categoría</label>
-    <input type="text" id="categoryCharacter" [(ngModel)]="selectedCharacter!.categoryCharacter" name="categoryCharacter" required>
-  </div>
-  <div>
-    <label for="universeCharacter">Universo</label>
-    <input type="text" id="universeCharacter" [(ngModel)]="selectedCharacter!.universeCharacter" name="universeCharacter" required>
-  </div>
-  <div>
-    <label for="imageUrl">URL de Imagen</label>
-    <input type="text" id="imageUrl" [(ngModel)]="selectedCharacter!.imageUrl" name="imageUrl" required>
-  </div>
-  <button type="submit">Actualizar Personaje</button>
-  <button type="button" (click)="resetForm()">Cancelar</button>
-</form>
+  <form *ngIf="isEditMode && selectedCharacter" (ngSubmit)="updateCharacter()" class="character-form">
+    <div>
+      <label for="nameCharacter">Nombre</label>
+      <input type="text" id="nameCharacter" [(ngModel)]="selectedCharacter!.nameCharacter" name="nameCharacter" required>
+    </div>
+    <div>
+      <label for="healthCharacter">Salud</label>
+      <input type="number" id="healthCharacter" [(ngModel)]="selectedCharacter!.healthCharacter" name="healthCharacter" required>
+    </div>
+    <div>
+      <label for="attackCharacter">Ataque</label>
+      <input type="number" id="attackCharacter" [(ngModel)]="selectedCharacter!.attackCharacter" name="attackCharacter" required>
+    </div>
+    <div>
+      <label for="defenseCharacter">Defensa</label>
+      <input type="number" id="defenseCharacter" [(ngModel)]="selectedCharacter!.defenseCharacter" name="defenseCharacter" required>
+    </div>
+    <div>
+      <label for="speedCharacter">Velocidad</label>
+      <input type="number" id="speedCharacter" [(ngModel)]="selectedCharacter!.speedCharacter" name="speedCharacter" required>
+    </div>
+    <div>
+      <label for="staminaCharacter">Resistencia</label>
+      <input type="number" id="staminaCharacter" [(ngModel)]="selectedCharacter!.staminaCharacter" name="staminaCharacter" required>
+    </div>
+    <div>
+      <label for="intelligenceCharacter">Inteligencia</label>
+      <input type="number" id="intelligenceCharacter" [(ngModel)]="selectedCharacter!.intelligenceCharacter" name="intelligenceCharacter" required>
+    </div>
+    <div>
+      <label for="specialCharacter">Especial</label>
+      <input type="number" id="specialCharacter" [(ngModel)]="selectedCharacter!.specialCharacter" name="specialCharacter" required>
+    </div>
+    <div>
+      <label for="categoryCharacter">Categoría</label>
+      <input type="text" id="categoryCharacter" [(ngModel)]="selectedCharacter!.categoryCharacter" name="categoryCharacter" required>
+    </div>
+    <div>
+      <label for="universeCharacter">Universo</label>
+      <input type="text" id="universeCharacter" [(ngModel)]="selectedCharacter!.universeCharacter" name="universeCharacter" required>
+    </div>
+    <div>
+      <label for="imageUrl">URL de Imagen</label>
+      <input type="text" id="imageUrl" [(ngModel)]="selectedCharacter!.imageUrl" name="imageUrl" required>
+    </div>
+    <button type="submit">Actualizar Personaje</button>
+    <button type="button" (click)="resetForm()">Cancelar</button>
+  </form>
 
-<h2>Lista de Personajes</h2>
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Acciones</th>
-  </tr>
-  <tr *ngFor="let character of characters">
-    <td>{{ character.idCharacter }}</td>
-    <td>{{ character.nameCharacter }}</td>
-    <td>
-      <button (click)="selectCharacter(character)">Editar</button>
-      <button (click)="deleteCharacter(character.idCharacter)">Eliminar</button>
-    </td>
-  </tr>
-</table>
+  <h2>Lista de Personajes</h2>
+  <div class="character-list">
+    <table class="styled-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let character of characters">
+        <td>{{ character.idCharacter }}</td>
+        <td>{{ character.nameCharacter }}</td>
+        <td>
+          <button class="action-button" (click)="selectCharacter(character)">Editar</button>
+          <button class="action-button" (click)="deleteCharacter(character.idCharacter)">Eliminar</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
