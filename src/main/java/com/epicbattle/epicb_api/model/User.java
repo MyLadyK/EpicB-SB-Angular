@@ -43,14 +43,14 @@ public class User {
     private int pointsUser;
 
     @OneToMany(mappedBy = "owner")
-    private List<UserCharacter> character;
+    private List<UserCharacter> characters;
 
     @OneToMany(mappedBy = "user")
-    private List<Message> messageSent;
+    private List<Message> messagesSent;
 
     @OneToMany(mappedBy = "user")
-    private List<Message> messageReceived;
+    private List<Message> messagesReceived;
 
     @OneToMany(mappedBy = "winner")
-    private List<BattleResult> battleResult;
+    private List<BattleResult> battleResults;
 }

@@ -16,7 +16,7 @@ import { Character } from '../model/character';
 export class CharacterManagementComponent implements OnInit {
   characters: Character[] = [];
   selectedCharacter: Character | null = null;
-  isEditMode: boolean = false;
+  isEditMode = false;
 
   constructor(private characterService: CharacterService) { }
 

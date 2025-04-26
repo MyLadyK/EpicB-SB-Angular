@@ -11,10 +11,20 @@ public class RankingService {
     @Autowired
     private RankingRepository rankingRepository;
 
+    /**
+     * Obtiene el ranking de un usuario. Lanza excepción si no existe ranking.
+     */
     public Ranking getRankingByUser(User user) {
-        return rankingRepository.findByUser(user);
+        Ranking ranking = rankingRepository.findByUser(user);
+        if (ranking == null) {
+            throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Ranking no encontrado para el usuario: " + user.getIdUser());
+        }
+        return ranking;
     }
 
+    /**
+     * Suma puntos al ranking de un usuario, creando el ranking si no existe.
+     */
     public void addPointsToUser(User user, int points) {
         Ranking ranking = rankingRepository.findByUser(user);
         if (ranking == null) {

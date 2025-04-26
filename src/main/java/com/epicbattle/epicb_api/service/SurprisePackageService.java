@@ -15,11 +15,16 @@ public class SurprisePackageService {
     @Autowired
     private SurprisePackageRepository surprisePackageRepository;
 
+    /**
+     * Obtiene un paquete sorpresa aleatorio de la base de datos.
+     * Lanza excepción si no hay paquetes disponibles.
+     */
     public SurprisePackage getRandomPackage() {
         List<SurprisePackage> packages = surprisePackageRepository.findAll();
+        if (packages.isEmpty()) {
+            throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("No hay paquetes sorpresa disponibles en la base de datos");
+        }
         Random random = new Random();
         return packages.get(random.nextInt(packages.size()));
     }
 }
-
-

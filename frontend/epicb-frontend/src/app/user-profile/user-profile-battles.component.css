@@ -1,0 +1,35 @@
+.battles-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  max-width: 420px;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+}
+.date {
+  font-size: 0.9em;
+  color: #888;
+  min-width: 70px;
+}
+.vs {
+  color: #aaa;
+  font-weight: bold;
+}
+.opponent {
+  flex: 1;
+  font-weight: 500;
+}
+.result.win { color: #16a34a; font-weight: bold; }
+.result.lose { color: #dc2626; font-weight: bold; }
+.result.draw { color: #2563eb; font-weight: bold; }

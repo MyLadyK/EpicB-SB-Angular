@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 
+/**
+ * Servicio para la gestión de usuarios.
+ */
 @Service
 public class UserService {
 
@@ -23,30 +26,66 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Guarda un usuario en la base de datos.
+     */
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
+    /**
+     * Obtiene un usuario por ID. Lanza excepción personalizada si no existe.
+     */
     public Optional<User> getUserById(int id) {
-        return userRepository.findById(id);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Usuario no encontrado con id: " + id);
+        }
+        return user;
     }
 
+    /**
+     * Devuelve todos los usuarios.
+     */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    /**
+     * Obtiene un usuario por nombre. Lanza excepción personalizada si no existe.
+     */
     public User getUserByName(String nameUser) {
-        return userRepository.findByNameUser(nameUser);
+        User user = userRepository.findByNameUser(nameUser);
+        if (user == null) {
+            throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Usuario no encontrado con nombre: " + nameUser);
+        }
+        return user;
     }
 
+    /**
+     * Elimina un usuario por ID. Lanza excepción personalizada si no existe.
+     */
     public void deleteUser(int id) {
+        if (!userRepository.existsById(id)) {
+            throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Usuario no encontrado para eliminar con id: " + id);
+        }
         userRepository.deleteById(id);
     }
 
+    /**
+     * Autentica un usuario por email y contraseña. Lanza excepción personalizada si las credenciales son inválidas.
+     */
     public User authenticateUser(String mailUser, String passwordHash) {
-        return userRepository.findByMailUserAndPasswordHash(mailUser, passwordHash);
+        User user = userRepository.findByMailUserAndPasswordHash(mailUser, passwordHash);
+        if (user == null) {
+            throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Credenciales inválidas");
+        }
+        return user;
     }
 
+    /**
+     * Registra un nuevo usuario en la base de datos.
+     */
     @Transactional
     public User registerUser(UserDto userDto) {
         User user = new User();
@@ -60,6 +99,18 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    /**
+     * Cambia el rol de un usuario.
+     */
+    public void changeUserRole(int userId, String newRole) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setRole(newRole);
+            userRepository.save(user);
+        } else {
+            throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Usuario no encontrado");
+        }
+    }
 }
-
-

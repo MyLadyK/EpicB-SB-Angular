@@ -1,6 +1,61 @@
 <p>battle works!</p>
 
-<button (click)="fight()">Start Battle</button>
+<div class="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-lg p-8">
+  <h2 class="text-2xl font-bold mb-6 text-blue-900">Simulación de Batalla</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center">
+      <img [src]="characters.find(c => c.id === selectedCharacter1)?.imageUrl" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2">
+      <p class="font-semibold text-blue-800">{{ characters.find(c => c.id === selectedCharacter1)?.name }}</p>
+      <div class="w-full mt-2">
+        <div class="h-4 bg-gray-200 rounded-full">
+          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(characters.find(c => c.id === selectedCharacter1))"></div>
+        </div>
+        <span class="text-xs text-gray-700">Salud: {{ characters.find(c => c.id === selectedCharacter1)?.healthCharacter }}</span>
+      </div>
+    </div>
+    <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center">
+      <img [src]="characters.find(c => c.id === selectedCharacter2)?.imageUrl" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2">
+      <p class="font-semibold text-blue-800">{{ characters.find(c => c.id === selectedCharacter2)?.name }}</p>
+      <div class="w-full mt-2">
+        <div class="h-4 bg-gray-200 rounded-full">
+          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(characters.find(c => c.id === selectedCharacter2))"></div>
+        </div>
+        <span class="text-xs text-gray-700">Salud: {{ characters.find(c => c.id === selectedCharacter2)?.healthCharacter }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center mb-6">
+    <button (click)="fightSummary()" [disabled]="loading" class="btn bg-blue-700 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-900 transition-colors">Iniciar Batalla</button>
+  </div>
+
+  <div *ngIf="loading">
+    <p>Cargando resumen de batalla...</p>
+  </div>
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="battleSummary" class="mt-8">
+    <h3 class="text-xl font-bold mb-4 text-blue-900">Resumen del Combate</h3>
+    <div class="bg-blue-50 rounded-lg p-4 shadow mb-4">
+      <div *ngFor="let event of battleSummary.events" class="mb-2 text-gray-800">
+        <span [ngClass]="{'font-bold text-red-600': event.includes('crítico'), 'font-bold text-purple-600': event.includes('especial')}">
+          {{ event }}
+        </span>
+      </div>
+      <div class="mt-4">
+        <span class="font-semibold text-green-700">Ganador: {{ battleSummary.winnerName }}</span>
+      </div>
+      <div *ngIf="battleSummary.surprisePackage" class="mt-2 text-blue-700">
+        <span class="font-semibold">Paquete Sorpresa:</span> {{ battleSummary.surprisePackage }}
+      </div>
+      <div *ngIf="battleSummary.pointsAwarded" class="mt-2 text-blue-700">
+        <span class="font-semibold">Puntos Ganados:</span> {{ battleSummary.pointsAwarded }}
+      </div>
+    </div>
+  </div>
+</div>
 
 <div *ngIf="battleResult">
   <p>Winner: {{battleResult.winner.nameUser}}</p>

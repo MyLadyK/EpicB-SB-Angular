@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router'; // Asegúrate de importar RouterModule
+import { ActivatedRoute, RouterModule } from '@angular/router'; 
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [RouterModule], // Importa RouterModule para las rutas
+  imports: [RouterModule], 
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css'] // Corrige el nombre de la propiedad
+  styleUrls: ['./user-profile.component.css'] 
 })
 export class UserProfileComponent implements OnInit {
-  user: User = {
+  user: any = {
     idUser: 0,
     nameUser: '',
     mailUser: '',
@@ -21,6 +21,10 @@ export class UserProfileComponent implements OnInit {
     lastEnergyRefill: '',
     pointsUser: 0
   };
+
+  get userId(): number {
+    return this.user.idUser;
+  }
 
   constructor(private route: ActivatedRoute, private userService: UserService) { }
 

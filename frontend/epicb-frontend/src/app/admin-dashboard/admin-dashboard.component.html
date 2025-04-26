@@ -14,6 +14,7 @@
         <th>ID</th>
         <th>Nombre</th>
         <th>Correo</th>
+        <th>Rol</th>
       </tr>
       </thead>
       <tbody>
@@ -21,6 +22,12 @@
         <td>{{user.idUser}}</td>
         <td>{{user.nameUser}}</td>
         <td>{{user.mailUser}}</td>
+        <td>
+          <select [value]="user.role" (change)="changeUserRole(user, $event.target.value)">
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </td>
       </tr>
       </tbody>
     </table>

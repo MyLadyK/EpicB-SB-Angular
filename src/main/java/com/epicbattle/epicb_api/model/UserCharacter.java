@@ -9,7 +9,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-
+/**
+ * @author [Your Name]
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,7 +23,7 @@ public class UserCharacter {
     private int idUserCharacter;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "idUser")
     private User owner;
 
     @ManyToOne

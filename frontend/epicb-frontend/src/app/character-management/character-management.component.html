@@ -1,78 +1,79 @@
-<div class="character-management-container">
-  <h2>Gestión de Personajes</h2>
+<div class="character-management-container max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mt-8">
+  <h2 class="text-2xl font-bold mb-6 text-blue-900">Gestión de Personajes</h2>
 
   <app-character-form *ngIf="!isEditMode" (characterAdded)="loadCharacters()"></app-character-form>
 
-  <form *ngIf="isEditMode && selectedCharacter" (ngSubmit)="updateCharacter()" class="character-form">
-    <div>
-      <label for="nameCharacter">Nombre</label>
-      <input type="text" id="nameCharacter" [(ngModel)]="selectedCharacter!.nameCharacter" name="nameCharacter" required>
+  <form *ngIf="isEditMode && selectedCharacter" (ngSubmit)="updateCharacter()" class="character-form grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="flex flex-col">
+      <label for="nameCharacter" class="font-semibold text-blue-900 mb-1">Nombre</label>
+      <input type="text" id="nameCharacter" [(ngModel)]="selectedCharacter!.nameCharacter" name="nameCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="healthCharacter">Salud</label>
-      <input type="number" id="healthCharacter" [(ngModel)]="selectedCharacter!.healthCharacter" name="healthCharacter" required>
+    <div class="flex flex-col">
+      <label for="healthCharacter" class="font-semibold text-blue-900 mb-1">Salud</label>
+      <input type="number" id="healthCharacter" [(ngModel)]="selectedCharacter!.healthCharacter" name="healthCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="attackCharacter">Ataque</label>
-      <input type="number" id="attackCharacter" [(ngModel)]="selectedCharacter!.attackCharacter" name="attackCharacter" required>
+    <div class="flex flex-col">
+      <label for="attackCharacter" class="font-semibold text-blue-900 mb-1">Ataque</label>
+      <input type="number" id="attackCharacter" [(ngModel)]="selectedCharacter!.attackCharacter" name="attackCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="defenseCharacter">Defensa</label>
-      <input type="number" id="defenseCharacter" [(ngModel)]="selectedCharacter!.defenseCharacter" name="defenseCharacter" required>
+    <div class="flex flex-col">
+      <label for="defenseCharacter" class="font-semibold text-blue-900 mb-1">Defensa</label>
+      <input type="number" id="defenseCharacter" [(ngModel)]="selectedCharacter!.defenseCharacter" name="defenseCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="speedCharacter">Velocidad</label>
-      <input type="number" id="speedCharacter" [(ngModel)]="selectedCharacter!.speedCharacter" name="speedCharacter" required>
+    <div class="flex flex-col">
+      <label for="speedCharacter" class="font-semibold text-blue-900 mb-1">Velocidad</label>
+      <input type="number" id="speedCharacter" [(ngModel)]="selectedCharacter!.speedCharacter" name="speedCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="staminaCharacter">Resistencia</label>
-      <input type="number" id="staminaCharacter" [(ngModel)]="selectedCharacter!.staminaCharacter" name="staminaCharacter" required>
+    <div class="flex flex-col">
+      <label for="staminaCharacter" class="font-semibold text-blue-900 mb-1">Resistencia</label>
+      <input type="number" id="staminaCharacter" [(ngModel)]="selectedCharacter!.staminaCharacter" name="staminaCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="intelligenceCharacter">Inteligencia</label>
-      <input type="number" id="intelligenceCharacter" [(ngModel)]="selectedCharacter!.intelligenceCharacter" name="intelligenceCharacter" required>
+    <div class="flex flex-col">
+      <label for="intelligenceCharacter" class="font-semibold text-blue-900 mb-1">Inteligencia</label>
+      <input type="number" id="intelligenceCharacter" [(ngModel)]="selectedCharacter!.intelligenceCharacter" name="intelligenceCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="specialCharacter">Especial</label>
-      <input type="number" id="specialCharacter" [(ngModel)]="selectedCharacter!.specialCharacter" name="specialCharacter" required>
+    <div class="flex flex-col">
+      <label for="specialCharacter" class="font-semibold text-blue-900 mb-1">Especial</label>
+      <input type="number" id="specialCharacter" [(ngModel)]="selectedCharacter!.specialCharacter" name="specialCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="categoryCharacter">Categoría</label>
-      <input type="text" id="categoryCharacter" [(ngModel)]="selectedCharacter!.categoryCharacter" name="categoryCharacter" required>
+    <div class="flex flex-col">
+      <label for="categoryCharacter" class="font-semibold text-blue-900 mb-1">Categoría</label>
+      <input type="text" id="categoryCharacter" [(ngModel)]="selectedCharacter!.categoryCharacter" name="categoryCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="universeCharacter">Universo</label>
-      <input type="text" id="universeCharacter" [(ngModel)]="selectedCharacter!.universeCharacter" name="universeCharacter" required>
+    <div class="flex flex-col">
+      <label for="universeCharacter" class="font-semibold text-blue-900 mb-1">Universo</label>
+      <input type="text" id="universeCharacter" [(ngModel)]="selectedCharacter!.universeCharacter" name="universeCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <div>
-      <label for="imageUrl">URL de Imagen</label>
-      <input type="text" id="imageUrl" [(ngModel)]="selectedCharacter!.imageUrl" name="imageUrl" required>
+    <div class="flex flex-col">
+      <label for="imageUrl" class="font-semibold text-blue-900 mb-1">URL de Imagen</label>
+      <input type="text" id="imageUrl" [(ngModel)]="selectedCharacter!.imageUrl" name="imageUrl" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
     </div>
-    <button type="submit">Actualizar Personaje</button>
-    <button type="button" (click)="resetForm()">Cancelar</button>
+    <div class="flex items-center gap-2 mt-4">
+      <button type="submit" class="btn bg-green-600 text-white font-bold px-6 py-2 rounded shadow hover:bg-green-800 transition-colors">Actualizar Personaje</button>
+      <button type="button" (click)="resetForm()" class="btn bg-gray-300 text-gray-800 font-bold px-6 py-2 rounded shadow hover:bg-gray-400 transition-colors">Cancelar</button>
+    </div>
   </form>
 
-  <h2>Lista de Personajes</h2>
-  <div class="character-list">
-    <table class="styled-table">
-      <thead>
+  <h2 class="text-xl font-bold mt-8 mb-4 text-blue-900">Lista de Personajes</h2>
+  <div class="character-list overflow-x-auto">
+    <table class="styled-table min-w-full bg-white rounded-lg shadow-md">
+      <thead class="bg-blue-100">
       <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
+        <th class="px-4 py-2">ID</th>
+        <th class="px-4 py-2">Nombre</th>
+        <th class="px-4 py-2">Acciones</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let character of characters">
-        <td>{{ character.idCharacter }}</td>
-        <td>{{ character.nameCharacter }}</td>
-        <td>
-          <button class="action-button" (click)="selectCharacter(character)">Editar</button>
-          <button class="action-button" (click)="deleteCharacter(character.idCharacter)">Eliminar</button>
+      <tr *ngFor="let character of characters" class="hover:bg-blue-50 transition-colors">
+        <td class="px-4 py-2">{{ character.idCharacter }}</td>
+        <td class="px-4 py-2">{{ character.nameCharacter }}</td>
+        <td class="px-4 py-2 flex gap-2">
+          <button (click)="selectCharacter(character)" class="btn bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-600 transition-colors">Editar</button>
+          <button (click)="deleteCharacter(character.idCharacter)" class="btn bg-red-600 text-white px-3 py-1 rounded hover:bg-red-800 transition-colors">Eliminar</button>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
-

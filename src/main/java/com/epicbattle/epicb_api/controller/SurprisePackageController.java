@@ -16,9 +16,12 @@ public class SurprisePackageController {
     private SurprisePackageService surprisePackageService;
 
     @GetMapping("/random")
-    public ResponseEntity<SurprisePackage> getRandomPackage() {
-        SurprisePackage surprisePackage = surprisePackageService.getRandomPackage();
-        return ResponseEntity.ok(surprisePackage);
+    public ResponseEntity<?> getRandomPackage() {
+        try {
+            SurprisePackage surprisePackage = surprisePackageService.getRandomPackage();
+            return ResponseEntity.ok(surprisePackage);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 }
-

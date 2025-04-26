@@ -1,0 +1,26 @@
+<div class="max-w-3xl mx-auto mt-10 bg-white rounded-lg shadow-lg p-8">
+  <h2 class="text-2xl font-bold mb-6 text-blue-900">Ranking de Usuarios</h2>
+  <div *ngIf="loading">Cargando ranking...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="updated" class="ranking-updated">¡Ranking actualizado tras la batalla!</div>
+
+  <table *ngIf="ranking.length > 0" class="min-w-full bg-white rounded-lg shadow-md">
+    <thead class="bg-blue-100">
+      <tr>
+        <th class="px-4 py-2">Posición</th>
+        <th class="px-4 py-2">Usuario</th>
+        <th class="px-4 py-2">Puntos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entry of ranking; let i = index" [class.current-user]="entry.userName === currentUser" class="hover:bg-blue-50 transition-colors">
+        <td class="px-4 py-2 font-bold text-blue-800">#{{ i + 1 }}</td>
+        <td class="px-4 py-2 flex items-center gap-3">
+          <img [src]="entry.imageUrl" alt="avatar" class="w-10 h-10 object-cover rounded-full border-2 border-blue-300">
+          <span class="font-semibold">{{ entry.userName }}</span>
+        </td>
+        <td class="px-4 py-2">{{ entry.points }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

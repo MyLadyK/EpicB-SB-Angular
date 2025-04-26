@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -19,35 +21,28 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User loginUser) {
+    public ResponseEntity<?> login(@Valid @RequestBody User loginUser) {
         try {
-            System.out.println("Attempting login with: " + loginUser.getMailUser() + ", " + loginUser.getPasswordHash());
             User user = userRepository.findByMailUser(loginUser.getMailUser());
             if (user != null && passwordEncoder.matches(loginUser.getPasswordHash(), user.getPasswordHash())) {
-                System.out.println("User found: " + user.getNameUser());
                 return ResponseEntity.ok(user);
             } else {
-                System.out.println("Invalid credentials");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
             }
         } catch (Exception e) {
-            System.out.println("Exception in AuthController: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
         }
     }
 
     @PostMapping("/create-admin")
-    public ResponseEntity<?> createAdmin(@RequestBody User adminUser) {
+    public ResponseEntity<?> createAdmin(@Valid @RequestBody User adminUser) {
         try {
             adminUser.setPasswordHash(passwordEncoder.encode(adminUser.getPasswordHash()));
             adminUser.setRole("ADMIN");
             userRepository.save(adminUser);
-            System.out.println("Admin created with role: " + adminUser.getRole());
             return ResponseEntity.ok("Administrador creado exitosamente.");
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el administrador.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el administrador: " + e.getMessage());
         }
     }
 }

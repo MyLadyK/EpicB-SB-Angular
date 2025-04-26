@@ -1,0 +1,20 @@
+<div class="battles-container">
+  <h3>Historial de batallas</h3>
+  <ul *ngIf="battles.length > 0; else emptyBattles">
+    <li *ngFor="let battle of battles">
+      <span class="date">{{ battle.date | date:'short' }}</span>
+      <span class="vs">VS</span>
+      <span class="opponent">{{ battle.opponentName }}</span>
+      <span class="result" [ngClass]="{
+        'win': battle.result === 'WIN',
+        'lose': battle.result === 'LOSE',
+        'draw': battle.result === 'DRAW'
+      }">
+        {{ battle.result }}
+      </span>
+    </li>
+  </ul>
+  <ng-template #emptyBattles>
+    <p>No hay batallas recientes.</p>
+  </ng-template>
+</div>

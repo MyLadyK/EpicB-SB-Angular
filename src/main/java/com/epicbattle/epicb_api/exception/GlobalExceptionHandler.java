@@ -1,6 +1,5 @@
 package com.epicbattle.epicb_api.exception;
 
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,22 +9,24 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.stream.Collectors;
 
+/**
+ * Controlador global de excepciones para la API.
+ * Captura y responde uniformemente a errores comunes y personalizados.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Manejar excepciones de tipo ResourceNotFoundException
+    /**
+     * Maneja excepciones de recurso no encontrado.
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        return new ResponseEntity<>("Recurso no encontrado: " + ex.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // Manejar otras excepciones
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGlobalException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>("Error inesperado.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    // Manejar excepciones de validación
+    /**
+     * Maneja excepciones de validación de datos (DTOs, @Valid).
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()
@@ -36,10 +37,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
-    // Excepción personalizada para recurso no encontrado
-    public static class ResourceNotFoundException extends RuntimeException {
-        public ResourceNotFoundException(String message) {
-            super(message);
-        }
+    /**
+     * Maneja cualquier otra excepción no controlada.
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGlobalException(Exception ex, WebRequest request) {
+        return new ResponseEntity<>("Error inesperado.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

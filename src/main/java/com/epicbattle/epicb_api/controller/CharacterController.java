@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,24 +27,46 @@ public class CharacterController {
     }
 
     @PostMapping
-    public Character createCharacter(@RequestBody Character character) {
-        return characterService.createCharacter(character);
+    public ResponseEntity<?> createCharacter(@Valid @RequestBody Character character) {
+        try {
+            Character created = characterService.createCharacter(character);
+            return ResponseEntity.ok(created);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public Character getCharacterById(@PathVariable int id) {
-        return characterService.getCharacterById(id);
+    public ResponseEntity<?> getCharacterById(@PathVariable int id) {
+        try {
+            Character character = characterService.getCharacterById(id);
+            if (character != null) {
+                return ResponseEntity.ok(character);
+            } else {
+                return ResponseEntity.status(404).body("Personaje no encontrado");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public Character updateCharacter(@PathVariable int id, @RequestBody Character characterDetails) {
-        return characterService.updateCharacter(id, characterDetails);
+    public ResponseEntity<?> updateCharacter(@PathVariable int id, @Valid @RequestBody Character characterDetails) {
+        try {
+            Character updated = characterService.updateCharacter(id, characterDetails);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCharacter(@PathVariable int id) {
-        characterService.deleteCharacter(id);
-        return ResponseEntity.ok("Personaje eliminado");
+    public ResponseEntity<?> deleteCharacter(@PathVariable int id) {
+        try {
+            characterService.deleteCharacter(id);
+            return ResponseEntity.ok("Personaje eliminado");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 }
-

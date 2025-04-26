@@ -15,9 +15,19 @@ public class BattleResultService {
         this.battleResultRepository = battleResultRepository;
     }
 
-    // Get
+    /**
+     * Devuelve todos los resultados de batalla.
+     */
     public List<BattleResult> getAllBattleResults() {
         return battleResultRepository.findAll();
+    }
+
+    /**
+     * Busca un resultado de batalla por ID y lanza excepción personalizada si no existe.
+     */
+    public BattleResult getBattleResultById(int id) {
+        return battleResultRepository.findById(id)
+                .orElseThrow(() -> new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Resultado de batalla no encontrado con id: " + id));
     }
 
     // Métodos adicionales para manejar los resultados de batalla

@@ -43,10 +43,13 @@ public class BattleService {
 
     /**
      * Realiza una batalla avanzada entre dos personajes de usuario y otorga recompensa al ganador.
+     * Lanza IllegalArgumentException si algún personaje de usuario no existe.
      */
     public BattleResult battle(User user1, Character character1, User user2, Character character2, int userCharacter1Id, int userCharacter2Id) {
-        UserCharacter uc1 = userCharacterService.getById(userCharacter1Id).orElseThrow(() -> new RuntimeException("UserCharacter1 no encontrado"));
-        UserCharacter uc2 = userCharacterService.getById(userCharacter2Id).orElseThrow(() -> new RuntimeException("UserCharacter2 no encontrado"));
+        UserCharacter uc1 = userCharacterService.getById(userCharacter1Id)
+                .orElseThrow(() -> new IllegalArgumentException("UserCharacter1 no encontrado"));
+        UserCharacter uc2 = userCharacterService.getById(userCharacter2Id)
+                .orElseThrow(() -> new IllegalArgumentException("UserCharacter2 no encontrado"));
 
         // Clonar salud para simulación (no modificar objeto real)
         double health1 = uc1.getHealthUserCharacter();
@@ -102,12 +105,14 @@ public class BattleService {
     }
 
     /**
-     * Realiza una batalla avanzada entre dos personajes de usuario y otorga recompensa al ganador.
-     * Devuelve el resumen del combate.
+     * Simula una batalla y devuelve un resumen detallado de las acciones y el resultado.
+     * Lanza IllegalArgumentException si algún personaje de usuario no existe.
      */
     public BattleSummary battleWithSummary(User user1, Character character1, User user2, Character character2, int userCharacter1Id, int userCharacter2Id) {
-        UserCharacter uc1 = userCharacterService.getById(userCharacter1Id).orElseThrow(() -> new RuntimeException("UserCharacter1 no encontrado"));
-        UserCharacter uc2 = userCharacterService.getById(userCharacter2Id).orElseThrow(() -> new RuntimeException("UserCharacter2 no encontrado"));
+        UserCharacter uc1 = userCharacterService.getById(userCharacter1Id)
+                .orElseThrow(() -> new IllegalArgumentException("UserCharacter1 no encontrado"));
+        UserCharacter uc2 = userCharacterService.getById(userCharacter2Id)
+                .orElseThrow(() -> new IllegalArgumentException("UserCharacter2 no encontrado"));
 
         double health1 = uc1.getHealthUserCharacter();
         double health2 = uc2.getHealthUserCharacter();
@@ -147,23 +152,36 @@ public class BattleService {
         }
 
         // Otorgar recompensa al personaje ganador
+        final String[] surpriseDescription = {null};
         userCharacterService.getById(winnerUserCharacterId).ifPresent(userCharacter -> {
             SurprisePackage surprise = surprisePackageService.getRandomPackage();
             applySurprisePackageToUserCharacter(userCharacter, surprise);
             userCharacterService.save(userCharacter);
-            events.add("¡" + userCharacter.getBaseCharacter().getNameCharacter() + " recibe un paquete sorpresa: " + surprise.getDescription() + "!");
+            String desc = "¡" + userCharacter.getBaseCharacter().getNameCharacter() + " recibe un paquete sorpresa: " + surprise.getDescription() + "!";
+            events.add(desc);
+            surpriseDescription[0] = surprise.getDescription();
         });
 
         // Sumar puntos al ranking del usuario ganador
-        rankingService.addPointsToUser(winner, 3);
-        events.add("¡" + winnerName + " gana la batalla y suma 3 puntos al ranking!");
+        int points = 3;
+        rankingService.addPointsToUser(winner, points);
+        events.add("¡" + winnerName + " gana la batalla y suma " + points + " puntos al ranking!");
 
         return new BattleSummary(
                 winnerName,
                 Math.max(0, Math.round(health1 * 10.0) / 10.0),
                 Math.max(0, Math.round(health2 * 10.0) / 10.0),
-                events
+                events,
+                surpriseDescription[0],
+                points
         );
+    }
+
+    /**
+     * Devuelve el historial de batallas donde el usuario participó (como user1 o user2), ordenadas por fecha descendente.
+     */
+    public List<BattleResult> getBattlesByUser(int userId) {
+        return battleResultRepository.findByUser1_IdOrUser2_IdOrderByBattleDateDesc(userId, userId);
     }
 
     /**

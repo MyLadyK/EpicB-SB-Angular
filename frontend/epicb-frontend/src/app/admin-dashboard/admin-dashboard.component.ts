@@ -24,36 +24,48 @@ export class AdminDashboardComponent implements OnInit {
     this.loadUsers();
   }
 
-  loadUsers() {
+  loadUsers(): void {
     this.userService.getUsers().subscribe(
-      response => {
+      (response: User[]) => {
         this.users = response;
       },
-      error => {
+      (error: Error) => {
         console.error('Error al cargar usuarios', error);
       }
     );
   }
 
-  banUser(userId: number, duration: string) {
+  banUser(userId: number, duration: string): void {
     this.userService.banUser(userId, duration).subscribe(
-      response => {
+      (response: { success: boolean }) => {
         console.log('Usuario baneado', response);
         this.loadUsers();
       },
-      error => {
+      (error: Error) => {
         console.error('Error al banear usuario', error);
       }
     );
   }
 
-  navigateToCharacterManagement() {
+  navigateToCharacterManagement(): void {
     this.isUserManagementVisible = false;
     this.isCharacterManagementVisible = true;
   }
 
-  navigateToUserManagement() {
+  navigateToUserManagement(): void {
     this.isCharacterManagementVisible = false;
     this.isUserManagementVisible = true;
+  }
+
+  // NUEVO: Cambiar rol de usuario
+  changeUserRole(user: User, newRole: string): void {
+    this.userService.changeUserRole(user.id, newRole).subscribe(
+      (response: { success: boolean }) => {
+        this.loadUsers();
+      },
+      (error: Error) => {
+        console.error('Error al cambiar el rol', error);
+      }
+    );
   }
 }

@@ -1,0 +1,21 @@
+<div *ngIf="show" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+  <div [ngClass]="{
+    'bg-red-600': type === 'error',
+    'bg-green-600': type === 'success',
+    'bg-blue-600': type === 'info'
+  }"
+    class="text-white px-6 py-3 rounded shadow-lg flex items-center gap-2 animate-fade-in-up min-w-[220px]">
+    <ng-container [ngSwitch]="type">
+      <svg *ngSwitchCase="'error'" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+      </svg>
+      <svg *ngSwitchCase="'success'" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <svg *ngSwitchCase="'info'" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01" />
+      </svg>
+    </ng-container>
+    <span class="font-semibold">{{ message }}</span>
+  </div>
+</div>

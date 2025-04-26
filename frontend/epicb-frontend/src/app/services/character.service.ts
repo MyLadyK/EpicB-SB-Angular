@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Character } from '../model/character';
 
 @Injectable({
@@ -12,15 +13,15 @@ export class CharacterService {
   constructor(private http: HttpClient) {}
 
   getCharacters(): Observable<Character[]> {
-    return this.http.get<Character[]>(this.baseUrl);
+    return this.http.get<Character[]>(this.baseUrl).pipe(catchError(this.handleError));
   }
 
   updateCharacter(character: Character): Observable<Character> {
-    return this.http.put<Character>(`${this.baseUrl}/${character.idCharacter}`, character);
+    return this.http.put<Character>(`${this.baseUrl}/${character.idCharacter}`, character).pipe(catchError(this.handleError));
   }
 
   deleteCharacter(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(catchError(this.handleError));
   }
 
   uploadImage(file: File): Observable<{ imageUrl: string }> {
@@ -31,6 +32,22 @@ export class CharacterService {
       headers: new HttpHeaders({
         'Accept': 'application/json',
       }),
-    });
+    }).pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMsg = 'Error desconocido';
+    if (error.error instanceof ErrorEvent) {
+      errorMsg = `Error de red: ${error.error.message}`;
+    } else if (error.status === 404) {
+      errorMsg = error.error || 'Recurso no encontrado';
+    } else if (error.status === 400) {
+      errorMsg = error.error || 'Datos inválidos';
+    } else if (error.status === 0) {
+      errorMsg = 'No se pudo conectar con el servidor';
+    } else {
+      errorMsg = error.error || 'Error inesperado en el servidor';
+    }
+    return throwError(() => errorMsg);
   }
 }

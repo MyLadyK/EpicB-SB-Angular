@@ -1,20 +1,20 @@
-<div class="signup-container">
-  <div class="sign-up-form">
-    <h2>Registro</h2>
-    <form (ngSubmit)="register()">
-      <div class="form-group">
-        <label for="nameUser">Nombre</label>
-        <input type="text" id="nameUser" [(ngModel)]="user.nameUser" name="nameUser" required>
+<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
+  <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold text-center text-blue-900 mb-6">Registro</h2>
+    <form (ngSubmit)="register()" class="space-y-4">
+      <div class="flex flex-col">
+        <label for="nameUser" class="font-semibold text-blue-900 mb-1">Nombre</label>
+        <input id="nameUser" [(ngModel)]="user.nameUser" name="nameUser" class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400" required>
       </div>
-      <div class="form-group">
-        <label for="mailUser">Correo</label>
-        <input type="email" id="mailUser" [(ngModel)]="user.mailUser" name="mailUser" required>
+      <div class="flex flex-col">
+        <label for="mailUser" class="font-semibold text-blue-900 mb-1">Correo</label>
+        <input id="mailUser" [(ngModel)]="user.mailUser" name="mailUser" type="email" class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400" required>
       </div>
-      <div class="form-group">
-        <label for="passwordHash">Contraseña</label>
-        <input type="password" id="passwordHash" [(ngModel)]="user.passwordHash" name="passwordHash" required>
+      <div class="flex flex-col">
+        <label for="passwordHash" class="font-semibold text-blue-900 mb-1">Contraseña</label>
+        <input id="passwordHash" type="password" [(ngModel)]="user.passwordHash" name="passwordHash" class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400" required>
       </div>
-      <button type="submit">Registrar</button>
+      <button type="submit" class="btn w-full bg-blue-700 text-white font-bold py-2 rounded shadow hover:bg-blue-900 transition-colors">Registrar</button>
     </form>
   </div>
 </div>

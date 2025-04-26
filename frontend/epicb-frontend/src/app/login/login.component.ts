@@ -14,8 +14,8 @@ import { RouterModule, Router } from '@angular/router';
   providers: [AuthService]
 })
 export class LoginComponent {
-  mailUser: string = '';
-  passwordHash: string = '';
+  mailUser = '';
+  passwordHash = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 

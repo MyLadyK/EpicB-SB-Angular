@@ -1,0 +1,17 @@
+<div class="history-container">
+  <h3>Historial de notificaciones</h3>
+  <ul *ngIf="history.length > 0; else empty">
+    <li *ngFor="let notif of history">
+      <span [ngClass]="{
+        'color-error': notif.type === 'error',
+        'color-success': notif.type === 'success',
+        'color-info': notif.type === 'info'
+      }">●</span>
+      <span class="msg">{{ notif.message }}</span>
+      <span class="timestamp">{{ notif.timestamp | date:'shortTime' }}</span>
+    </li>
+  </ul>
+  <ng-template #empty>
+    <p>No hay notificaciones recientes.</p>
+  </ng-template>
+</div>
