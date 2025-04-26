@@ -44,9 +44,11 @@ export class CharacterManagementComponent implements OnInit {
     if (characterId !== undefined) {
       this.characterService.deleteCharacter(characterId).subscribe(
         response => {
+          alert('Personaje eliminado con éxito');
           this.loadCharacters();
         },
         error => {
+          alert('Error al eliminar')
           console.error('Error al eliminar personaje', error);
         }
       );
@@ -62,10 +64,12 @@ export class CharacterManagementComponent implements OnInit {
     if (this.selectedCharacter) {
       this.characterService.updateCharacter(this.selectedCharacter).subscribe(
         response => {
+          alert('Personaje actualizado con éxito');
           this.resetForm();
           this.loadCharacters();
         },
         error => {
+          alert('Error al actualizar')
           console.error('Error al actualizar personaje', error);
         }
       );

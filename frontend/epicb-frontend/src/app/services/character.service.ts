@@ -1,33 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Character } from '../model/character';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CharacterService {
-  private apiUrl = 'http://localhost:8081/api/characters';
+  private baseUrl = 'http://localhost:3000/api/characters';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  addCharacter(character: Character): Observable<Character> {
-    return this.http.post<Character>(this.apiUrl, character);
+  getCharacters(): Observable<Character[]> {
+    return this.http.get<Character[]>(this.baseUrl);
   }
 
   updateCharacter(character: Character): Observable<Character> {
-    return this.http.put<Character>(`${this.apiUrl}/${character.idCharacter}`, character);
+    return this.http.put<Character>(`${this.baseUrl}/${character.idCharacter}`, character);
   }
 
-  deleteCharacter(characterId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${characterId}`);
+  deleteCharacter(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  getCharacters(): Observable<Character[]> {
-    return this.http.get<Character[]>(this.apiUrl);
-  }
+  uploadImage(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
 
-  getCharacterById(id: number): Observable<Character> {
-    return this.http.get<Character>(`${this.apiUrl}/${id}`);
+    return this.http.post<{ imageUrl: string }>(`${this.baseUrl}/upload`, formData, {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+      }),
+    });
   }
 }

@@ -1,5 +1,6 @@
 package com.epicbattle.epicb_api.controller;
 
+import com.epicbattle.epicb_api.dto.BattleSummary;
 import com.epicbattle.epicb_api.exception.GlobalExceptionHandler;
 import com.epicbattle.epicb_api.model.BattleResult;
 import com.epicbattle.epicb_api.model.Character;
@@ -37,7 +38,25 @@ public class BattleController {
         Character character1 = characterService.getCharacterById(battleData.get("character1Id"));
         Character character2 = characterService.getCharacterById(battleData.get("character2Id"));
 
-        BattleResult result = battleService.battle(user1, character1, user2, character2);
+        int userCharacter1Id = battleData.get("userCharacter1Id");
+        int userCharacter2Id = battleData.get("userCharacter2Id");
+
+        BattleResult result = battleService.battle(user1, character1, user2, character2, userCharacter1Id, userCharacter2Id);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/fight/summary")
+    public ResponseEntity<BattleSummary> battleSummary(@RequestBody Map<String, Integer> battleData){
+        User user1 = userService.getUserById(battleData.get("user1Id")).orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Usuario 1 no encontrado"));
+        User user2 = userService.getUserById(battleData.get("user2Id")).orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Usuario 2 no encontrado"));
+
+        Character character1 = characterService.getCharacterById(battleData.get("character1Id"));
+        Character character2 = characterService.getCharacterById(battleData.get("character2Id"));
+
+        int userCharacter1Id = battleData.get("userCharacter1Id");
+        int userCharacter2Id = battleData.get("userCharacter2Id");
+
+        BattleSummary summary = battleService.battleWithSummary(user1, character1, user2, character2, userCharacter1Id, userCharacter2Id);
+        return ResponseEntity.ok(summary);
     }
 }

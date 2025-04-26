@@ -31,9 +31,26 @@ nav ul li a:hover {
   color: #00FF7F;
 }
 
-/* Contenido principal */
-.main-content {
-  padding-bottom: 70px; /* Aumenta este valor si es necesario */
+/* Contenedor principal */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to right, #ff512f, #dd2476); /* Fondo degradado */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Pie de página */
@@ -41,11 +58,11 @@ footer {
   background: #333;
   color: #FFF;
   text-align: center;
-  padding: 20px 0; /* Aumenta el padding para asegurar la visibilidad */
-  position: fixed;
-  bottom: 0;
+  padding: 20px 0;
   width: 100%;
-  height: auto; /* Ajusta la altura automáticamente */
+  position: relative; /* Parte del flujo del documento */
+  flex-shrink: 0;
+  z-index: 1; /* Asegura que el footer esté en la parte superior */
 }
 
 footer .social-icons {
