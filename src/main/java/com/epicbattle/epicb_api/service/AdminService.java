@@ -1,7 +1,6 @@
 package com.epicbattle.epicb_api.service;
 
 import com.epicbattle.epicb_api.model.User;
-import com.epicbattle.epicb_api.repository.AdminRepository;
 import com.epicbattle.epicb_api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +11,9 @@ import java.util.Optional;
 @Service
 public class AdminService {
 
-    private final AdminRepository adminRepository;
     private final UserRepository userRepository;
 
-    public AdminService(AdminRepository adminRepository, UserRepository userRepository) {
-        this.adminRepository = adminRepository;
+    public AdminService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

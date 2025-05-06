@@ -22,7 +22,7 @@ export class LoginComponent {
   login() {
     this.authService.authenticate(this.mailUser, this.passwordHash).subscribe(
       response => {
-        if (response.role === 'ADMIN') {
+        if (response.roleUser === 'ADMIN') {
           // Redirigir a la página de administración
           this.router.navigate(['/admin-dashboard']);
         } else {

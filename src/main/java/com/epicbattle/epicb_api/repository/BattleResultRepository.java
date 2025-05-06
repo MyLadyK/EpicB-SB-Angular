@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface BattleResultRepository extends JpaRepository <BattleResult, Integer> {
-    List<BattleResult> findByUser1_IdOrUser2_IdOrderByBattleDateDesc(int user1Id, int user2Id);
+    List<BattleResult> findByUser1_IdUserOrUser2_IdUserOrderByBattleDateDesc(int user1Id, int user2Id);
 }

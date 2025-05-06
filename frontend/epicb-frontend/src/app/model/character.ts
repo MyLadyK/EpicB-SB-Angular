@@ -1,6 +1,6 @@
 export interface Character {
-  id: number;
-  name: string;
+  idCharacter: number;
+  nameCharacter: string;
   healthCharacter: number;
   attackCharacter: number;
   defenseCharacter: number;

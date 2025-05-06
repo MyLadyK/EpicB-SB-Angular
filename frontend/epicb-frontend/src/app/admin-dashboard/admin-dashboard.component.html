@@ -23,9 +23,9 @@
         <td>{{user.nameUser}}</td>
         <td>{{user.mailUser}}</td>
         <td>
-          <select [value]="user.role" (change)="changeUserRole(user, $event.target.value)">
-            <option value="USER">USER</option>
-            <option value="ADMIN">ADMIN</option>
+          <select [ngModel]="user.roleUser" (change)="changeUserRole(user, $event)">
+            <option [value]="'USER'">USER</option>
+            <option [value]="'ADMIN'">ADMIN</option>
           </select>
         </td>
       </tr>

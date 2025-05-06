@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router'; 
+import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
+import { NotificationHistoryComponent } from '../components/notification-history/notification-history.component';
+import { UserProfileBattlesComponent } from './user-profile-battles.component';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [RouterModule], 
+  imports: [RouterModule, NotificationHistoryComponent, UserProfileBattlesComponent, CommonModule], 
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'] 
 })

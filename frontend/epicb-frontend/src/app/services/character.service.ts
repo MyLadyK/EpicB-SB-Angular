@@ -24,6 +24,10 @@ export class CharacterService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(catchError(this.handleError));
   }
 
+  addCharacter(character: Character): Observable<Character> {
+    return this.http.post<Character>(this.baseUrl, character).pipe(catchError(this.handleError));
+  }
+
   uploadImage(file: File): Observable<{ imageUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);

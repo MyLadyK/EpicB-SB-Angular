@@ -35,12 +35,12 @@ export class CharacterFormComponent {
 
   addCharacter() {
     this.characterService.addCharacter(this.character).subscribe(
-      response => {
+      (response: any) => {
         console.log('Personaje añadido', response);
         this.characterAdded.emit();
         // Puedes añadir una lógica para resetear el formulario o mostrar un mensaje de éxito
       },
-      error => {
+      (error: any) => {
         console.error('Error al añadir personaje', error);
       }
     );

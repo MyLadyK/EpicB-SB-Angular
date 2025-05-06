@@ -1,11 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService, Notification, NotificationType } from '../../services/notification.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-error-toast',
   templateUrl: './error-toast.component.html',
-  styleUrls: ['./error-toast.component.css']
+  styleUrls: ['./error-toast.component.css'],
+  imports: [CommonModule]
 })
 export class ErrorToastComponent implements OnInit, OnDestroy {
   queue: Notification[] = [];

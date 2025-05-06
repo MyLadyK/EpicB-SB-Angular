@@ -5,19 +5,13 @@ import com.epicbattle.epicb_api.model.Character;
 import com.epicbattle.epicb_api.model.User;
 import com.epicbattle.epicb_api.model.UserCharacter;
 import com.epicbattle.epicb_api.model.SurprisePackage;
-import com.epicbattle.epicb_api.model.Ranking;
 import com.epicbattle.epicb_api.repository.BattleResultRepository;
-import com.epicbattle.epicb_api.service.CharacterService;
-import com.epicbattle.epicb_api.service.UserCharacterService;
-import com.epicbattle.epicb_api.service.SurprisePackageService;
-import com.epicbattle.epicb_api.service.RankingService;
-import com.epicbattle.epicb_api.service.UserService;
+
 import com.epicbattle.epicb_api.dto.BattleSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,12 +19,6 @@ public class BattleService {
 
     @Autowired
     private BattleResultRepository battleResultRepository;
-
-    @Autowired
-    private CharacterService characterService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private UserCharacterService userCharacterService;
@@ -181,7 +169,7 @@ public class BattleService {
      * Devuelve el historial de batallas donde el usuario participó (como user1 o user2), ordenadas por fecha descendente.
      */
     public List<BattleResult> getBattlesByUser(int userId) {
-        return battleResultRepository.findByUser1_IdOrUser2_IdOrderByBattleDateDesc(userId, userId);
+        return battleResultRepository.findByUser1_IdUserOrUser2_IdUserOrderByBattleDateDesc(userId, userId);
     }
 
     /**

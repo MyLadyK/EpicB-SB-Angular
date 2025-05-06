@@ -2,8 +2,11 @@ import { User } from './user';
 
 export interface BattleResult {
   idBattleResult: number;
-  user1: User; // Puedes crear modelos específicos para User y Character
-  user2: User;
-  winner: User;
+  user1: any;
+  user2: any;
+  winner: any;
   battleDate: Date;
+  date?: string; // Para compatibilidad con el template
+  opponentName?: string;
+  result?: string;
 }

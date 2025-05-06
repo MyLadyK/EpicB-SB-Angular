@@ -3,10 +3,12 @@ import { Router, RouterModule } from '@angular/router'; // Importar RouterModule
 import { AuthService } from './services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { DemoModeService } from './demo-mode.service';
+import { CommonModule } from '@angular/common';
+import { ErrorToastComponent } from './components/error-toast/error-toast.component';
 
 @Component({
   standalone: true,
-  imports: [RouterModule, FormsModule], // Asegúrate de incluir RouterModule aquí
+  imports: [RouterModule, FormsModule, CommonModule, ErrorToastComponent], // Asegúrate de incluir RouterModule aquí
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -22,7 +24,8 @@ export class AppComponent {
   feedbackMsg = '';
   feedbackType: 'success' | 'error' | '' = '';
 
-  constructor(private authService: AuthService, private router: Router, private demoModeService: DemoModeService) {
+  // Cambia acceso a authService a public para acceso desde template
+  constructor(public authService: AuthService, private router: Router, private demoModeService: DemoModeService) {
     // Suscribirse a demoMode
     setInterval(() => {
       this.demoMode = this.demoModeService.demoMode;
@@ -35,15 +38,15 @@ export class AppComponent {
       response => {
         this.authService.setSession(response);
         this.user = response;
-        this.showFeedback('¡Bienvenido, ' + response.name + '!', 'success');
+        this.showFeedback('¡Bienvenido, ' + response.nameUser + '!', 'success');
         if (this.authService.isAdmin(response)) {
           this.router.navigate(['/admin-dashboard']);
         } else {
-          this.router.navigate(['/user-dashboard']);
+          this.router.navigate(['/']);
         }
       },
       error => {
-        this.showFeedback('Error al iniciar sesión', 'error');
+        this.showFeedback('Error de autenticación', 'error');
       }
     );
   }

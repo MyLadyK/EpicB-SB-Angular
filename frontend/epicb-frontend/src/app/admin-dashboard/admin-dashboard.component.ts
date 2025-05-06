@@ -4,10 +4,11 @@ import { RouterModule, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { CharacterManagementComponent } from '../character-management/character-management.component';
 import { User } from '../model/user';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule, CharacterManagementComponent],
+  imports: [CommonModule, RouterModule, CharacterManagementComponent, FormsModule],
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
@@ -58,13 +59,16 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   // NUEVO: Cambiar rol de usuario
-  changeUserRole(user: User, newRole: string): void {
-    this.userService.changeUserRole(user.id, newRole).subscribe(
+  changeUserRole(user: User, event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const newRole = selectElement.value;
+    
+    this.userService.changeUserRole(user.idUser, newRole).subscribe(
       (response: { success: boolean }) => {
         this.loadUsers();
       },
       (error: Error) => {
-        console.error('Error al cambiar el rol', error);
+        console.error('Error al cambiar el rol del usuario', error);
       }
     );
   }

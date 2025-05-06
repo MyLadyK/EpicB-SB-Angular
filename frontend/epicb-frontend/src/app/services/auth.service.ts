@@ -18,11 +18,11 @@ export class AuthService {
   }
 
   isAdmin(user: User): boolean {
-    return !!(user && user.role && typeof user.role === 'string' && user.role.toUpperCase() === 'ADMIN');
+    return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'ADMIN');
   }
 
   isUser(user: User): boolean {
-    return !!(user && user.role && typeof user.role === 'string' && user.role.toUpperCase() === 'USER');
+    return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'USER');
   }
 
   // Manejo de sesión en localStorage
