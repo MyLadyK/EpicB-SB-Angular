@@ -8,7 +8,7 @@ import { Character } from '../model/character';
   providedIn: 'root',
 })
 export class CharacterService {
-  private baseUrl = 'http://localhost:3000/api/characters';
+  private baseUrl = 'http://localhost:8081/api/characters';
 
   constructor(private http: HttpClient) {}
 

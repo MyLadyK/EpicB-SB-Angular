@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-help',
+  selector: 'app-about',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './help.component.html',
-  styleUrls: ['./help.component.css']
+  templateUrl: './about.component.html',
+  styleUrl: './about.component.css'
 })
-export class HelpComponent {
+export class AboutComponent {
   constructor() { }
 }
