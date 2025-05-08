@@ -2,9 +2,9 @@ export interface User {
   idUser: number;
   nameUser: string;
   mailUser: string;
-  passwordHash: string;
+  passwordHash?: string;
   roleUser?: string;
-  energyUser?: number;
+  energy?: number;
   lastEnergyRefill?: string;
   pointsUser?: number;
 }

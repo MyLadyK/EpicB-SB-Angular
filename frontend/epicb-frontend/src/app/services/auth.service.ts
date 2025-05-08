@@ -19,7 +19,7 @@ export class AuthService {
       // Mapeamos el campo 'role' del backend a 'roleUser' en el modelo frontend
       map((resp: any) => ({
         ...resp,
-        roleUser: resp.role // para compatibilidad con el frontend
+        roleUser: resp.role || resp.roleUser // asegúrate de que roleUser siempre esté presente
       })),
       catchError(this.handleError)
     );

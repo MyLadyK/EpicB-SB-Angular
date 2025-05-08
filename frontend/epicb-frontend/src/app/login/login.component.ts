@@ -21,6 +21,8 @@ export class LoginComponent {
   login() {
   this.authService.authenticate(this.mailUser, this.passwordHash).subscribe(
     response => {
+      console.log('Respuesta de login:', response);
+      this.authService.setSession(response);
       if (response.roleUser && response.roleUser.toUpperCase() === 'ADMIN') {
         this.router.navigate(['/admin-dashboard']);
       } else {
