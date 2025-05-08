@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from '../model/user';
@@ -13,13 +14,20 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   authenticate(mailUser: string, passwordHash: string): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/login`, { mailUser, passwordHash })
-      .pipe(catchError(this.handleError));
-  }
+  return this.http.post<any>(`${this.apiUrl}/login`, { mailUser, passwordHash })
+    .pipe(
+      // Mapeamos el campo 'role' del backend a 'roleUser' en el modelo frontend
+      map((resp: any) => ({
+        ...resp,
+        roleUser: resp.role // para compatibilidad con el frontend
+      })),
+      catchError(this.handleError)
+    );
+}
 
   isAdmin(user: User): boolean {
-    return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'ADMIN');
-  }
+  return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'ADMIN');
+}
 
   isUser(user: User): boolean {
     return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'USER');

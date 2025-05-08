@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Map;
+import java.util.HashMap;
 import javax.validation.Valid;
 
 @RestController
@@ -21,18 +22,27 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody User loginUser) {
-        try {
-            User user = userRepository.findByMailUser(loginUser.getMailUser());
-            if (user != null && passwordEncoder.matches(loginUser.getPasswordHash(), user.getPasswordHash())) {
-                return ResponseEntity.ok(user);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
+public ResponseEntity<?> login(@Valid @RequestBody User loginUser) {
+    try {
+        User user = userRepository.findByMailUser(loginUser.getMailUser());
+        if (user != null && passwordEncoder.matches(loginUser.getPasswordHash(), user.getPasswordHash())) {
+            // Creamos un DTO con los datos necesarios
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("idUser", user.getIdUser());
+            userData.put("nameUser", user.getNameUser());
+            userData.put("mailUser", user.getMailUser());
+            userData.put("role", user.getRole());
+            userData.put("energy", user.getEnergy());
+            userData.put("lastEnergyRefill", user.getLastEnergyRefill());
+            userData.put("pointsUser", user.getPointsUser());
+            return ResponseEntity.ok(userData);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
         }
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
     }
+}
 
     @PostMapping("/create-admin")
     public ResponseEntity<?> createAdmin(@Valid @RequestBody User adminUser) {

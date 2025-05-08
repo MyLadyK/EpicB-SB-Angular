@@ -10,8 +10,7 @@ import { RouterModule, Router } from '@angular/router';
   imports: [CommonModule, FormsModule, HttpClientModule, RouterModule],
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  providers: [AuthService]
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   mailUser = '';
@@ -20,19 +19,17 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) { }
 
   login() {
-    this.authService.authenticate(this.mailUser, this.passwordHash).subscribe(
-      response => {
-        if (response.roleUser === 'ADMIN') {
-          // Redirigir a la página de administración
-          this.router.navigate(['/admin-dashboard']);
-        } else {
-          // Redirigir a la página de usuario regular
-          this.router.navigate([`/profile/${response.idUser}`]);
-        }
-      },
-      error => {
-        console.error('Error al iniciar sesión', error);
+  this.authService.authenticate(this.mailUser, this.passwordHash).subscribe(
+    response => {
+      if (response.roleUser && response.roleUser.toUpperCase() === 'ADMIN') {
+        this.router.navigate(['/admin-dashboard']);
+      } else {
+        this.router.navigate([`/profile/${response.idUser}`]);
       }
-    );
-  }
+    },
+    error => {
+      console.error('Error al iniciar sesión', error);
+    }
+  );
+}
 }
