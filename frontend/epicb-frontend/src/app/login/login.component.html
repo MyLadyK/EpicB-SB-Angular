@@ -1,14 +1,16 @@
-<div class="login-container">
-  <form class="login-form" (ngSubmit)="login()">
-    <h2>Iniciar Sesión</h2>
-    <div>
-      <label for="mailUser">Correo</label>
-      <input id="mailUser" [(ngModel)]="mailUser" name="mailUser" required>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
+  <form class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-blue-200" (ngSubmit)="login()">
+    <h2 class="text-3xl font-bold text-center text-blue-900 mb-8">Iniciar Sesión</h2>
+    <div class="mb-6">
+      <label for="mailUser" class="block text-sm font-semibold text-blue-900 mb-2">Correo</label>
+      <input id="mailUser" [(ngModel)]="mailUser" name="mailUser" type="email" autocomplete="username" required
+        class="block w-full px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-blue-900 bg-blue-50 placeholder-blue-300 transition" placeholder="correo@ejemplo.com">
     </div>
-    <div>
-      <label for="passwordHash">Contraseña</label>
-      <input id="passwordHash" type="password" [(ngModel)]="passwordHash" name="passwordHash" required>
+    <div class="mb-8">
+      <label for="passwordHash" class="block text-sm font-semibold text-blue-900 mb-2">Contraseña</label>
+      <input id="passwordHash" type="password" [(ngModel)]="passwordHash" name="passwordHash" autocomplete="current-password" required
+        class="block w-full px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-blue-900 bg-blue-50 placeholder-blue-300 transition" placeholder="••••••••">
     </div>
-    <button type="submit">Iniciar Sesión</button>
+    <button type="submit" class="w-full py-3 bg-blue-700 hover:bg-blue-900 text-white font-bold rounded-lg shadow transition-colors">Iniciar Sesión</button>
   </form>
 </div>
