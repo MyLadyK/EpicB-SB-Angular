@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**")
-                .addResourceLocations("file:assets/");
+                .addResourceLocations("file:C:/Users/grisi/Desktop/2º DAW/Proyecto/epicb-api-Front/src/main/resources/static/assets/");
     }
 
     @Override

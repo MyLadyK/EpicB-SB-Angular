@@ -13,6 +13,7 @@ import { Character } from '../model/character';
 export class CharacterListComponent implements OnInit {
   characters: Character[] = [];
   flippedIndexes: boolean[] = [];
+  backendUrl: string = 'http://localhost:8081';
 
   constructor(private characterService: CharacterService) { }
 
@@ -33,5 +34,12 @@ export class CharacterListComponent implements OnInit {
   toggleFlip(index: number) {
     this.flippedIndexes[index] = !this.flippedIndexes[index];
   }
+
+  getImageUrl(url: string): string {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    return this.backendUrl + url;
+  }
 }
+
 

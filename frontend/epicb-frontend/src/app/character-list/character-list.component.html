@@ -1,29 +1,30 @@
 <div class="character-list-container max-w-3xl mx-auto p-4 bg-white rounded-lg shadow-lg mt-8">
   <h2 class="text-2xl font-bold mb-4 text-blue-900">Listado de Personajes</h2>
   <ul class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <li *ngFor="let character of characters; let i = index" class="character-card">
-      <div class="flip-card" [class.flipped]="flippedIndexes[i]" (click)="toggleFlip(i)">
-        <div class="flip-card-inner">
-          <!-- Front -->
-          <div class="flip-card-front flex flex-col items-center justify-center">
-            <span class="character-name text-xl font-bold mb-2 text-blue-900">{{ character.nameCharacter }}</span>
-            <img [src]="character.imageUrl" alt="{{ character.nameCharacter }}" class="character-img w-32 h-32 object-cover rounded-full border-4 border-blue-300 shadow-lg cursor-pointer">
-          </div>
-          <!-- Back -->
-          <div class="flip-card-back flex flex-col items-center justify-center p-4 bg-blue-50 rounded-lg">
-            <span class="character-name text-xl font-bold mb-2 text-blue-900">{{ character.nameCharacter }}</span>
-            <p><span class="font-semibold">Salud:</span> {{ character.healthCharacter }}</p>
-            <p><span class="font-semibold">Ataque:</span> {{ character.attackCharacter }}</p>
-            <p><span class="font-semibold">Defensa:</span> {{ character.defenseCharacter }}</p>
-            <p><span class="font-semibold">Velocidad:</span> {{ character.speedCharacter }}</p>
-            <p><span class="font-semibold">Resistencia:</span> {{ character.staminaCharacter }}</p>
-            <p><span class="font-semibold">Inteligencia:</span> {{ character.intelligenceCharacter }}</p>
-            <p><span class="font-semibold">Especial:</span> {{ character.specialCharacter }}</p>
+  <li *ngFor="let character of characters; let i = index" class="character-card">
+    <div class="flip-card" [class.flipped]="flippedIndexes[i]">
+      <div class="flip-card-inner">
+        <!-- Front -->
+        <div class="flip-card-front" (click)="toggleFlip(i)">
+          <span class="character-name text-xl font-bold mb-2 text-blue-900">{{ character.nameCharacter }}</span>
+          <img [src]="getImageUrl(character.imageUrl)" alt="{{ character.nameCharacter }}" class="character-img w-32 h-32 object-cover rounded-full border-4 border-blue-300 shadow-lg cursor-pointer mb-2">
+          <div class="character-meta text-base mt-1 text-gray-700">
             <p><span class="font-semibold">Categoría:</span> {{ character.categoryCharacter }}</p>
             <p><span class="font-semibold">Universo:</span> {{ character.universeCharacter }}</p>
           </div>
         </div>
+        <!-- Back -->
+        <div class="flip-card-back" (click)="toggleFlip(i)">
+          <p><span class="font-semibold">Salud:</span> {{ character.healthCharacter }}</p>
+          <p><span class="font-semibold">Ataque:</span> {{ character.attackCharacter }}</p>
+          <p><span class="font-semibold">Defensa:</span> {{ character.defenseCharacter }}</p>
+          <p><span class="font-semibold">Velocidad:</span> {{ character.speedCharacter }}</p>
+          <p><span class="font-semibold">Resistencia:</span> {{ character.staminaCharacter }}</p>
+          <p><span class="font-semibold">Inteligencia:</span> {{ character.intelligenceCharacter }}</p>
+          <p><span class="font-semibold">Especial:</span> {{ character.specialCharacter }}</p>
+        </div>
       </div>
-    </li>
-  </ul>
+    </div>
+  </li>
+</ul>
 </div>
