@@ -12,6 +12,7 @@ import { Character } from '../model/character';
 })
 export class CharacterListComponent implements OnInit {
   characters: Character[] = [];
+  flippedIndexes: boolean[] = [];
 
   constructor(private characterService: CharacterService) { }
 
@@ -21,8 +22,16 @@ export class CharacterListComponent implements OnInit {
 
   loadCharacters() {
     this.characterService.getCharacters().subscribe(
-      characters => this.characters = characters,
+      characters => {
+        this.characters = characters;
+        this.flippedIndexes = new Array(characters.length).fill(false);
+      },
       error => console.error('Error al cargar personajes', error)
     );
   }
+
+  toggleFlip(index: number) {
+    this.flippedIndexes[index] = !this.flippedIndexes[index];
+  }
 }
+

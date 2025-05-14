@@ -1,10 +1,7 @@
 <nav class="bg-gradient-to-r from-gray-900 to-blue-900 text-white shadow-lg">
   <ul class="flex flex-wrap gap-3 px-4 py-2 items-center justify-center text-base">
     <li><a routerLink="/" class="hover:text-yellow-300 transition-colors">Inicio</a></li>
-    <li *ngIf="user"><button (click)="showCharacterList = !showCharacterList" class="hover:text-yellow-300 transition-colors">Tropas</button></li>
-    <div *ngIf="showCharacterList">
-      <app-character-list></app-character-list>
-    </div>
+    <li *ngIf="user"><a routerLink="/characters" class="hover:text-yellow-300 transition-colors">Tropas</a></li>
     <li *ngIf="user"><a routerLink="/ranking" class="hover:text-yellow-300 transition-colors">Ranking</a></li>
     <li *ngIf="!user"><a routerLink="/sign-up" class="hover:text-yellow-300 transition-colors">Registrarse</a></li>
     <li><a routerLink="/terms" class="hover:text-yellow-300 transition-colors">Términos</a></li>
