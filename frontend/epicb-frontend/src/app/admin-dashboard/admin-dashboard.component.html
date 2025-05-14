@@ -35,6 +35,44 @@
 
   <!-- Componente de gestión de personajes -->
   <div *ngIf="isCharacterManagementVisible" class="character-management">
-    <app-character-management></app-character-management>
+    <h2>Gestión de Personajes</h2>
+    <button class="action-button mb-4" (click)="showAddCharacterForm = !showAddCharacterForm">
+      {{ showAddCharacterForm ? 'Cancelar alta' : 'Añadir Personaje' }}
+    </button>
+    <div *ngIf="showAddCharacterForm">
+      <form (ngSubmit)="addCharacter()" #characterForm="ngForm" class="add-character-form">
+        <input type="text" placeholder="Nombre" [(ngModel)]="newCharacter.nameCharacter" name="nameCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="number" placeholder="Salud" [(ngModel)]="newCharacter.healthCharacter" name="healthCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="number" placeholder="Ataque" [(ngModel)]="newCharacter.attackCharacter" name="attackCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="number" placeholder="Defensa" [(ngModel)]="newCharacter.defenseCharacter" name="defenseCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="number" placeholder="Velocidad" [(ngModel)]="newCharacter.speedCharacter" name="speedCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="number" placeholder="Resistencia" [(ngModel)]="newCharacter.staminaCharacter" name="staminaCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="number" placeholder="Inteligencia" [(ngModel)]="newCharacter.intelligenceCharacter" name="intelligenceCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="number" placeholder="Especial" [(ngModel)]="newCharacter.specialCharacter" name="specialCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="text" placeholder="Categoría" [(ngModel)]="newCharacter.categoryCharacter" name="categoryCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="text" placeholder="Universo" [(ngModel)]="newCharacter.universeCharacter" name="universeCharacter" required class="input input-bordered rounded mb-2 text-black">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="input input-bordered rounded mb-2 text-black">
+        <button class="action-button w-full" type="submit">Guardar Personaje</button>
+      </form>
+    </div>
+    <h3 class="mt-6 mb-2">Listado de Personajes</h3>
+    <table class="styled-table w-full">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Universo</th>
+          <th>Categoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let character of characters">
+          <td>{{character.idCharacter}}</td>
+          <td>{{character.nameCharacter}}</td>
+          <td>{{character.universeCharacter}}</td>
+          <td>{{character.categoryCharacter}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

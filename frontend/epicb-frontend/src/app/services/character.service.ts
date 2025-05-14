@@ -28,15 +28,11 @@ export class CharacterService {
     return this.http.post<Character>(this.baseUrl, character).pipe(catchError(this.handleError));
   }
 
-  uploadImage(file: File): Observable<{ imageUrl: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post<{ imageUrl: string }>(`${this.baseUrl}/upload`, formData, {
-      headers: new HttpHeaders({
-        'Accept': 'application/json',
-      }),
-    }).pipe(catchError(this.handleError));
+  uploadImage(formData: FormData): Observable<{ imageUrl: string }> {
+    return this.http.post<{ imageUrl: string }>(
+      'http://localhost:8081/api/characters/upload',
+      formData
+    );
   }
 
   private handleError(error: HttpErrorResponse) {
