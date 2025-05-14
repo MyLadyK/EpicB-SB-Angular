@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router'; // Importar RouterModule aquí
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { DemoModeService } from './demo-mode.service';
-import { CommonModule } from '@angular/common';
 import { ErrorToastComponent } from './components/error-toast/error-toast.component';
+import { CharacterListComponent } from './character-list/character-list.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [RouterModule, FormsModule, CommonModule, ErrorToastComponent], // Asegúrate de incluir RouterModule aquí
+  imports: [RouterModule, FormsModule, CommonModule, ErrorToastComponent, CharacterListComponent], // Asegúrate de incluir todos los componentes necesarios
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -18,15 +19,14 @@ export class AppComponent {
   title = 'epicb-frontend';
   mailUser = '';
   passwordHash = '';
+  showCharacterList = false;
   demoMode = false;
   user: any = null;
   showUserMenu = false;
   feedbackMsg = '';
   feedbackType: 'success' | 'error' | '' = '';
 
-  // Cambia acceso a authService a public para acceso desde template
   constructor(public authService: AuthService, private router: Router, private demoModeService: DemoModeService) {
-    // Suscribirse a demoMode
     setInterval(() => {
       this.demoMode = this.demoModeService.demoMode;
       this.user = this.authService.getCurrentUser();
@@ -38,15 +38,17 @@ export class AppComponent {
       response => {
         this.authService.setSession(response);
         this.user = response;
-        this.showFeedback('¡Bienvenido, ' + response.nameUser + '!', 'success');
-        if (this.authService.isAdmin(response)) {
-          this.router.navigate(['/admin-dashboard']);
-        } else {
-          this.router.navigate(['/']);
-        }
+        // this.showFeedback('¡Bienvenido, ' + response.nameUser + '!', 'success');
+        // if (this.authService.isAdmin && this.authService.isAdmin(response)) {
+        //   this.router.navigate(['/admin-dashboard']);
+        // } else {
+        //   this.router.navigate(['/']);
+        // }
       },
       error => {
-        this.showFeedback('Error de autenticación', 'error');
+        this.feedbackMsg = 'Error de autenticación';
+        this.feedbackType = 'error';
+        // this.showFeedback('Error de autenticación', 'error');
       }
     );
   }
@@ -54,16 +56,7 @@ export class AppComponent {
   logout() {
     this.authService.logout();
     this.user = null;
-    this.router.navigate(['/']);
-    this.showFeedback('Sesión cerrada correctamente', 'success');
-  }
-
-  showFeedback(msg: string, type: 'success' | 'error') {
-    this.feedbackMsg = msg;
-    this.feedbackType = type;
-    setTimeout(() => {
-      this.feedbackMsg = '';
-      this.feedbackType = '';
-    }, 3500);
+    this.router.navigate(['/login']);
+    // this.showFeedback('Sesión cerrada correctamente', 'success');
   }
 }
