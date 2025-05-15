@@ -1,15 +1,17 @@
 :host {
   display: block;
   padding: 2rem 0;
+  background: linear-gradient(to right, #ff512f, #dd2476);
 }
 
 .max-w-4xl {
   max-width: 56rem;
   margin: 0 auto;
   padding: 2rem;
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  color: #CCCCCC;
 }
 
 .text-3xl {
@@ -56,15 +58,15 @@
 }
 
 .text-blue-900 {
-  color: #1e3a8a;
+  color: #00FF7F;
 }
 
 .text-blue-800 {
-  color: #1e40af;
+  color: #00FF7F;
 }
 
 .text-gray-700 {
-  color: #374151;
+  color: #CCCCCC;
 }
 
 .font-bold {
@@ -80,13 +82,25 @@
 }
 
 .list-disc {
-  list-style-type: disc;
+  list-style-type: none;
+}
+
+.list-disc li {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  transition: background 0.2s;
+}
+
+.list-disc li:hover {
+  background: rgba(43, 43, 43, 0.7);
 }
 
 .rounded-lg {
-  border-radius: 0.5rem;
+  border-radius: 10px;
 }
 
 .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
