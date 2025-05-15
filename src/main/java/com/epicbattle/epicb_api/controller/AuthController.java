@@ -21,12 +21,22 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/login")
-public ResponseEntity<?> login(@Valid @RequestBody User loginUser) {
+    @Autowired
+private com.epicbattle.epicb_api.JwtUtil jwtUtil;
+
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
     try {
-        User user = userRepository.findByMailUser(loginUser.getMailUser());
-        if (user != null && passwordEncoder.matches(loginUser.getPasswordHash(), user.getPasswordHash())) {
-            // Creamos un DTO con los datos necesarios
+        String mailUser = loginRequest.get("mailUser");
+        String password = loginRequest.get("password");
+        System.out.println("Intentando login para: " + mailUser);
+        User user = null;
+        if (mailUser != null && password != null) {
+            user = userRepository.findByMailUser(mailUser);
+        }
+        if (user != null && passwordEncoder.matches(password, user.getPasswordHash())) {
+            System.out.println("Login correcto para: " + mailUser);
+            String token = jwtUtil.generateToken(user.getNameUser());
             Map<String, Object> userData = new HashMap<>();
             userData.put("idUser", user.getIdUser());
             userData.put("nameUser", user.getNameUser());
@@ -35,11 +45,14 @@ public ResponseEntity<?> login(@Valid @RequestBody User loginUser) {
             userData.put("energy", user.getEnergy());
             userData.put("lastEnergyRefill", user.getLastEnergyRefill());
             userData.put("pointsUser", user.getPointsUser());
+            userData.put("token", token);
             return ResponseEntity.ok(userData);
         } else {
+            System.out.println("Login fallido para: " + mailUser);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
         }
     } catch (Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
     }
 }

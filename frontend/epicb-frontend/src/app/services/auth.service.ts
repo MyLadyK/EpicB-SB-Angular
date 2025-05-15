@@ -13,17 +13,17 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  authenticate(mailUser: string, passwordHash: string): Observable<User> {
-  return this.http.post<any>(`${this.apiUrl}/login`, { mailUser, passwordHash })
-    .pipe(
-      // Mapeamos el campo 'role' del backend a 'roleUser' en el modelo frontend
-      map((resp: any) => ({
-        ...resp,
-        roleUser: resp.role || resp.roleUser // asegúrate de que roleUser siempre esté presente
-      })),
-      catchError(this.handleError)
-    );
-}
+  authenticate(mailUser: string, password: string): Observable<User> {
+    return this.http.post<any>(`${this.apiUrl}/login`, { mailUser, password })
+      .pipe(
+        map((resp: any) => ({
+          ...resp,
+          roleUser: resp.role || resp.roleUser, // asegúrate de que roleUser siempre esté presente
+          token: resp.token // <-- añade el JWT si viene del backend
+        })),
+        catchError(this.handleError)
+      );
+  }
 
   isAdmin(user: User): boolean {
   return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'ADMIN');

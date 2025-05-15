@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../services/character.service';
+import { UserCharacterService } from '../services/user-character.service';
 import { Character } from '../model/character';
+import { UserCharacter } from '../model/user-character';
 
 @Component({
   standalone: true,
@@ -15,10 +17,15 @@ export class CharacterListComponent implements OnInit {
   flippedIndexes: boolean[] = [];
   backendUrl: string = 'http://localhost:8081';
 
-  constructor(private characterService: CharacterService) { }
+  userCollection: UserCharacter[] = [];
+  loadingCollection = false;
+  feedbackMsg = '';
+
+  constructor(private characterService: CharacterService, private userCharacterService: UserCharacterService) { }
 
   ngOnInit(): void {
     this.loadCharacters();
+    this.loadUserCollection();
   }
 
   loadCharacters() {
@@ -29,6 +36,56 @@ export class CharacterListComponent implements OnInit {
       },
       error => console.error('Error al cargar personajes', error)
     );
+  }
+
+  loadUserCollection() {
+    this.loadingCollection = true;
+    this.userCharacterService.getMyCollection().subscribe({
+      next: (collection) => {
+        this.userCollection = collection;
+        this.loadingCollection = false;
+      },
+      error: () => {
+        this.feedbackMsg = 'No se pudo cargar tu colección';
+        this.loadingCollection = false;
+      }
+    });
+  }
+
+  isInCollection(character: Character): boolean {
+    return this.userCollection.some(uc => uc.baseCharacter.idCharacter === character.idCharacter);
+  }
+
+  canAddToCollection(): boolean {
+    return this.userCollection.length < 8;
+  }
+
+  addToCollection(character: Character) {
+    if (!this.canAddToCollection()) {
+      this.feedbackMsg = 'No puedes tener más de 8 personajes en tu colección.';
+      return;
+    }
+    this.userCharacterService.addCharacterToCollection(character.idCharacter).subscribe({
+      next: () => {
+        this.feedbackMsg = 'Personaje añadido a tu colección.';
+        this.loadUserCollection();
+      },
+      error: (err) => {
+        this.feedbackMsg = err.error || 'No se pudo añadir el personaje.';
+      }
+    });
+  }
+
+  removeFromCollection(character: Character) {
+    this.userCharacterService.removeCharacterFromCollection(character.idCharacter).subscribe({
+      next: () => {
+        this.feedbackMsg = 'Personaje eliminado de tu colección.';
+        this.loadUserCollection();
+      },
+      error: (err) => {
+        this.feedbackMsg = err.error || 'No se pudo eliminar el personaje.';
+      }
+    });
   }
 
   toggleFlip(index: number) {

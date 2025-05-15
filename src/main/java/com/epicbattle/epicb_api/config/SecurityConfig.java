@@ -17,12 +17,15 @@ import org.springframework.lang.NonNull;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // Deshabilita CSRF para pruebas
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()  // Permite todas las solicitudes sin autenticación
-                );
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**", "/api/users/register").permitAll()
+                .requestMatchers("/api/user-characters/**").authenticated()
+                .anyRequest().permitAll()
+            )
+            .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -32,10 +35,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/api/**");  // Actualización de antMatchers a requestMatchers
-    }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {

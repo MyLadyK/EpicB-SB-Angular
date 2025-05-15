@@ -10,6 +10,31 @@
     </div>
   </div>
   <div class="mt-8 flex flex-col gap-6">
+    <div class="bg-blue-50 rounded-lg p-4 shadow">
+      <h3 class="text-xl font-bold text-blue-800 mb-2">Mi tropa ({{ userCollection.length }}/8)</h3>
+      <div *ngIf="userCollection.length === 0" class="text-gray-500">No tienes personajes en tu tropa.</div>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <li *ngFor="let uc of userCollection" class="flex items-center gap-4 bg-white rounded shadow p-2">
+          <img [src]="uc.baseCharacter.imageUrl" alt="{{ uc.baseCharacter.nameCharacter }}" class="w-16 h-16 object-cover rounded-full border-2 border-blue-300">
+          <div class="flex-1">
+            <div class="font-semibold text-blue-900">{{ uc.baseCharacter.nameCharacter }}</div>
+            <div class="text-sm text-gray-700">{{ uc.baseCharacter.categoryCharacter }} | {{ uc.baseCharacter.universeCharacter }}</div>
+            <div class="text-xs text-gray-500">Salud: {{ uc.baseCharacter.healthCharacter }} | Ataque: {{ uc.baseCharacter.attackCharacter }}</div>
+          </div>
+          <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded" (click)="removeFromCollection(uc.baseCharacter)">Eliminar</button>
+        </li>
+      </ul>
+      <div class="flex items-center gap-2 mt-2">
+        <select class="border rounded px-2 py-1" [(ngModel)]="selectedCharacterId">
+          <option [ngValue]="null">Selecciona un personaje para añadir</option>
+          <option *ngFor="let char of allCharacters" [ngValue]="char.idCharacter" [disabled]="isInCollection(char)">
+            {{ char.nameCharacter }} ({{ char.categoryCharacter }})
+          </option>
+        </select>
+        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded disabled:opacity-50" [disabled]="!selectedCharacterId || !canAddToCollection()" (click)="addToCollectionById()">Añadir</button>
+      </div>
+      <div *ngIf="feedbackMsg" class="mt-2 text-blue-700 bg-blue-100 p-2 rounded shadow text-sm">{{ feedbackMsg }}</div>
+    </div>
     <app-notification-history></app-notification-history>
     <app-user-profile-battles [userId]="userId"></app-user-profile-battles>
   </div>

@@ -33,4 +33,21 @@ public class UserCharacterService {
     public UserCharacter save(UserCharacter userCharacter) {
         return userCharacterRepository.save(userCharacter);
     }
+
+    /**
+     * Busca todos los UserCharacter de un usuario.
+     */
+    public java.util.List<UserCharacter> findByOwner(com.epicbattle.epicb_api.model.User owner) {
+        return userCharacterRepository.findAll().stream()
+            .filter(uc -> uc.getOwner().getIdUser() == owner.getIdUser())
+            .toList();
+    }
+
+    /**
+     * Elimina un UserCharacter.
+     */
+    public void delete(UserCharacter userCharacter) {
+        userCharacterRepository.delete(userCharacter);
+    }
 }
+

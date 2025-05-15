@@ -7,4 +7,5 @@ export interface User {
   energy?: number;
   lastEnergyRefill?: string;
   pointsUser?: number;
+  token?: string; // JWT
 }

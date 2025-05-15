@@ -14,12 +14,12 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class LoginComponent {
   mailUser = '';
-  passwordHash = '';
+  password = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 
   login() {
-  this.authService.authenticate(this.mailUser, this.passwordHash).subscribe(
+  this.authService.authenticate(this.mailUser, this.password).subscribe(
     response => {
       console.log('Respuesta de login:', response);
       this.authService.setSession(response);
