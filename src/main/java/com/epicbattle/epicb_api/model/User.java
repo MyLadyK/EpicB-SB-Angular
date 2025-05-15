@@ -12,8 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,7 +34,7 @@ public class User {
     @Size(min = 8, max = 20, message = "La contraseña debe tener entre 8 y 20 caracteres")
     private String passwordHash;
 
-    @Column(name = "role", insertable = false, updatable = false)
+    @Column(name = "role")
     private String role;
 
     private int energy;
