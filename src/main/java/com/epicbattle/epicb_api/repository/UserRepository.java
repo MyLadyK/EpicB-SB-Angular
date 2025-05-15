@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findByMailUserAndPasswordHash(String mailUser, String passwordHash);
     User findByMailUser(String mailUser);  // Simplificación del método
 
-    // Find all users ordered by points in descending order
-    @Query("SELECT u FROM User u ORDER BY u.pointsUser DESC")
+    // Find all users ordered by points in descending order, excluding ADMIN users
+    @Query("SELECT u FROM User u WHERE u.role != 'ADMIN' ORDER BY u.pointsUser DESC")
     List<User> findAllOrderByPointsDesc();
 }
