@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Ranking de Usuarios</h2>
+  <h2 class="mb-4">🏆 Ranking de Usuarios 🏆</h2>
 
   <div *ngIf="loading" class="text-center">
     <div class="spinner-border" role="status">
@@ -14,30 +14,32 @@
   <!-- Resultado de la batalla -->
   <div *ngIf="battleResult" class="card mb-4">
     <div class="card-header bg-primary text-white">
-      Resultado de la Batalla
+      🔥 Resultado de la Batalla 🔥
     </div>
     <div class="card-body">
-      <h5 class="card-title">¡{{ battleResult.winner }} ha ganado la batalla!</h5>
+      <h5 class="card-title" style="color: #00FF7F; text-align: center; font-size: 1.5rem;">
+        ¡{{ battleResult.winner }} ha ganado la batalla!
+      </h5>
       <div class="row">
-        <div class="col-md-6">
-          <div class="card">
+        <div class="col-md-6 mb-3">
+          <div class="card battle-character-card">
             <div class="card-header">Tu Personaje</div>
             <div class="card-body">
-              <h6>{{ battleResult.currentUserCharacter.baseCharacter.nameCharacter }}</h6>
+              <h6 style="color: #FF69B4;">{{ battleResult.currentUserCharacter.baseCharacter.nameCharacter }}</h6>
               <img [src]="battleResult.currentUserCharacter.imageUrlUserCharacter"
-                   alt="Tu personaje" class="img-fluid mb-2" style="max-height: 150px;">
-              <p>Puntos actuales: {{ battleResult.currentUserPoints }}</p>
+                   alt="Tu personaje" class="img-fluid mb-2 battle-character-img">
+              <p>Puntos actuales: <span style="color: #00FF7F; font-weight: bold;">{{ battleResult.currentUserPoints }}</span></p>
             </div>
           </div>
         </div>
         <div class="col-md-6">
-          <div class="card">
+          <div class="card battle-character-card">
             <div class="card-header">Personaje Oponente</div>
             <div class="card-body">
-              <h6>{{ battleResult.opponentCharacter.baseCharacter.nameCharacter }}</h6>
+              <h6 style="color: #FF69B4;">{{ battleResult.opponentCharacter.baseCharacter.nameCharacter }}</h6>
               <img [src]="battleResult.opponentCharacter.imageUrlUserCharacter"
-                   alt="Personaje oponente" class="img-fluid mb-2" style="max-height: 150px;">
-              <p>Puntos actuales: {{ battleResult.opponentPoints }}</p>
+                   alt="Personaje oponente" class="img-fluid mb-2 battle-character-img">
+              <p>Puntos actuales: <span style="color: #00FF7F; font-weight: bold;">{{ battleResult.opponentPoints }}</span></p>
             </div>
           </div>
         </div>
@@ -58,21 +60,25 @@
       </thead>
       <tbody>
         <tr *ngFor="let user of users; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
+          <th scope="row">
+            <span [ngClass]="{'text-warning': i === 0, 'text-light': i === 1, 'text-danger': i === 2}">
+              {{ i + 1 }}{{ i < 3 ? ' 🏅' : '' }}
+            </span>
+          </th>
           <td>{{ user.nameUser }}</td>
-          <td>{{ user.pointsUser }}</td>
+          <td><span style="color: #00FF7F; font-weight: bold;">{{ user.pointsUser }}</span></td>
           <td>
             <button *ngIf="canBattle(user)"
-                    class="btn btn-primary btn-sm"
+                    class="btn btn-primary"
                     (click)="startBattle(user.idUser)"
                     [disabled]="loading">
-              Batallar
+              ⚔️ Batallar
             </button>
-            <span *ngIf="!canBattle(user) && currentUser">
-              {{ currentUser.idUser === user.idUser ? 'Eres tú' : 'No disponible' }}
+            <span *ngIf="!canBattle(user) && currentUser" style="color: #FF69B4;">
+              {{ currentUser.idUser === user.idUser ? '👑 Eres tú' : '❌ No disponible' }}
             </span>
-            <span *ngIf="!currentUser">
-              Inicia sesión para batallar
+            <span *ngIf="!currentUser" style="color: #FF69B4;">
+              🔒 Inicia sesión para batallar
             </span>
           </td>
         </tr>
@@ -87,7 +93,7 @@
     <p>
       <strong>¿Cómo funciona?</strong> Selecciona un oponente del ranking para iniciar una batalla.
       Se seleccionará aleatoriamente un personaje de tu colección y otro de la colección del oponente.
-      El ganador recibirá 20 puntos y el perdedor perderá 8 puntos (mínimo 0).
+      El ganador recibirá <span style="color: #00FF7F; font-weight: bold;">20 puntos</span> y el perdedor perderá <span style="color: #FF69B4; font-weight: bold;">8 puntos</span> (mínimo 0).
     </p>
   </div>
 </div>
