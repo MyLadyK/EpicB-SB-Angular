@@ -4,23 +4,23 @@
   <h2 class="text-2xl font-bold mb-6 text-blue-900">Simulación de Batalla</h2>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
     <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center">
-      <img [src]="characters.find(c => c.id === selectedCharacter1)?.imageUrl" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2">
-      <p class="font-semibold text-blue-800">{{ characters.find(c => c.id === selectedCharacter1)?.name }}</p>
+      <img [src]="getCharacter1()?.imageUrl" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2">
+      <p class="font-semibold text-blue-800">{{ getCharacter1()?.nameCharacter }}</p>
       <div class="w-full mt-2">
         <div class="h-4 bg-gray-200 rounded-full">
-          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(characters.find(c => c.id === selectedCharacter1))"></div>
+          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(getCharacter1())"></div>
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ characters.find(c => c.id === selectedCharacter1)?.healthCharacter }}</span>
+        <span class="text-xs text-gray-700">Salud: {{ getCharacter1()?.healthCharacter }}</span>
       </div>
     </div>
     <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center">
-      <img [src]="characters.find(c => c.id === selectedCharacter2)?.imageUrl" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2">
-      <p class="font-semibold text-blue-800">{{ characters.find(c => c.id === selectedCharacter2)?.name }}</p>
+      <img [src]="getCharacter2()?.imageUrl" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2">
+      <p class="font-semibold text-blue-800">{{ getCharacter2()?.nameCharacter }}</p>
       <div class="w-full mt-2">
         <div class="h-4 bg-gray-200 rounded-full">
-          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(characters.find(c => c.id === selectedCharacter2))"></div>
+          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(getCharacter2())"></div>
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ characters.find(c => c.id === selectedCharacter2)?.healthCharacter }}</span>
+        <span class="text-xs text-gray-700">Salud: {{ getCharacter2()?.healthCharacter }}</span>
       </div>
     </div>
   </div>

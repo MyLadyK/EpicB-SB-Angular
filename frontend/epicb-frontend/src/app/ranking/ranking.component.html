@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Ranking de Usuarios</h2>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Resultado de la batalla -->
+  <div *ngIf="battleResult" class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      Resultado de la Batalla
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">¡{{ battleResult.winner }} ha ganado la batalla!</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">Tu Personaje</div>
+            <div class="card-body">
+              <h6>{{ battleResult.currentUserCharacter.baseCharacter.nameCharacter }}</h6>
+              <img [src]="battleResult.currentUserCharacter.imageUrlUserCharacter"
+                   alt="Tu personaje" class="img-fluid mb-2" style="max-height: 150px;">
+              <p>Puntos actuales: {{ battleResult.currentUserPoints }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">Personaje Oponente</div>
+            <div class="card-body">
+              <h6>{{ battleResult.opponentCharacter.baseCharacter.nameCharacter }}</h6>
+              <img [src]="battleResult.opponentCharacter.imageUrlUserCharacter"
+                   alt="Personaje oponente" class="img-fluid mb-2" style="max-height: 150px;">
+              <p>Puntos actuales: {{ battleResult.opponentPoints }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de ranking -->
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Usuario</th>
+          <th scope="col">Puntos</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ user.nameUser }}</td>
+          <td>{{ user.pointsUser }}</td>
+          <td>
+            <button *ngIf="canBattle(user)"
+                    class="btn btn-primary btn-sm"
+                    (click)="startBattle(user.idUser)"
+                    [disabled]="loading">
+              Batallar
+            </button>
+            <span *ngIf="!canBattle(user) && currentUser">
+              {{ currentUser.idUser === user.idUser ? 'Eres tú' : 'No disponible' }}
+            </span>
+            <span *ngIf="!currentUser">
+              Inicia sesión para batallar
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="users.length === 0 && !loading">
+          <td colspan="4" class="text-center">No hay usuarios en el ranking</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4">
+    <p>
+      <strong>¿Cómo funciona?</strong> Selecciona un oponente del ranking para iniciar una batalla.
+      Se seleccionará aleatoriamente un personaje de tu colección y otro de la colección del oponente.
+      El ganador recibirá 20 puntos y el perdedor perderá 8 puntos (mínimo 0).
+    </p>
+  </div>
+</div>

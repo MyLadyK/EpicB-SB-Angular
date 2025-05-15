@@ -31,4 +31,11 @@ public class BattleResultService {
     }
 
     // Métodos adicionales para manejar los resultados de batalla
+
+    /**
+     * Guarda un resultado de batalla.
+     */
+    public BattleResult saveBattleResult(BattleResult battleResult) {
+        return battleResultRepository.save(battleResult);
+    }
 }

@@ -5,7 +5,7 @@ import { CharacterManagementComponent } from './character-management/character-m
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { CharacterListComponent } from './character-list/character-list.component';
-import { RankingComponent } from './ranking.component';
+import { RankingComponent } from './ranking/ranking.component';
 import { HelpComponent } from './help.component';
 import { TermsComponent } from './terms/terms.component';
 import { AboutComponent } from './about/about.component';
@@ -15,49 +15,49 @@ import { UserGuard } from './guards/user.guard';
 export const routes: Routes = [
   { path: '', component: LoginComponent }, // Página de inicio para el logueo
   { path: 'login', redirectTo: '', pathMatch: 'full' }, // Redirige /login a la raíz
-  { 
-    path: 'admin-dashboard', 
-    component: AdminDashboardComponent, 
-    canActivate: [AdminGuard] 
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [AdminGuard]
   },
-  { 
-    path: 'character-management', 
-    component: CharacterManagementComponent, 
-    canActivate: [AdminGuard] 
+  {
+    path: 'character-management',
+    component: CharacterManagementComponent,
+    canActivate: [AdminGuard]
   },
-  { 
-    path: 'sign-up', 
-    component: SignUpComponent 
+  {
+    path: 'sign-up',
+    component: SignUpComponent
   },
-  { 
-    path: 'profile/:id', 
-    component: UserProfileComponent, 
-    canActivate: [UserGuard] 
+  {
+    path: 'profile/:id',
+    component: UserProfileComponent,
+    canActivate: [UserGuard]
   },
-  { 
-    path: 'characters', 
-    component: CharacterListComponent, 
-    canActivate: [UserGuard] 
+  {
+    path: 'characters',
+    component: CharacterListComponent,
+    canActivate: [UserGuard]
   },
-  { 
-    path: 'ranking', 
-    component: RankingComponent, 
-    canActivate: [UserGuard] 
+  {
+    path: 'ranking',
+    component: RankingComponent,
+    canActivate: [UserGuard]
   },
-  { 
-    path: 'help', 
-    component: HelpComponent 
+  {
+    path: 'help',
+    component: HelpComponent
   },
-  { 
-    path: 'terms', 
-    component: TermsComponent 
+  {
+    path: 'terms',
+    component: TermsComponent
   },
-  { 
-    path: 'about', 
-    component: AboutComponent 
+  {
+    path: 'about',
+    component: AboutComponent
   },
-  { 
-    path: '**', 
-    redirectTo: '' 
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];

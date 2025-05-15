@@ -37,6 +37,24 @@ public class UserController {
         }
     }
 
+    @GetMapping("/ranking")
+    public ResponseEntity<List<UserProfileDTO>> getUserRanking() {
+        return ResponseEntity.ok(
+            userService.getAllUsersOrderedByPoints().stream()
+                .map(UserProfileDTO::fromUser)
+                .collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
+        return ResponseEntity.ok(
+            userService.getAllUsers().stream()
+                .map(UserProfileDTO::fromUser)
+                .collect(Collectors.toList())
+        );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable int id) {
         Optional<User> user = userService.getUserById(id);
@@ -51,15 +69,6 @@ public class UserController {
                 .build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
-    }
-
-    @GetMapping
-    public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
-        return ResponseEntity.ok(
-            userService.getAllUsers().stream()
-                .map(UserProfileDTO::fromUser)
-                .collect(Collectors.toList())
-        );
     }
 
     @GetMapping("/name/{nameUser}")

@@ -52,6 +52,13 @@ public class UserService {
     }
 
     /**
+     * Devuelve todos los usuarios ordenados por puntos (de mayor a menor).
+     */
+    public List<User> getAllUsersOrderedByPoints() {
+        return userRepository.findAllOrderByPointsDesc();
+    }
+
+    /**
      * Obtiene un usuario por nombre. Lanza excepción personalizada si no existe.
      */
     public User getUserByName(String nameUser) {
