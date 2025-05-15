@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router'; 
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
-import { NotificationHistoryComponent } from '../components/notification-history/notification-history.component';
 import { UserProfileBattlesComponent } from './user-profile-battles.component';
 import { UserCharacterService } from '../services/user-character.service';
 import { CharacterService } from '../services/character.service';
@@ -14,7 +13,7 @@ import { UserCharacter } from '../model/user-character';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [RouterModule, NotificationHistoryComponent, UserProfileBattlesComponent, CommonModule, FormsModule],
+  imports: [RouterModule, UserProfileBattlesComponent, CommonModule, FormsModule],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
@@ -92,13 +91,13 @@ export class UserProfileComponent implements OnInit {
       return;
     }
     this.userCharacterService.addCharacterToCollection(character.idCharacter).subscribe({
-      next: () => {
-        this.feedbackMsg = 'Personaje añadido a tu colección.';
+      next: (response) => {
+        this.feedbackMsg = response.message || 'Personaje añadido a tu colección.';
         this.loadUserCollection();
         this.selectedCharacterId = null;
       },
       error: (err) => {
-        this.feedbackMsg = err.error || 'No se pudo añadir el personaje.';
+        this.feedbackMsg = err.error?.message || err.error || 'No se pudo añadir el personaje.';
       }
     });
   }
@@ -113,12 +112,12 @@ export class UserProfileComponent implements OnInit {
 
   removeFromCollection(character: Character) {
     this.userCharacterService.removeCharacterFromCollection(character.idCharacter).subscribe({
-      next: () => {
-        this.feedbackMsg = 'Personaje eliminado de tu colección.';
+      next: (response) => {
+        this.feedbackMsg = response.message || 'Personaje eliminado de tu colección.';
         this.loadUserCollection();
       },
       error: (err) => {
-        this.feedbackMsg = err.error || 'No se pudo eliminar el personaje.';
+        this.feedbackMsg = err.error?.message || err.error || 'No se pudo eliminar el personaje.';
       }
     });
   }

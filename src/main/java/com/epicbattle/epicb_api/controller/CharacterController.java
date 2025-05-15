@@ -45,8 +45,8 @@ public class CharacterController {
 
             // Nombre del archivo: nombrePersonaje.ext (sin espacios)
             String sanitizedNombre = nombrePersonaje.replaceAll("\\s+", "");
-            // Construir ruta absoluta para guardar la imagen en resources/static/assets/imagenes/personajes/<universo>/
-            String basePath = System.getProperty("user.dir") + "/src/main/resources/static/assets/imagenes/personajes/" + universo;
+            // Construir ruta absoluta para guardar la imagen en assets/imagenes/personajes/<universo>/
+            String basePath = "C:/Users/grisi/Desktop/2º DAW/Proyecto/epicb-api-Front/assets/imagenes/personajes/" + universo;
             String fileName = sanitizedNombre + ext;
             String filePath = basePath + "/" + fileName;
 
@@ -98,7 +98,7 @@ public class CharacterController {
             Character created = characterService.createCharacter(character);
             return ResponseEntity.ok(created);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -120,10 +120,10 @@ public class CharacterController {
                 }
                 return ResponseEntity.ok(character);
             } else {
-                return ResponseEntity.status(404).body("Personaje no encontrado");
+                return ResponseEntity.status(404).body(Map.of("error", "Personaje no encontrado"));
             }
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -133,7 +133,7 @@ public class CharacterController {
             Character updated = characterService.updateCharacter(id, characterDetails);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -141,9 +141,9 @@ public class CharacterController {
     public ResponseEntity<?> deleteCharacter(@PathVariable int id) {
         try {
             characterService.deleteCharacter(id);
-            return ResponseEntity.ok("Personaje eliminado");
+            return ResponseEntity.ok(Map.of("message", "Personaje eliminado"));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 }

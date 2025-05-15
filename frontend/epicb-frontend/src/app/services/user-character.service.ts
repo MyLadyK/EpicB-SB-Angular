@@ -15,12 +15,12 @@ export class UserCharacterService {
   }
 
   // El token JWT se añade automáticamente por el interceptor JwtInterceptor
-  addCharacterToCollection(characterId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add/${characterId}`, {});
+  addCharacterToCollection(characterId: number): Observable<{message: string}> {
+    return this.http.post<{message: string}>(`${this.apiUrl}/add/${characterId}`, {});
   }
 
   // El token JWT se añade automáticamente por el interceptor JwtInterceptor
-  removeCharacterFromCollection(characterId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/remove/${characterId}`);
+  removeCharacterFromCollection(characterId: number): Observable<{message: string}> {
+    return this.http.delete<{message: string}>(`${this.apiUrl}/remove/${characterId}`);
   }
 }
