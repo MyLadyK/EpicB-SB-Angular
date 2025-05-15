@@ -18,8 +18,10 @@ export class MockInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Si interceptamos, activamos demo mode
-        this.demoModeService.setDemoMode(true);
+        // Solo activamos demo mode si hay un error de conexión o el servidor no está disponible
+        if (error.status === 0 || error.status === 503 || error.status === 504) {
+          this.demoModeService.setDemoMode(true);
+        }
         // Simular datos mock para el ranking
         if (req.url.endsWith('/api/ranking')) {
           const mockRanking = [

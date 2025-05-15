@@ -5,7 +5,7 @@
   background: linear-gradient(to right, #ff512f, #dd2476);
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  color: white;
+  color: #333333;
 }
 
 .character-list-container h2 {

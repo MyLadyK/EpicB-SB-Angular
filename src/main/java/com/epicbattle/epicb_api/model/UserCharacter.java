@@ -1,5 +1,6 @@
 package com.epicbattle.epicb_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class UserCharacter {
 
     @ManyToOne
     @JoinColumn(name = "idUser")
+    @JsonBackReference
     private User owner;
 
     @ManyToOne

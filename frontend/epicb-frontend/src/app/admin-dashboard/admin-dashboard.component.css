@@ -5,7 +5,7 @@
   padding: 20px;
   background: linear-gradient(to right, #ff512f, #dd2476);
   height: 100vh;
-  color: white;
+  color: #333333;
 }
 
 h1 {
@@ -23,7 +23,7 @@ h1 {
 .action-button {
   padding: 10px 20px;
   font-size: 16px;
-  color: #FFF;
+  color: #333333;
   background: #FF69B4;
   border: none;
   border-radius: 5px;

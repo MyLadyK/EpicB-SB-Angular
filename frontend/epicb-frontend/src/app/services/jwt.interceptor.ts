@@ -14,11 +14,15 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const user = this.authService.getCurrentUser();
+    // Refuerzo: busca el token en varias posibles propiedades
+    // Cast a any para evitar errores TS2339 y mantener compatibilidad
+    const token = user?.token || (user as any)?.accessToken || (user as any)?.jwt || null;
+
     let jwtReq = req;
-    if (user && user.token) {
+    if (token) {
       jwtReq = req.clone({
         setHeaders: {
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${token}`
         }
       });
     }

@@ -74,6 +74,21 @@ public class CharacterController {
     @GetMapping
     public ResponseEntity<List<Character>> getAllCharacters() {
         List<Character> characters = characterService.getAllCharacters();
+
+        // Transformar las URLs de las imágenes para que apunten al servidor backend
+        characters.forEach(character -> {
+            if (character.getImageUrl() != null) {
+                String imageUrl = character.getImageUrl();
+                // Si la URL comienza con "/assets", añadir el prefijo del servidor backend
+                if (imageUrl.startsWith("/assets")) {
+                    // Usar "http://localhost:8081" como prefijo para el servidor backend
+                    String backendUrl = "http://localhost:8081";
+                    String fullImageUrl = backendUrl + imageUrl;
+                    character.setImageUrl(fullImageUrl);
+                }
+            }
+        });
+
         return ResponseEntity.ok(characters);
     }
 
@@ -92,6 +107,17 @@ public class CharacterController {
         try {
             Character character = characterService.getCharacterById(id);
             if (character != null) {
+                // Transformar la URL de la imagen para que apunte al servidor backend
+                if (character.getImageUrl() != null) {
+                    String imageUrl = character.getImageUrl();
+                    // Si la URL comienza con "/assets", añadir el prefijo del servidor backend
+                    if (imageUrl.startsWith("/assets")) {
+                        // Usar "http://localhost:8081" como prefijo para el servidor backend
+                        String backendUrl = "http://localhost:8081";
+                        String fullImageUrl = backendUrl + imageUrl;
+                        character.setImageUrl(fullImageUrl);
+                    }
+                }
                 return ResponseEntity.ok(character);
             } else {
                 return ResponseEntity.status(404).body("Personaje no encontrado");

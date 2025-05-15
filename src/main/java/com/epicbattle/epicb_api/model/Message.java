@@ -1,5 +1,6 @@
 package com.epicbattle.epicb_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,5 +25,6 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference(value="user-messages-sent")
     private User user;
 }

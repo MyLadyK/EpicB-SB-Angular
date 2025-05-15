@@ -41,7 +41,7 @@ public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
             userData.put("idUser", user.getIdUser());
             userData.put("nameUser", user.getNameUser());
             userData.put("mailUser", user.getMailUser());
-            userData.put("role", user.getRole());
+            userData.put("roleUser", user.getRole());
             userData.put("energy", user.getEnergy());
             userData.put("lastEnergyRefill", user.getLastEnergyRefill());
             userData.put("pointsUser", user.getPointsUser());

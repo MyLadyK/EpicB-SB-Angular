@@ -1,5 +1,6 @@
 package com.epicbattle.epicb_api.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -42,14 +43,18 @@ public class User {
     private int pointsUser;
 
     @OneToMany(mappedBy = "owner")
+    @JsonManagedReference
     private List<UserCharacter> characters;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference(value="user-messages-sent")
     private List<Message> messagesSent;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference(value="user-messages-received")
     private List<Message> messagesReceived;
 
     @OneToMany(mappedBy = "winner")
+    @JsonManagedReference(value="user-battle-results")
     private List<BattleResult> battleResults;
 }

@@ -12,7 +12,7 @@
   padding: 20px;
   background: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
-  color: white;
+  color: #CCCCCC;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
@@ -29,7 +29,7 @@
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  color: white;
+  color: #CCCCCC;
 }
 
 .form-group input {
@@ -38,7 +38,7 @@
   border: 2px solid #575757;
   border-radius: 5px;
   background: #1c1e22;
-  color: white;
+  color: #CCCCCC;
   box-sizing: border-box;
 }
 
@@ -53,7 +53,7 @@ button {
   border: none;
   border-radius: 5px;
   background: #FF69B4;
-  color: white;
+  color: #333333;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s;

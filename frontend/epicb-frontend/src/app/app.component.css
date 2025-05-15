@@ -23,7 +23,7 @@ nav ul li a {
 
 nav ul li a:hover {
   background: #222;
-  color: #fff;
+  color: #CCCCCC;
 }
 
 /* Contenedor principal */
@@ -61,7 +61,7 @@ body {
 /* Pie de página */
 footer {
   background: #333;
-  color: #FFF;
+  color: #CCCCCC;
   text-align: center;
   padding: 20px 0;
   width: 100%;
@@ -76,7 +76,7 @@ footer .social-icons {
 
 footer .social-icons a {
   margin: 0 10px;
-  color: #FFF;
+  color: #CCCCCC;
   text-decoration: none;
   font-size: 20px;
   transition: color 0.3s;
@@ -106,12 +106,12 @@ footer .social-icons a:hover {
 
 .feedback-banner.success {
   background: #4caf50;
-  color: #fff;
+  color: #333333;
 }
 
 .feedback-banner.error {
   background: #ff5252;
-  color: #fff;
+  color: #333333;
 }
 
 .demo-banner {

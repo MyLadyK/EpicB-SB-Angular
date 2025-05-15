@@ -8,10 +8,10 @@ import com.epicbattle.epicb_api.repository.CharacterRepository;
 import com.epicbattle.epicb_api.service.UserCharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +38,22 @@ public class UserCharacterController {
         }
         if (user == null) return ResponseEntity.notFound().build();
         List<UserCharacter> collection = userCharacterService.findByOwner(user);
+
+        // Transformar las URLs de las imágenes para que apunten al servidor backend
+        collection.forEach(userCharacter -> {
+            Character baseCharacter = userCharacter.getBaseCharacter();
+            if (baseCharacter != null && baseCharacter.getImageUrl() != null) {
+                String imageUrl = baseCharacter.getImageUrl();
+                // Si la URL comienza con "/assets", añadir el prefijo del servidor backend
+                if (imageUrl.startsWith("/assets")) {
+                    // Usar "http://localhost:8081" como prefijo para el servidor backend
+                    String backendUrl = "http://localhost:8081";
+                    String fullImageUrl = backendUrl + imageUrl;
+                    baseCharacter.setImageUrl(fullImageUrl);
+                }
+            }
+        });
+
         return ResponseEntity.ok(collection);
     }
 
@@ -49,25 +65,35 @@ public class UserCharacterController {
         if (user == null) {
             user = userRepository.findByMailUser(username);
         }
-        if (user == null) return ResponseEntity.status(401).body("Usuario no autenticado");
+        if (user == null) return ResponseEntity.status(401).body(Map.of("error", "Usuario no autenticado"));
         List<UserCharacter> collection = userCharacterService.findByOwner(user);
         if (collection.size() >= 8) {
-            return ResponseEntity.badRequest().body("No puedes tener más de 8 personajes en tu colección");
+            return ResponseEntity.badRequest().body(Map.of("error", "No puedes tener más de 8 personajes en tu colección"));
         }
         Optional<Character> characterOpt = characterRepository.findById(characterId.intValue());
         if (characterOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body("Personaje no encontrado");
+            return ResponseEntity.badRequest().body(Map.of("error", "Personaje no encontrado"));
         }
         // Evitar duplicados
         boolean alreadyInCollection = collection.stream().anyMatch(uc -> uc.getBaseCharacter().getIdCharacter() == characterId);
         if (alreadyInCollection) {
-            return ResponseEntity.badRequest().body("El personaje ya está en tu colección");
+            return ResponseEntity.badRequest().body(Map.of("error", "El personaje ya está en tu colección"));
         }
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setOwner(user);
-        userCharacter.setBaseCharacter(characterOpt.get());
+        Character base = characterOpt.get();
+        userCharacter.setBaseCharacter(base);
+        userCharacter.setHealthUserCharacter(base.getHealthCharacter());
+        userCharacter.setAttackUserCharacter(base.getAttackCharacter());
+        userCharacter.setDefenseUserCharacter(base.getDefenseCharacter());
+        userCharacter.setSpeedUserCharacter(base.getSpeedCharacter());
+        userCharacter.setStaminaUserCharacter(base.getStaminaCharacter());
+        userCharacter.setIntelligenceUserCharacter(base.getIntelligenceCharacter());
+        userCharacter.setSpecialUserCharacter(base.getSpecialCharacter());
+        userCharacter.setImageUrlUserCharacter(base.getImageUrl());
+        userCharacter.setTimesUsed(0);
         userCharacterService.save(userCharacter);
-        return ResponseEntity.ok("Personaje añadido a tu colección");
+        return ResponseEntity.ok(Map.of("message", "Personaje añadido a tu colección"));
     }
 
     // Eliminar personaje de la colección del usuario autenticado
@@ -78,14 +104,14 @@ public class UserCharacterController {
         if (user == null) {
             user = userRepository.findByMailUser(username);
         }
-        if (user == null) return ResponseEntity.status(401).body("Usuario no autenticado");
+        if (user == null) return ResponseEntity.status(401).body(Map.of("error", "Usuario no autenticado"));
         List<UserCharacter> collection = userCharacterService.findByOwner(user);
         Optional<UserCharacter> userCharacterOpt = collection.stream()
                 .filter(uc -> uc.getBaseCharacter().getIdCharacter() == characterId).findFirst();
         if (userCharacterOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body("El personaje no está en tu colección");
+            return ResponseEntity.badRequest().body(Map.of("error", "El personaje no está en tu colección"));
         }
         userCharacterService.delete(userCharacterOpt.get());
-        return ResponseEntity.ok("Personaje eliminado de tu colección");
+        return ResponseEntity.ok(Map.of("message", "Personaje eliminado de tu colección"));
     }
 }
