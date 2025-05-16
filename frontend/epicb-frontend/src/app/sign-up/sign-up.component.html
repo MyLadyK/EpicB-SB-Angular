@@ -1,20 +1,73 @@
-<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
-  <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-bold text-center text-blue-900 mb-6">Registro</h2>
-    <form (ngSubmit)="register()" class="space-y-4">
-      <div class="flex flex-col">
-        <label for="nameUser" class="font-semibold text-blue-900 mb-1">Nombre</label>
-        <input id="nameUser" [(ngModel)]="user.nameUser" name="nameUser" class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400" required>
+<div class="login-background" style="min-height: 100vh; background: linear-gradient(135deg, #2C3E50, #4CA1AF); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+  <div class="login-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1;"></div>
+  
+  <div class="login-container" style="width: 100%; max-width: 400px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 2; position: relative; border: 1px solid rgba(255,255,255,0.2);">
+    <div class="text-center mb-4">
+      <h1 style="color: #00FF7F; font-size: 2.5rem; text-shadow: 0 0 10px rgba(0,255,127,0.5);">Epic Battle</h1>
+      <p style="color: #FF69B4; opacity: 0.8;">Únete a la batalla épica</p>
+    </div>
+    
+    <form (ngSubmit)="register()">
+      <div class="mb-4">
+        <label for="nameUser" class="form-label" style="color: #FF69B4; font-weight: bold;">Nombre de Héroe</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background: rgba(255,105,180,0.2); border: none; color: #FF69B4;">
+            <i class="fas fa-user"></i>
+          </span>
+          <input 
+            id="nameUser" 
+            [(ngModel)]="user.nameUser" 
+            name="nameUser" 
+            type="text" 
+            class="form-control" 
+            style="background: rgba(255,255,255,0.1); border: none; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+            required
+            placeholder="Nombre del héroe"
+          >
+        </div>
       </div>
-      <div class="flex flex-col">
-        <label for="mailUser" class="font-semibold text-blue-900 mb-1">Correo</label>
-        <input id="mailUser" [(ngModel)]="user.mailUser" name="mailUser" type="email" class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400" required>
+      
+      <div class="mb-4">
+        <label for="mailUser" class="form-label" style="color: #FF69B4; font-weight: bold;">Correo del Reino</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background: rgba(255,105,180,0.2); border: none; color: #FF69B4;">
+            <i class="fas fa-envelope"></i>
+          </span>
+          <input 
+            id="mailUser" 
+            [(ngModel)]="user.mailUser" 
+            name="mailUser" 
+            type="email" 
+            class="form-control" 
+            style="background: rgba(255,255,255,0.1); border: none; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+            required
+            placeholder="correo@reino.com"
+          >
+        </div>
       </div>
-      <div class="flex flex-col">
-        <label for="passwordHash" class="font-semibold text-blue-900 mb-1">Contraseña</label>
-        <input id="passwordHash" type="password" [(ngModel)]="user.passwordHash" name="passwordHash" class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400" required>
+      
+      <div class="mb-4">
+        <label for="passwordHash" class="form-label" style="color: #FF69B4; font-weight: bold;">Código de Acceso</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background: rgba(255,105,180,0.2); border: none; color: #FF69B4;">
+            <i class="fas fa-key"></i>
+          </span>
+          <input 
+            id="passwordHash" 
+            type="password" 
+            [(ngModel)]="user.passwordHash" 
+            name="passwordHash" 
+            class="form-control" 
+            style="background: rgba(255,255,255,0.1); border: none; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+            required
+            placeholder="••••••••"
+          >
+        </div>
       </div>
-      <button type="submit" class="btn w-full bg-blue-700 text-white font-bold py-2 rounded shadow hover:bg-blue-900 transition-colors">Registrar</button>
+      
+      <button type="submit" class="btn btn-primary w-100" style="background: #00FF7F; border: none; color: white; padding: 12px; border-radius: 10px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,255,127,0.3); transition: all 0.3s ease;">
+        <span style="text-shadow: 0 0 10px rgba(0,255,127,0.5);">Unirse a la Batalla</span>
+      </button>
     </form>
   </div>
 </div>

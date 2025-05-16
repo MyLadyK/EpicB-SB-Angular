@@ -9,17 +9,17 @@
            'ring-4 ring-red-500 animate-pulse': battleInProgress && attackingCharacter === selectedCharacter1,
            'ring-4 ring-blue-500': battleInProgress && defendingCharacter === selectedCharacter1
          }">
-      <img [src]="getCharacter1()?.imageUrl" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
+      <img [src]="getCharacterImageUrl(getCharacter1())" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
            [ngClass]="{
              'border-red-500 border-4': battleInProgress && attackingCharacter === selectedCharacter1,
              'border-blue-500 border-4': battleInProgress && defendingCharacter === selectedCharacter1
            }">
-      <p class="font-semibold text-blue-800">{{ getCharacter1()?.nameCharacter }}</p>
+      <p class="font-semibold text-blue-800">{{ getCharacterName(getCharacter1()) }}</p>
       <div class="w-full mt-2">
         <div class="h-4 bg-gray-200 rounded-full">
           <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(getCharacter1())"></div>
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth1 : getCharacter1()?.healthCharacter }}</span>
+        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth1 : getCharacterHealth(getCharacter1()) }}</span>
       </div>
     </div>
     <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center"
@@ -27,17 +27,17 @@
            'ring-4 ring-red-500 animate-pulse': battleInProgress && attackingCharacter === selectedCharacter2,
            'ring-4 ring-blue-500': battleInProgress && defendingCharacter === selectedCharacter2
          }">
-      <img [src]="getCharacter2()?.imageUrl" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
+      <img [src]="getCharacterImageUrl(getCharacter2())" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
            [ngClass]="{
              'border-red-500 border-4': battleInProgress && attackingCharacter === selectedCharacter2,
              'border-blue-500 border-4': battleInProgress && defendingCharacter === selectedCharacter2
            }">
-      <p class="font-semibold text-blue-800">{{ getCharacter2()?.nameCharacter }}</p>
+      <p class="font-semibold text-blue-800">{{ getCharacterName(getCharacter2()) }}</p>
       <div class="w-full mt-2">
         <div class="h-4 bg-gray-200 rounded-full">
           <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(getCharacter2())"></div>
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth2 : getCharacter2()?.healthCharacter }}</span>
+        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth2 : getCharacterHealth(getCharacter2()) }}</span>
       </div>
     </div>
   </div>
@@ -83,5 +83,3 @@
     </div>
   </div>
 </div>
-
-
