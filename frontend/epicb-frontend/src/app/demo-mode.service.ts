@@ -5,10 +5,12 @@ export class DemoModeService {
   private _demoMode = false;
 
   get demoMode(): boolean {
-    return this._demoMode;
+    // Always return false to ensure real data is used
+    return false;
   }
 
   setDemoMode(value: boolean) {
-    this._demoMode = value;
+    // Ignore any attempts to set demo mode to true
+    this._demoMode = false;
   }
 }

@@ -6,6 +6,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { CharacterListComponent } from './character-list/character-list.component';
 import { RankingComponent } from './ranking/ranking.component';
+import { BattleComponent } from './battle/battle.component';
 import { HelpComponent } from './help.component';
 import { TermsComponent } from './terms/terms.component';
 import { AboutComponent } from './about/about.component';
@@ -42,6 +43,11 @@ export const routes: Routes = [
   {
     path: 'ranking',
     component: RankingComponent,
+    canActivate: [UserGuard]
+  },
+  {
+    path: 'battle/:opponentId',
+    component: BattleComponent,
     canActivate: [UserGuard]
   },
   {

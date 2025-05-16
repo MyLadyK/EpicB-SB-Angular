@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { RankingService } from '../services/ranking.service';
 import { BattleService } from '../services/battle.service';
 import { User } from '../model/user';
@@ -23,7 +23,8 @@ export class RankingComponent implements OnInit {
   constructor(
     private rankingService: RankingService,
     private battleService: BattleService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -52,23 +53,8 @@ export class RankingComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
-    this.battleResult = null;
-    this.error = '';
-
-    this.battleService.startBattle(opponentId).subscribe({
-      next: (result) => {
-        this.battleResult = result;
-        this.loading = false;
-        // Recargar el ranking para mostrar los puntos actualizados
-        this.loadRanking();
-      },
-      error: (err) => {
-        this.error = err.error?.error || 'Error al iniciar la batalla';
-        this.loading = false;
-        console.error(err);
-      }
-    });
+    // Navegar a la página de batalla con el ID del oponente
+    this.router.navigate(['/battle', opponentId]);
   }
 
   canBattle(user: User): boolean {

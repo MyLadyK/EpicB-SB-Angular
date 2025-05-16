@@ -86,8 +86,12 @@ public class BattleService {
             userCharacterService.save(userCharacter);
         });
 
-        // Sumar puntos al ranking del usuario ganador
-        rankingService.addPointsToUser(winner, 3);
+        // Sumar puntos al ranking del usuario ganador y restar al perdedor
+        rankingService.addPointsToUser(winner, 20);
+
+        // Determinar el perdedor y restarle puntos
+        User loser = winner.equals(user1) ? user2 : user1;
+        rankingService.addPointsToUser(loser, -8);
 
         return battleResultRepository.save(battleResult);
     }
@@ -115,13 +119,29 @@ public class BattleService {
             for (int i = 0; i < attacks1 && health2 > 0; i++) {
                 double damage = calcularDanio(uc1, uc2);
                 health2 -= damage;
-                events.add(uc1.getBaseCharacter().getNameCharacter() + " ataca a " + uc2.getBaseCharacter().getNameCharacter() + " e inflige " + damage + " de daño. Salud restante: " + Math.max(0, Math.round(health2 * 10.0) / 10.0));
+                events.add(user1.getNameUser() + " ataca a " + user2.getNameUser() + " por " + damage + " de daño");
+
+                // Añadir eventos especiales con probabilidad aleatoria
+                if (Math.random() < 0.2) { // 20% de probabilidad de golpe crítico
+                    events.add(user1.getNameUser() + " realiza un golpe crítico");
+                }
+                if (Math.random() < 0.15) { // 15% de probabilidad de habilidad especial
+                    events.add(user1.getNameUser() + " usa habilidad especial");
+                }
             }
             // Turnos de uc2
             for (int i = 0; i < attacks2 && health1 > 0; i++) {
                 double damage = calcularDanio(uc2, uc1);
                 health1 -= damage;
-                events.add(uc2.getBaseCharacter().getNameCharacter() + " ataca a " + uc1.getBaseCharacter().getNameCharacter() + " e inflige " + damage + " de daño. Salud restante: " + Math.max(0, Math.round(health1 * 10.0) / 10.0));
+                events.add(user2.getNameUser() + " ataca a " + user1.getNameUser() + " por " + damage + " de daño");
+
+                // Añadir eventos especiales con probabilidad aleatoria
+                if (Math.random() < 0.2) { // 20% de probabilidad de golpe crítico
+                    events.add(user2.getNameUser() + " realiza un golpe crítico");
+                }
+                if (Math.random() < 0.15) { // 15% de probabilidad de habilidad especial
+                    events.add(user2.getNameUser() + " usa habilidad especial");
+                }
             }
             round++;
         }
@@ -132,11 +152,11 @@ public class BattleService {
         if (health1 > health2) {
             winner = user1;
             winnerUserCharacterId = userCharacter1Id;
-            winnerName = uc1.getBaseCharacter().getNameCharacter();
+            winnerName = user1.getNameUser();
         } else {
             winner = user2;
             winnerUserCharacterId = userCharacter2Id;
-            winnerName = uc2.getBaseCharacter().getNameCharacter();
+            winnerName = user2.getNameUser();
         }
 
         // Otorgar recompensa al personaje ganador
@@ -145,15 +165,21 @@ public class BattleService {
             SurprisePackage surprise = surprisePackageService.getRandomPackage();
             applySurprisePackageToUserCharacter(userCharacter, surprise);
             userCharacterService.save(userCharacter);
-            String desc = "¡" + userCharacter.getBaseCharacter().getNameCharacter() + " recibe un paquete sorpresa: " + surprise.getDescription() + "!";
+            String desc = "¡" + winner.getNameUser() + " recibe un paquete sorpresa: " + surprise.getDescription() + "!";
             events.add(desc);
             surpriseDescription[0] = surprise.getDescription();
         });
 
-        // Sumar puntos al ranking del usuario ganador
-        int points = 3;
-        rankingService.addPointsToUser(winner, points);
-        events.add("¡" + winnerName + " gana la batalla y suma " + points + " puntos al ranking!");
+        // Sumar puntos al ranking del usuario ganador y restar al perdedor
+        int pointsWinner = 20;
+        int pointsLoser = -8;
+        rankingService.addPointsToUser(winner, pointsWinner);
+
+        // Determinar el perdedor y restarle puntos
+        User loser = winner.equals(user1) ? user2 : user1;
+        rankingService.addPointsToUser(loser, pointsLoser);
+
+        events.add("¡" + winnerName + " gana la batalla y obtiene un paquete sorpresa!");
 
         return new BattleSummary(
                 winnerName,
@@ -161,7 +187,7 @@ public class BattleService {
                 Math.max(0, Math.round(health2 * 10.0) / 10.0),
                 events,
                 surpriseDescription[0],
-                points
+                pointsWinner
         );
     }
 

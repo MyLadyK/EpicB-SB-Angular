@@ -1,10 +1,15 @@
 package com.epicbattle.epicb_api.controller;
 
+import com.epicbattle.epicb_api.dto.BattleRequestDTO;
+import com.epicbattle.epicb_api.dto.BattleSummary;
 import com.epicbattle.epicb_api.model.BattleResult;
+import com.epicbattle.epicb_api.model.Character;
 import com.epicbattle.epicb_api.model.User;
 import com.epicbattle.epicb_api.model.UserCharacter;
 import com.epicbattle.epicb_api.repository.UserRepository;
 import com.epicbattle.epicb_api.service.BattleResultService;
+import com.epicbattle.epicb_api.service.BattleService;
+import com.epicbattle.epicb_api.service.CharacterService;
 import com.epicbattle.epicb_api.service.UserCharacterService;
 import com.epicbattle.epicb_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,12 @@ public class BattleController {
 
     @Autowired
     private BattleResultService battleResultService;
+
+    @Autowired
+    private BattleService battleService;
+
+    @Autowired
+    private CharacterService characterService;
 
     /**
      * Inicia una batalla entre el usuario autenticado y otro usuario seleccionado.
@@ -215,6 +226,61 @@ public class BattleController {
 
         return ResponseEntity.ok(userBattles);
     }
+
+    /**
+     * Endpoint para realizar una batalla entre dos personajes.
+     * @param battleRequest Datos de la batalla (user1Id, user2Id, character1Id, character2Id)
+     * @return Resultado de la batalla
+     */
+    @PostMapping("/fight")
+    public ResponseEntity<?> fight(@RequestBody BattleRequestDTO battleRequest) {
+        try {
+            // Obtener usuarios y personajes
+            User user1 = userService.getUserById(battleRequest.getUser1Id()).orElseThrow(
+                    () -> new IllegalArgumentException("Usuario 1 no encontrado"));
+            User user2 = userService.getUserById(battleRequest.getUser2Id()).orElseThrow(
+                    () -> new IllegalArgumentException("Usuario 2 no encontrado"));
+            Character character1 = characterService.getCharacterById(battleRequest.getCharacter1Id());
+            Character character2 = characterService.getCharacterById(battleRequest.getCharacter2Id());
+
+            // Realizar la batalla
+            BattleResult result = battleService.battle(
+                    user1, character1, user2, character2, 
+                    battleRequest.getUserCharacter1Id(), battleRequest.getUserCharacter2Id());
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Endpoint para realizar una batalla con resumen detallado.
+     * @param battleRequest Datos de la batalla (user1Id, user2Id, character1Id, character2Id)
+     * @return Resumen detallado de la batalla
+     */
+    @PostMapping("/fight/summary")
+    public ResponseEntity<?> fightSummary(@RequestBody BattleRequestDTO battleRequest) {
+        try {
+            // Obtener usuarios y personajes
+            User user1 = userService.getUserById(battleRequest.getUser1Id()).orElseThrow(
+                    () -> new IllegalArgumentException("Usuario 1 no encontrado"));
+            User user2 = userService.getUserById(battleRequest.getUser2Id()).orElseThrow(
+                    () -> new IllegalArgumentException("Usuario 2 no encontrado"));
+            Character character1 = characterService.getCharacterById(battleRequest.getCharacter1Id());
+            Character character2 = characterService.getCharacterById(battleRequest.getCharacter2Id());
+
+            // Realizar la batalla con resumen
+            BattleSummary summary = battleService.battleWithSummary(
+                    user1, character1, user2, character2, 
+                    battleRequest.getUserCharacter1Id(), battleRequest.getUserCharacter2Id());
+
+            return ResponseEntity.ok(summary);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
 
     /**
      * Transforma la URL de la imagen de un UserCharacter para que apunte al servidor backend.
