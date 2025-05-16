@@ -1,12 +1,15 @@
 import { User } from './user';
 
 export interface BattleResult {
-  idBattleResult: number;
-  user1: any;
-  user2: any;
-  winner: any;
+  idBattle: number;
+  user1: User;
+  user2: User;
+  winner: User;
+  events: string[];
+  finalHealth1: number;
+  finalHealth2: number;
   battleDate: Date;
-  date?: string; // Para compatibilidad con el template
+  date?: string;
   opponentName?: string;
   result?: string;
 }
