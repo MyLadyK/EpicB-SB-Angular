@@ -189,11 +189,7 @@ public class BattleController {
                 battle.getUser2().getIdUser() == userId)
             .toList();
 
-        // Transformar las URLs de las imágenes de los personajes en las batallas
-        for (BattleResult battle : userBattles) {
-            // Aquí se podrían transformar las URLs de las imágenes si las batallas contienen referencias a personajes
-            // Por ahora, no hacemos nada ya que BattleResult no contiene directamente UserCharacter
-        }
+
 
         return ResponseEntity.ok(userBattles);
     }
@@ -218,11 +214,7 @@ public class BattleController {
                 battle.getUser2().getIdUser() == userId)
             .toList();
 
-        // Transformar las URLs de las imágenes de los personajes en las batallas
-        for (BattleResult battle : userBattles) {
-            // Aquí se podrían transformar las URLs de las imágenes si las batallas contienen referencias a personajes
-            // Por ahora, no hacemos nada ya que BattleResult no contiene directamente UserCharacter
-        }
+
 
         return ResponseEntity.ok(userBattles);
     }

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/user-characters")
+@RequestMapping("/api/users/user-characters")
 public class UserCharacterController {
 
     @Autowired
@@ -49,12 +49,24 @@ public class UserCharacterController {
                     // Usar "http://localhost:8081" como prefijo para el servidor backend
                     String backendUrl = "http://localhost:8081";
                     String fullImageUrl = backendUrl + imageUrl;
-                    baseCharacter.setImageUrl(fullImageUrl);
+                    userCharacter.setImageUrlUserCharacter(fullImageUrl);
                 }
             }
         });
 
         return ResponseEntity.ok(collection);
+    }
+
+    @GetMapping(value = "/user/{userId}", produces = "application/json")
+    public ResponseEntity<List<UserCharacter>> getUserCharacters(@PathVariable Integer userId) {
+        try {
+            User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            List<UserCharacter> characters = userCharacterService.findByOwner(user);
+            return ResponseEntity.ok(characters);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     // Añadir personaje a la colección del usuario autenticado

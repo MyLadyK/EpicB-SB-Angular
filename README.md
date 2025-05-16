@@ -53,6 +53,20 @@ You can check if you have all the prerequisites installed by running:
 - Backend API: http://localhost:8081/api
 - Frontend: http://localhost:4200
 
+## Project Scope
+
+### Implemented Features
+- Battle System
+- User Authentication
+- Character Management
+- Global Ranking
+- Battle History
+
+### Out of Scope
+- Social Media Integration
+- Native Mobile Application
+- Payment System or Online Store
+
 ## Troubleshooting
 
 - If the backend fails to start, ensure MySQL is running and the database `epicb_db` exists

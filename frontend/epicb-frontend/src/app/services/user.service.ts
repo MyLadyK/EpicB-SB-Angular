@@ -37,6 +37,11 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  getUserCharacters(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user-characters/user/${userId}`)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMsg = 'Error desconocido';
     if (error.error instanceof ErrorEvent) {

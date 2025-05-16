@@ -61,6 +61,7 @@
         <span [ngClass]="{
           'font-bold text-red-600': event.includes('crítico'),
           'font-bold text-purple-600': event.includes('especial'),
+          'font-bold text-green-600': event.includes('gana'),
           'animate-pulse': i === currentEventIndex - 1 && battleInProgress
         }">
           {{ event }}
@@ -70,17 +71,17 @@
       <!-- Mostrar el resultado final solo cuando la batalla ha terminado -->
       <div *ngIf="!battleInProgress && battleResult" class="mt-4 border-t pt-4 border-gray-300">
         <div class="mt-2">
-          <span class="font-semibold text-green-700">Ganador: {{ battleResult.winner.nameUser }}</span>
+          <span class="font-semibold text-green-700">{{ battleResult.result }}</span>
         </div>
         <div class="mt-2 text-blue-700">
-          <span class="font-semibold">Puntos Ganados:</span> {{ battleResult.winner === currentUser ? 20 : -8 }}
+          <span class="font-semibold">Oponente:</span> {{ battleResult.opponentName }}
+        </div>
+        <div class="mt-2 text-gray-700">
+          <span class="font-semibold">Fecha:</span> {{ battleResult.date }}
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="battleResult">
-  <p>Winner: {{battleResult.winner.nameUser}}</p>
-  <p>Battle Date: {{battleResult.battleDate | date}}</p>
-</div>
+

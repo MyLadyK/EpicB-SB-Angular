@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { BattleService } from '../services/battle.service';
-import { CharacterService } from '../services/character.service';
-import { UserService } from '../services/user.service';
-import { AuthService } from '../services/auth.service';
-import { BattleResult } from '../model/battle-result';
 import { Character } from '../model/character';
 import { User } from '../model/user';
+import { CharacterService } from '../services/character.service';
+import { UserCharacterService } from '../services/user-character.service';
+import { AuthService } from '../services/auth.service';
+import { BattleService } from '../services/battle.service';
+import { BattleResult } from '../model/battle-result';
+import { Observable } from 'rxjs';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
@@ -17,7 +18,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   selector: 'app-battle',
   templateUrl: './battle.component.html',
   styleUrls: ['./battle.component.css'],
-  providers: [BattleService, CharacterService, UserService, AuthService],
+  providers: [BattleService, CharacterService, UserCharacterService, AuthService],
   animations: [
     trigger('fadeInEvent', [
       state('hidden', style({ opacity: 0, transform: 'translateY(30px) scale(0.95)' })),
@@ -29,47 +30,37 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   ]
 })
 export class BattleComponent implements OnInit {
-  battleResult?: BattleResult;
-  loading = false;
+  battleResult: BattleResult | null = null;
+  loading: boolean = false;
   error: string | null = null;
-  autoStarted = false;
-  opponentName: string = '';
-  opponentId?: number;
-
-  users: User[] = [
-    { idUser: 1, nameUser: 'Usuario 1', mailUser: '' },
-    { idUser: 2, nameUser: 'Usuario 2', mailUser: '' }
-  ];
   characters: Character[] = [];
-  selectedUser1 = this.users[0].idUser;
-  selectedUser2 = this.users[1].idUser;
-  selectedCharacter1?: number;
-  selectedCharacter2?: number;
-
-  currentUser?: User;
-  opponent?: User;
-
-  // Animación de eventos
-  eventAnimations: boolean[] = [];
+  selectedCharacter1: Character | null = null;
+  selectedCharacter2: Character | null = null;
   currentHealth1: number = 100;
   currentHealth2: number = 100;
-  battleInProgress: boolean = false;
   currentEventIndex: number = 0;
-  attackingCharacter: number | null = null;
-  defendingCharacter: number | null = null;
-
-  // Expresiones regulares para eventos de batalla
-  private criticoRegex = /(.+) realiza un golpe crítico/;
-  private especialRegex = /(.+) usa habilidad especial/;
-  private victoriaRegex = /(.+) gana la batalla/;
+  eventAnimations: boolean[] = [];
+  battleInProgress: boolean = false;
+  criticoRegex: RegExp = /¡Golpe crítico!/;
+  especialRegex: RegExp = /¡Habilidad especial!/;
+  victoriaRegex: RegExp = /¡Victoria!/;
+  opponentName: string = '';
+  opponentId: number = 0;
+  currentUser: User | null = null;
+  opponent: User | undefined;
 
   constructor(
     private battleService: BattleService,
     private characterService: CharacterService,
-    private userService: UserService,
+    private userCharacterService: UserCharacterService,
     private authService: AuthService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.currentUser = currentUser;
+    }
+  }
 
   ngOnInit(): void {
     this.loadCharacters();
@@ -79,198 +70,219 @@ export class BattleComponent implements OnInit {
       const opponentId = Number(params.get('opponentId'));
       if (opponentId) {
         this.opponentId = opponentId;
-        this.autoStarted = true;
-        this.fight();
+        this.opponentName = params.get('opponentName') || 'Oponente';
+        
+        // Buscar los personajes del oponente
+        this.userCharacterService.getUserCharacters(opponentId).subscribe(
+          (characters: Character[]) => {
+            if (characters.length > 0) {
+              this.selectedCharacter2 = characters[0];
+              this.fight();
+            }
+          },
+          (error: any) => {
+            this.error = 'Error al obtener los personajes del oponente';
+          }
+        );
       }
     });
-
-    // Get current user
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      this.currentUser = currentUser;
-    } else {
-      this.currentUser = undefined;
-    }
-
-    // Iniciar la animación si la batalla se inició automáticamente
-    if (this.autoStarted && this.opponentId) {
-      this.battleService.startBattle(this.opponentId).subscribe(
-        (result: any) => {
-          this.battleResult = result;
-          this.loading = false;
-          window.dispatchEvent(new Event('ranking-updated'));
-          this.showBattleEventsStepByStep();
-        },
-        (error: any) => {
-          this.loading = false;
-          this.error = error.error?.message || 'Error al iniciar la batalla';
-          console.error('Error en la batalla:', error);
-        }
-      );
-    }
   }
 
-  loadCharacters() {
-    this.loading = true;
+  private loadCharacters(): void {
     this.characterService.getCharacters().subscribe(
-      (characters) => {
+      (characters: Character[]) => {
         this.characters = characters;
         if (this.characters.length >= 2) {
-          this.selectedCharacter1 = this.characters[0].idCharacter;
-          this.selectedCharacter2 = this.characters[1].idCharacter;
+          this.selectedCharacter1 = this.characters[0];
+          this.selectedCharacter2 = this.characters[1];
         }
-        this.loading = false;
       },
-      (error) => {
+      (error: any) => {
         this.error = 'Error al cargar los personajes: ' + error;
-        this.loading = false;
       }
     );
   }
 
-  getCharacter1(): Character | undefined {
-    return this.characters.find(c => c.idCharacter === this.selectedCharacter1);
-  }
-
-  getCharacter2(): Character | undefined {
-    return this.characters.find(c => c.idCharacter === this.selectedCharacter2);
-  }
-
-  getHealthBarWidth(character?: Character): string {
-    if (!character) return '0%';
-
-    // Si la batalla está en progreso, usar la salud actual
-    if (this.battleInProgress) {
-      if (character.idCharacter === this.selectedCharacter1) {
-        return `${this.currentHealth1}%`;
-      } else if (character.idCharacter === this.selectedCharacter2) {
-        return `${this.currentHealth2}%`;
-      }
+  getHealthBarWidth(character: Character): string {
+    const character1 = this.getCharacter1();
+    const character2 = this.getCharacter2();
+    
+    if (!character1 || !character2) return '100%';
+    
+    // If this is character 1, use currentHealth1
+    if (character.idCharacter === character1.idCharacter) {
+      return `${this.currentHealth1}%`;
     }
-
-    // Si no, usar la salud inicial del personaje
-    return `${(character.healthCharacter / 100) * 100}%`;
+    // If this is character 2, use currentHealth2
+    if (character.idCharacter === character2.idCharacter) {
+      return `${this.currentHealth2}%`;
+    }
+    
+    // Fallback to initial health if character not found
+    return `${character.healthCharacter}%`;
   }
 
-  fight() {
+  private getCharacter1(): Character | undefined {
+    return this.characters.find(c => c.idCharacter === this.selectedCharacter1?.idCharacter);
+  }
+
+  private getCharacter2(): Character | undefined {
+    return this.characters.find(c => c.idCharacter === this.selectedCharacter2?.idCharacter);
+  }
+
+  fight(): void {
     if (!this.selectedCharacter1 || !this.selectedCharacter2) {
-      this.error = 'Debes seleccionar dos personajes para la batalla';
+      this.error = 'Por favor, seleccione dos personajes';
       return;
     }
 
     this.error = null;
     this.loading = true;
-    this.battleService.startBattle(this.opponentId!).subscribe(
-      result => {
+    this.battleInProgress = true;
+    this.currentEventIndex = 0;
+    this.eventAnimations = [];
+    this.currentHealth1 = 100;
+    this.currentHealth2 = 100;
+
+    if (!this.selectedCharacter1 || !this.selectedCharacter2) {
+      this.error = 'Por favor, seleccione dos personajes';
+      this.loading = false;
+      this.battleInProgress = false;
+      return;
+    }
+
+    this.battleService.fight(this.selectedCharacter1.idCharacter, this.selectedCharacter2.idCharacter).subscribe({
+      next: (result) => {
+        if (!result?.events) {
+          this.error = 'Error en el resultado de la batalla';
+          this.loading = false;
+          this.battleInProgress = false;
+          return;
+        }
+
         this.battleResult = result;
         this.loading = false;
-        window.dispatchEvent(new Event('ranking-updated'));
         this.showBattleEventsStepByStep();
       },
-      error => {
-        this.error = error.error?.message || 'Error al iniciar la batalla';
+      error: (error) => {
+        this.error = error.message || 'Error al iniciar la batalla';
         this.loading = false;
-        console.error('Error en la batalla:', error);
+        this.battleInProgress = false;
       }
-    );
+    });
   }
 
-  showBattleEventsStepByStep() {
-    if (!this.battleResult || !this.battleResult.events || !this.battleResult.events.length) {
-      return;
-    }
+  private showBattleEventsStepByStep(): void {
+    if (!this.battleResult?.events) return;
 
     const events = this.battleResult.events;
-    this.currentEventIndex = 1;
-    this.eventAnimations = new Array(events.length).fill(false);
+    const totalEvents = events.length;
+    this.eventAnimations = new Array(totalEvents).fill(false);
     this.battleInProgress = true;
 
-    const interval = setInterval(() => {
-      if (this.currentEventIndex <= events.length) {
-        const currentEventIndex = this.currentEventIndex - 1;
-        if (currentEventIndex >= 0 && currentEventIndex < events.length) {
-          const event = events[currentEventIndex];
-          if (event) {
-            this.eventAnimations[currentEventIndex] = true;
-            this.updateHealthFromEvent(event);
-            this.currentEventIndex++;
-          }
-        }
-      } else {
-        clearInterval(interval);
-        this.battleInProgress = false;
-
-        // Establecer la salud final
-        if (this.battleResult) {
-          this.currentHealth1 = this.battleResult.finalHealth1;
-          this.currentHealth2 = this.battleResult.finalHealth2;
-        }
+    const showNextEvent = () => {
+      if (this.currentEventIndex >= totalEvents) {
+        this.showBattleSummary();
+        return;
       }
-    }, 700);
+
+      const event = events[this.currentEventIndex];
+      this.eventAnimations[this.currentEventIndex] = true;
+      
+      // Actualizar salud basado en el evento
+      this.updateHealthFromEvent(event);
+      
+      // Incrementar índice y esperar antes de mostrar el siguiente evento
+      setTimeout(() => {
+        this.currentEventIndex++;
+        showNextEvent();
+      }, 1000);
+    };
+
+    showNextEvent();
   }
 
-  updateHealthFromEvent(event: string) {
-    // Buscar patrones como "Usuario1 realiza un golpe crítico"
+  private showBattleSummary(): void {
+    if (!this.battleResult) return;
+
+    // Mostrar el ganador
+    const winner = this.battleResult.winner ? this.battleResult.winner.nameUser : 'Empate';
+    
+    // Calcular puntos ganados
+    const pointsWon = this.battleResult.winner?.idUser === this.currentUser?.idUser
+      ? Math.abs(this.battleResult.finalHealth1 - this.battleResult.finalHealth2)
+      : -Math.abs(this.battleResult.finalHealth1 - this.battleResult.finalHealth2);
+
+    // Mostrar la fecha
+    const battleDate = this.battleResult.battleDate 
+      ? new Date(this.battleResult.battleDate).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      : 'Fecha no disponible';
+
+    // Mostrar el resumen
+    this.error = `Ganador: ${winner}\nPuntos ganados: ${pointsWon}\nFecha: ${battleDate}`;
+  }
+
+  private updateHealthFromEvent(event: string): void {
+    if (!event) return;
+    const character1 = this.getCharacter1();
+    const character2 = this.getCharacter2();
+    if (!character1 || !character2) return;
+
     const criticoMatch = event.match(this.criticoRegex);
-    if (criticoMatch) {
-      const attacker = criticoMatch[1];
-      this.updateHealthFromAttack(attacker, 25);
-      return;
-    }
-
-    // Buscar patrones como "Usuario1 usa habilidad especial"
     const especialMatch = event.match(this.especialRegex);
-    if (especialMatch) {
-      const attacker = especialMatch[1];
-      this.updateHealthFromAttack(attacker, 30);
-      return;
-    }
-
-    // Buscar patrones como "Usuario1 gana la batalla"
     const victoriaMatch = event.match(this.victoriaRegex);
-    if (victoriaMatch) {
-      const winner = victoriaMatch[1];
-      this.updateHealthFromVictory(winner);
+
+    // Actualizar salud basado en el tipo de evento
+    if (criticoMatch) {
+      // Reducir salud del oponente con daño crítico
+      const damage = this.calculateCriticalDamage(character1, character2);
+      if (event.includes(character1.nameCharacter)) {
+        this.currentHealth2 = Math.max(0, this.currentHealth2 - damage);
+      } else {
+        this.currentHealth1 = Math.max(0, this.currentHealth1 - damage);
+      }
+    } else if (especialMatch) {
+      // Reducir salud del oponente con habilidad especial
+      const damage = this.calculateSpecialDamage(character1, character2);
+      if (event.includes(character1.nameCharacter)) {
+        this.currentHealth2 = Math.max(0, this.currentHealth2 - damage);
+      } else {
+        this.currentHealth1 = Math.max(0, this.currentHealth1 - damage);
+      }
+    } else if (victoriaMatch) {
+      // No hay cambios de salud en eventos de victoria
+      return;
+    } else {
+      // Ataque normal
+      const attackerName = event.split(' ')[0];
+      const attacker = character1.nameCharacter === attackerName ? character1 : character2;
+      const defender = attacker === character1 ? character2 : character1;
+      
+      // Ataque normal causa daño normal
+      const damage = this.calculateNormalDamage(attacker, defender);
+      if (attacker === character1) {
+        this.currentHealth2 = Math.max(0, this.currentHealth2 - damage);
+      } else {
+        this.currentHealth1 = Math.max(0, this.currentHealth1 - damage);
+      }
     }
   }
 
-  private updateHealthFromAttack(attacker: string, damage: number) {
-    if (!this.battleResult?.events) return;
-
-    const firstEvent = this.battleResult.events[0];
-    const firstMatch = firstEvent.match(/(.+) ataca a (.+) por/);
-    if (!firstMatch) return;
-
-    const user1 = firstMatch[1];
-    const user2 = firstMatch[2];
-
-    if (attacker === user1) {
-      this.attackingCharacter = this.selectedCharacter1!;
-      this.defendingCharacter = this.selectedCharacter2!;
-      this.currentHealth2 = Math.max(0, this.currentHealth2 - damage);
-    } else if (attacker === user2) {
-      this.attackingCharacter = this.selectedCharacter2!;
-      this.defendingCharacter = this.selectedCharacter1!;
-      this.currentHealth1 = Math.max(0, this.currentHealth1 - damage);
-    }
+  private calculateNormalDamage(attacker: Character, defender: Character): number {
+    return Math.floor((attacker.attackCharacter * 1.5) - (defender.defenseCharacter * 0.5));
   }
 
-  private updateHealthFromVictory(winner: string) {
-    if (!this.battleResult?.events) return;
+  private calculateCriticalDamage(attacker: Character, defender: Character): number {
+    return Math.floor((attacker.attackCharacter * 2) - (defender.defenseCharacter * 0.5));
+  }
 
-    const firstEvent = this.battleResult.events[0];
-    const firstMatch = firstEvent.match(/(.+) ataca a (.+) por/);
-    if (!firstMatch) return;
-
-    const user1 = firstMatch[1];
-    const user2 = firstMatch[2];
-
-    if (winner === user1) {
-      this.currentHealth1 = 34;
-      this.currentHealth2 = 0;
-    } else if (winner === user2) {
-      this.currentHealth1 = 0;
-      this.currentHealth2 = 34;
-    }
+  private calculateSpecialDamage(attacker: Character, defender: Character): number {
+    return Math.floor((attacker.attackCharacter * 2.5) - (defender.defenseCharacter * 0.5));
   }
 }

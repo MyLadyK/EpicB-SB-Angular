@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { BattleResult } from '../model/battle-result';
 import { BattleSummary } from '../model/battle-summary';
@@ -18,8 +18,25 @@ export class BattleService {
    * Inicia una batalla contra otro usuario
    * @param opponentId ID del usuario oponente
    */
-  startBattle(opponentId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/start/${opponentId}`, {});
+  startBattle(opponentId: number): Observable<BattleResult> {
+    return this.http.post<BattleResult>(`${this.apiUrl}/start/${opponentId}`, {}).pipe(
+      map(response => {
+        // Asegurarse de que los datos estén en el formato correcto
+        return {
+          idBattle: response.idBattle,
+          user1: response.user1,
+          user2: response.user2,
+          winner: response.winner,
+          events: response.events || [],
+          finalHealth1: response.finalHealth1 || 100,
+          finalHealth2: response.finalHealth2 || 100,
+          battleDate: response.battleDate,
+          date: response.date,
+          opponentName: response.opponentName,
+          result: response.result
+        };
+      })
+    );
   }
 
   /**

@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UserCharacterService {
-  private apiUrl = environment.apiURL + '/user-characters';
+  private apiUrl = environment.apiURL + '/users/user-characters';
 
   constructor(private http: HttpClient) {}
 
@@ -22,5 +22,10 @@ export class UserCharacterService {
   // El token JWT se añade automáticamente por el interceptor JwtInterceptor
   removeCharacterFromCollection(characterId: number): Observable<{message: string}> {
     return this.http.delete<{message: string}>(`${this.apiUrl}/remove/${characterId}`);
+  }
+
+  // Obtener personajes de un usuario específico
+  getUserCharacters(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user/${userId}`);
   }
 }
