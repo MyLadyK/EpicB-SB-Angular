@@ -227,13 +227,33 @@ public class BattleController {
     @PostMapping("/fight")
     public ResponseEntity<?> fight(@RequestBody BattleRequestDTO battleRequest) {
         try {
-            // Obtener usuarios y personajes
+            // Obtener usuarios
             User user1 = userService.getUserById(battleRequest.getUser1Id()).orElseThrow(
                     () -> new IllegalArgumentException("Usuario 1 no encontrado"));
             User user2 = userService.getUserById(battleRequest.getUser2Id()).orElseThrow(
                     () -> new IllegalArgumentException("Usuario 2 no encontrado"));
-            Character character1 = characterService.getCharacterById(battleRequest.getCharacter1Id());
-            Character character2 = characterService.getCharacterById(battleRequest.getCharacter2Id());
+
+            // Obtener UserCharacter objetos
+            UserCharacter userCharacter1 = userCharacterService.getById(battleRequest.getUserCharacter1Id())
+                    .orElseThrow(() -> new IllegalArgumentException("Personaje del usuario 1 no encontrado"));
+            UserCharacter userCharacter2 = userCharacterService.getById(battleRequest.getUserCharacter2Id())
+                    .orElseThrow(() -> new IllegalArgumentException("Personaje del usuario 2 no encontrado"));
+
+            // Verificar que los personajes pertenecen a los usuarios correctos
+            if (userCharacter1.getOwner().getIdUser() != user1.getIdUser()) {
+                throw new IllegalArgumentException("El personaje 1 no pertenece al usuario 1");
+            }
+            if (userCharacter2.getOwner().getIdUser() != user2.getIdUser()) {
+                throw new IllegalArgumentException("El personaje 2 no pertenece al usuario 2");
+            }
+
+            // Obtener los personajes base
+            Character character1 = userCharacter1.getBaseCharacter();
+            Character character2 = userCharacter2.getBaseCharacter();
+
+            if (character1 == null || character2 == null) {
+                throw new IllegalArgumentException("Personaje base no encontrado");
+            }
 
             // Realizar la batalla
             BattleResult result = battleService.battle(
@@ -254,13 +274,33 @@ public class BattleController {
     @PostMapping("/fight/summary")
     public ResponseEntity<?> fightSummary(@RequestBody BattleRequestDTO battleRequest) {
         try {
-            // Obtener usuarios y personajes
+            // Obtener usuarios
             User user1 = userService.getUserById(battleRequest.getUser1Id()).orElseThrow(
                     () -> new IllegalArgumentException("Usuario 1 no encontrado"));
             User user2 = userService.getUserById(battleRequest.getUser2Id()).orElseThrow(
                     () -> new IllegalArgumentException("Usuario 2 no encontrado"));
-            Character character1 = characterService.getCharacterById(battleRequest.getCharacter1Id());
-            Character character2 = characterService.getCharacterById(battleRequest.getCharacter2Id());
+
+            // Obtener UserCharacter objetos
+            UserCharacter userCharacter1 = userCharacterService.getById(battleRequest.getUserCharacter1Id())
+                    .orElseThrow(() -> new IllegalArgumentException("Personaje del usuario 1 no encontrado"));
+            UserCharacter userCharacter2 = userCharacterService.getById(battleRequest.getUserCharacter2Id())
+                    .orElseThrow(() -> new IllegalArgumentException("Personaje del usuario 2 no encontrado"));
+
+            // Verificar que los personajes pertenecen a los usuarios correctos
+            if (userCharacter1.getOwner().getIdUser() != user1.getIdUser()) {
+                throw new IllegalArgumentException("El personaje 1 no pertenece al usuario 1");
+            }
+            if (userCharacter2.getOwner().getIdUser() != user2.getIdUser()) {
+                throw new IllegalArgumentException("El personaje 2 no pertenece al usuario 2");
+            }
+
+            // Obtener los personajes base
+            Character character1 = userCharacter1.getBaseCharacter();
+            Character character2 = userCharacter2.getBaseCharacter();
+
+            if (character1 == null || character2 == null) {
+                throw new IllegalArgumentException("Personaje base no encontrado");
+            }
 
             // Realizar la batalla con resumen
             BattleSummary summary = battleService.battleWithSummary(

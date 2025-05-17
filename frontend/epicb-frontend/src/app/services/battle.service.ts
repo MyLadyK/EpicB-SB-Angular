@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { BattleResult } from '../model/battle-result';
 import { BattleSummary } from '../model/battle-summary';
+import { UserCharacter } from '../model/user-character';
 
 @Injectable({
   providedIn: 'root'
@@ -58,9 +59,23 @@ export class BattleService {
    * Inicia una batalla entre dos personajes
    * @param battleData Datos de la batalla
    */
-  fight(battleData: any): Observable<BattleResult> {
+  fight(character1: UserCharacter, character2: UserCharacter, opponentId: number): Observable<BattleResult> {
+    const battleData = {
+      character1: character1,
+      character2: character2,
+      opponentId: opponentId
+    };
+
     return this.http.post<BattleResult>(`${this.apiUrl}/fight`, battleData)
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map(response => {
+          if (!response || !response.events) {
+            throw new Error('Respuesta de batalla inválida');
+          }
+          return response;
+        }),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -85,6 +100,6 @@ export class BattleService {
     } else {
       errorMsg = error.error || 'Error inesperado en el servidor';
     }
-    return throwError(() => errorMsg);
+    return throwError(() => new Error(errorMsg));
   }
 }
