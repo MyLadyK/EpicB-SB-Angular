@@ -42,6 +42,11 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  updateUserPoints(userId: number, points: number): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${userId}/points`, { points })
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMsg = 'Error desconocido';
     if (error.error instanceof ErrorEvent) {

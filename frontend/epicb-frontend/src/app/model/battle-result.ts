@@ -13,4 +13,6 @@ export interface BattleResult {
   date?: string;
   opponentName?: string;
   result?: string;
+  pointsGained: number;
+  pointsLost: number;
 }

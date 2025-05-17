@@ -9,7 +9,7 @@
            'ring-4 ring-red-500 animate-pulse': battleInProgress && attackingCharacter === selectedCharacter1,
            'ring-4 ring-blue-500': battleInProgress && defendingCharacter === selectedCharacter1
          }">
-      <img [src]="getCharacterImageUrl(getCharacter1())" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
+      <img *ngIf="getCharacter1()" [src]="getCharacterImageUrl(getCharacter1())" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
            [ngClass]="{
              'border-red-500 border-4': battleInProgress && attackingCharacter === selectedCharacter1,
              'border-blue-500 border-4': battleInProgress && defendingCharacter === selectedCharacter1
@@ -17,9 +17,9 @@
       <p class="font-semibold text-blue-800">{{ getCharacterName(getCharacter1()) }}</p>
       <div class="w-full mt-2">
         <div class="h-4 bg-gray-200 rounded-full">
-          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(getCharacter1())"></div>
+          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getCharacter1()?.healthUserCharacter || '100%'">
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth1 : getCharacterHealth(getCharacter1()) }}</span>
+        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth1 : getCharacter1()?.healthUserCharacter || 0 }}</span>
       </div>
     </div>
     <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center"
@@ -27,7 +27,7 @@
            'ring-4 ring-red-500 animate-pulse': battleInProgress && attackingCharacter === selectedCharacter2,
            'ring-4 ring-blue-500': battleInProgress && defendingCharacter === selectedCharacter2
          }">
-      <img [src]="getCharacterImageUrl(getCharacter2())" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
+      <img *ngIf="getCharacter2()" [src]="getCharacterImageUrl(getCharacter2())" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
            [ngClass]="{
              'border-red-500 border-4': battleInProgress && attackingCharacter === selectedCharacter2,
              'border-blue-500 border-4': battleInProgress && defendingCharacter === selectedCharacter2
@@ -35,9 +35,9 @@
       <p class="font-semibold text-blue-800">{{ getCharacterName(getCharacter2()) }}</p>
       <div class="w-full mt-2">
         <div class="h-4 bg-gray-200 rounded-full">
-          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getHealthBarWidth(getCharacter2())"></div>
+          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getCharacter2()?.healthUserCharacter || '100%'">
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth2 : getCharacterHealth(getCharacter2()) }}</span>
+        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth2 : getCharacter2()?.healthUserCharacter || 0 }}</span>
       </div>
     </div>
   </div>
@@ -59,25 +59,25 @@
       <div *ngFor="let event of battleResult.events; let i = index" class="mb-2 text-gray-800"
            [ngClass]="{'font-bold': i === currentEventIndex - 1, 'opacity-50': !eventAnimations[i]}">
         <span [ngClass]="{
-          'font-bold text-red-600': event.includes('crítico'),
-          'font-bold text-purple-600': event.includes('especial'),
-          'font-bold text-green-600': event.includes('gana'),
+          'font-bold text-red-600': event.description?.includes('Golpe crítico'),
+          'font-bold text-purple-600': event.description?.includes('Habilidad especial'),
+          'font-bold text-green-600': event.description?.includes('Victoria'),
           'animate-pulse': i === currentEventIndex - 1 && battleInProgress
         }">
-          {{ event }}
+          {{ event.description || 'Evento de batalla' }}
         </span>
       </div>
 
       <!-- Mostrar el resultado final solo cuando la batalla ha terminado -->
       <div *ngIf="!battleInProgress && battleResult" class="mt-4 border-t pt-4 border-gray-300">
         <div class="mt-2">
-          <span class="font-semibold text-green-700">{{ battleResult.result }}</span>
+          <span class="font-semibold text-green-700">{{ battleResult?.result || 'Resultado desconocido' }}</span>
         </div>
         <div class="mt-2 text-blue-700">
-          <span class="font-semibold">Oponente:</span> {{ battleResult.opponentName }}
+          <span class="font-semibold">Oponente:</span> {{ battleResult?.opponentName || 'Oponente desconocido' }}
         </div>
         <div class="mt-2 text-gray-700">
-          <span class="font-semibold">Fecha:</span> {{ battleResult.date }}
+          <span class="font-semibold">Fecha:</span> {{ battleResult?.date || 'Fecha desconocida' }}
         </div>
       </div>
     </div>

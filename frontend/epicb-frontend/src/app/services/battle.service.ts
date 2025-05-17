@@ -23,7 +23,7 @@ export class BattleService {
     return this.http.post<BattleResult>(`${this.apiUrl}/start/${opponentId}`, {}).pipe(
       map(response => {
         // Asegurarse de que los datos estén en el formato correcto
-        return {
+        const result: BattleResult = {
           idBattle: response.idBattle,
           user1: response.user1,
           user2: response.user2,
@@ -34,8 +34,15 @@ export class BattleService {
           battleDate: response.battleDate,
           date: response.date,
           opponentName: response.opponentName,
-          result: response.result
+          result: response.result,
+          pointsGained: response.winner.idUser === response.user1.idUser ? 20 : -8,
+          pointsLost: response.winner.idUser === response.user1.idUser ? -8 : 20
         };
+        return result;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error al iniciar la batalla:', error);
+        throw error;
       })
     );
   }
