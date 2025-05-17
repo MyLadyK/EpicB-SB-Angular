@@ -69,7 +69,7 @@ export class BattleComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const opponentId = params['id'];
-      
+
       if (opponentId) {
         this.opponentId = parseInt(opponentId);
         this.userService.getUserById(this.opponentId!).subscribe(
@@ -368,14 +368,14 @@ export class BattleComponent implements OnInit {
       return;
     }
 
-    const totalEvents = this.battleResult.events.length;
+    const totalEvents = this.battleResult?.events?.length || 0;
     const showNextEvent = () => {
       if (this.currentEventIndex >= totalEvents) {
         this.battleInProgress = false;
         return;
       }
 
-      const event = this.battleResult.events[this.currentEventIndex];
+      const event = this.battleResult?.events[this.currentEventIndex];
       if (!event) {
         this.handleError('Error: Evento no válido');
         return;
