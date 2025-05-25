@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { BattleResult } from '../model/battle-result';
 import { BattleSummary } from '../model/battle-summary';
 import { UserCharacter } from '../model/user-character';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,10 @@ import { UserCharacter } from '../model/user-character';
 export class BattleService {
   private apiUrl = environment.apiURL + '/battles';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
   /**
    * Inicia una batalla contra otro usuario
@@ -67,11 +71,30 @@ export class BattleService {
    * @param battleData Datos de la batalla
    */
   fight(character1: UserCharacter, character2: UserCharacter, opponentId: number): Observable<BattleResult> {
+    const currentUser = this.authService.getCurrentUser();
+    
+    if (!currentUser || !currentUser.idUser) {
+      return throwError(() => new Error('Usuario no autenticado'));
+    }
+
+    // Validar que no se está intentando luchar contra uno mismo
+    if (currentUser.idUser === opponentId) {
+      return throwError(() => new Error('No puedes luchar contra ti mismo'));
+    }
+
+    console.log('BattleService - fight - currentUser:', currentUser);
+    console.log('BattleService - fight - opponentId:', opponentId);
+    
     const battleData = {
       character1: character1,
       character2: character2,
-      opponentId: opponentId
+      user1Id: currentUser.idUser,
+      user2Id: opponentId,
+      userCharacter1Id: character1.idUserCharacter,
+      userCharacter2Id: character2.idUserCharacter
     };
+
+    console.log('BattleService - fight - battleData:', battleData);
 
     return this.http.post<BattleResult>(`${this.apiUrl}/fight`, battleData)
       .pipe(

@@ -8,4 +8,5 @@ export interface User {
   lastEnergyRefill?: string;
   pointsUser?: number;
   token?: string; // JWT
+  role?: string;
 }

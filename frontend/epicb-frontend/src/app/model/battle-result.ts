@@ -10,9 +10,9 @@ export interface BattleResult {
   finalHealth1: number;
   finalHealth2: number;
   battleDate: Date;
-  date?: string;
-  opponentName?: string;
-  result?: string;
+  date: string;
+  opponentName: string;
+  result: string;
   pointsGained: number;
   pointsLost: number;
 }

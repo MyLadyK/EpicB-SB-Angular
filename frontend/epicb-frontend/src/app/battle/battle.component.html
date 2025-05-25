@@ -1,7 +1,6 @@
 <div class="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-lg p-8">
   <h2 class="text-2xl font-bold mb-6 text-blue-900">
-    <span *ngIf="!autoStarted">Simulación de Batalla</span>
-    <span *ngIf="autoStarted">⚔️ Batalla contra {{ opponentName }} ⚔️</span>
+    <span>⚔️ Batalla contra {{ opponent?.nameUser || 'Oponente' }} ⚔️</span>
   </h2>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
     <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center"
@@ -42,7 +41,7 @@
     </div>
   </div>
 
-  <div class="flex justify-center mb-6" *ngIf="!autoStarted">
+  <div class="flex justify-center mb-6">
     <button (click)="fight()" [disabled]="loading" class="btn bg-blue-700 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-900 transition-colors">Iniciar Batalla</button>
   </div>
 
@@ -71,13 +70,13 @@
       <!-- Mostrar el resultado final solo cuando la batalla ha terminado -->
       <div *ngIf="!battleInProgress && battleResult" class="mt-4 border-t pt-4 border-gray-300">
         <div class="mt-2">
-          <span class="font-semibold text-green-700">{{ battleResult?.result || 'Resultado desconocido' }}</span>
+          <span class="font-semibold text-green-700">{{ battleResult.result || 'Resultado desconocido' }}</span>
         </div>
         <div class="mt-2 text-blue-700">
-          <span class="font-semibold">Oponente:</span> {{ battleResult?.opponentName || 'Oponente desconocido' }}
+          <span class="font-semibold">Oponente:</span> {{ opponent?.nameUser || 'Oponente desconocido' }}
         </div>
         <div class="mt-2 text-gray-700">
-          <span class="font-semibold">Fecha:</span> {{ battleResult?.date || 'Fecha desconocida' }}
+          <span class="font-semibold">Fecha:</span> {{ battleResult.date || 'Fecha desconocida' }}
         </div>
       </div>
     </div>
