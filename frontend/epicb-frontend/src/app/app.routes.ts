@@ -46,7 +46,7 @@ export const routes: Routes = [
     canActivate: [UserGuard]
   },
   {
-    path: 'battle/:opponentId',
+    path: 'battle/:id',
     component: BattleComponent,
     canActivate: [UserGuard]
   },

@@ -10,4 +10,7 @@ export interface UserCharacter {
   speedUserCharacter: number;
   staminaUserCharacter: number;
   intelligenceUserCharacter: number;
+  specialUserCharacter: number;
+  imageUrlUserCharacter: string;
+  timesUsed: number;
 }

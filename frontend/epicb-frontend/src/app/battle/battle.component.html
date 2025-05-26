@@ -45,11 +45,18 @@
     <button (click)="fight()" [disabled]="loading" class="btn bg-blue-700 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-900 transition-colors">Iniciar Batalla</button>
   </div>
 
-  <div *ngIf="loading">
-    <p>Cargando resumen de batalla...</p>
+  <div *ngIf="loading" class="text-center p-4">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto"></div>
+    <p class="mt-2 text-gray-600">Cargando resumen de batalla...</p>
   </div>
-  <div *ngIf="error" class="error">
-    <p>{{ error }}</p>
+  
+  <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 my-4 rounded shadow-md">
+    <div class="flex items-center">
+      <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <p>{{ error }}</p>
+    </div>
   </div>
 
   <div *ngIf="battleResult" class="mt-8">
@@ -70,13 +77,30 @@
       <!-- Mostrar el resultado final solo cuando la batalla ha terminado -->
       <div *ngIf="!battleInProgress && battleResult" class="mt-4 border-t pt-4 border-gray-300">
         <div class="mt-2">
-          <span class="font-semibold text-green-700">{{ battleResult.result || 'Resultado desconocido' }}</span>
+          <span class="font-semibold text-green-700">{{ battleResult?.result || 'Resultado desconocido' }}</span>
         </div>
+        
+        <!-- Mostrar el paquete sorpresa con animación -->
+        <div *ngIf="battleResult.events" class="surprise-banner">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a4 4 0 00-4-4H5.5A2.5 2.5 0 003 4.5v0A2.5 2.5 0 005.5 7H8m4-3h3a4 4 0 014 4v0a4 4 0 01-4 4H8"/>
+          </svg>
+          <span>¡Paquete Sorpresa Obtenido!</span>
+        </div>
+
+        <!-- Mostrar los puntos ganados/perdidos -->
+        <div class="points-banner">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+          <span>{{ battleResult.pointsGained > 0 ? '+' + battleResult.pointsGained : battleResult.pointsLost }} puntos de ranking</span>
+        </div>
+
         <div class="mt-2 text-blue-700">
           <span class="font-semibold">Oponente:</span> {{ opponent?.nameUser || 'Oponente desconocido' }}
         </div>
         <div class="mt-2 text-gray-700">
-          <span class="font-semibold">Fecha:</span> {{ battleResult.date || 'Fecha desconocida' }}
+          <span class="font-semibold">Fecha:</span> {{ battleResult?.date || 'Fecha desconocida' }}
         </div>
       </div>
     </div>
