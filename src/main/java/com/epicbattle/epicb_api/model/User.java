@@ -1,6 +1,7 @@
 package com.epicbattle.epicb_api.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -13,10 +14,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "idUser"
+)
 public class User {
 
     @Id
@@ -43,18 +47,20 @@ public class User {
     private int pointsUser;
 
     @OneToMany(mappedBy = "owner")
-    @JsonManagedReference
     private List<UserCharacter> characters;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference(value="user-messages-sent")
     private List<Message> messagesSent;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference(value="user-messages-received")
     private List<Message> messagesReceived;
 
+    @OneToMany(mappedBy = "user1")
+    private List<BattleResult> battlesAsUser1;
+
+    @OneToMany(mappedBy = "user2")
+    private List<BattleResult> battlesAsUser2;
+
     @OneToMany(mappedBy = "winner")
-    @JsonManagedReference(value="user-battle-results")
-    private List<BattleResult> battleResults;
+    private List<BattleResult> battlesWon;
 }

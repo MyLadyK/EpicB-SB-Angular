@@ -36,4 +36,16 @@ public class RankingService {
         }
         rankingRepository.save(ranking);
     }
+
+    public void updateRanking(User user) {
+        Ranking ranking = rankingRepository.findByUser_IdUser(user.getIdUser())
+                .orElseGet(() -> {
+                    Ranking newRanking = new Ranking();
+                    newRanking.setUser(user);
+                    return newRanking;
+                });
+        
+        ranking.setUserPoints(user.getPointsUser());
+        rankingRepository.save(ranking);
+    }
 }

@@ -2,7 +2,7 @@ import { User } from './user';
 import { BattleEvent } from './battle-event';
 
 export interface BattleResult {
-  idBattle: number;
+  idBattleResult: number;
   user1: User;
   user2: User;
   winner: User;
@@ -15,4 +15,5 @@ export interface BattleResult {
   result: string;
   pointsGained: number;
   pointsLost: number;
+  surprisePackageDescription?: string;
 }

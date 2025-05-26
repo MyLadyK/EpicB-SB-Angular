@@ -247,21 +247,32 @@ public class BattleController {
                 throw new IllegalArgumentException("El personaje 2 no pertenece al usuario 2");
             }
 
-            // Obtener los personajes base
-            Character character1 = userCharacter1.getBaseCharacter();
-            Character character2 = userCharacter2.getBaseCharacter();
-
-            if (character1 == null || character2 == null) {
-                throw new IllegalArgumentException("Personaje base no encontrado");
+            // Validaciones adicionales del estado de los personajes
+            if (userCharacter1.getHealthUserCharacter() <= 0) {
+                throw new IllegalArgumentException("El personaje 1 no tiene salud suficiente para batallar");
+            }
+            if (userCharacter2.getHealthUserCharacter() <= 0) {
+                throw new IllegalArgumentException("El personaje 2 no tiene salud suficiente para batallar");
             }
 
-            // Realizar la batalla
+            // Verificar que los personajes no están en otra batalla activa
+            if (userCharacter1.getTimesUsed() > 100) {
+                throw new IllegalArgumentException("El personaje 1 necesita descansar antes de otra batalla");
+            }
+            if (userCharacter2.getTimesUsed() > 100) {
+                throw new IllegalArgumentException("El personaje 2 necesita descansar antes de otra batalla");
+            }
+
+            // Realizar la batalla usando el servicio
             BattleResult result = battleService.battle(
-                    user1, character1, user2, character2, 
-                    battleRequest.getUserCharacter1Id(), battleRequest.getUserCharacter2Id());
+                    user1, userCharacter1,
+                    user2, userCharacter2,
+                    battleRequest.getUserCharacter1Id(),
+                    battleRequest.getUserCharacter2Id());
 
             return ResponseEntity.ok(result);
         } catch (Exception e) {
+            e.printStackTrace(); // Para ver el error en los logs
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
@@ -294,17 +305,26 @@ public class BattleController {
                 throw new IllegalArgumentException("El personaje 2 no pertenece al usuario 2");
             }
 
-            // Obtener los personajes base
-            Character character1 = userCharacter1.getBaseCharacter();
-            Character character2 = userCharacter2.getBaseCharacter();
+            // Validaciones adicionales del estado de los personajes
+            if (userCharacter1.getHealthUserCharacter() <= 0) {
+                throw new IllegalArgumentException("El personaje 1 no tiene salud suficiente para batallar");
+            }
+            if (userCharacter2.getHealthUserCharacter() <= 0) {
+                throw new IllegalArgumentException("El personaje 2 no tiene salud suficiente para batallar");
+            }
 
-            if (character1 == null || character2 == null) {
-                throw new IllegalArgumentException("Personaje base no encontrado");
+            // Verificar que los personajes no están en otra batalla activa
+            if (userCharacter1.getTimesUsed() > 100) {
+                throw new IllegalArgumentException("El personaje 1 necesita descansar antes de otra batalla");
+            }
+            if (userCharacter2.getTimesUsed() > 100) {
+                throw new IllegalArgumentException("El personaje 2 necesita descansar antes de otra batalla");
             }
 
             // Realizar la batalla con resumen
             BattleSummary summary = battleService.battleWithSummary(
-                    user1, character1, user2, character2, 
+                    user1, userCharacter1,
+                    user2, userCharacter2, 
                     battleRequest.getUserCharacter1Id(), battleRequest.getUserCharacter2Id());
 
             return ResponseEntity.ok(summary);
@@ -321,25 +341,9 @@ public class BattleController {
     private void transformImageUrl(UserCharacter userCharacter) {
         if (userCharacter != null && userCharacter.getImageUrlUserCharacter() != null) {
             String imageUrl = userCharacter.getImageUrlUserCharacter();
-            // Si la URL comienza con "/assets", añadir el prefijo del servidor backend
-            if (imageUrl.startsWith("/assets")) {
-                // Usar "http://localhost:8081" como prefijo para el servidor backend
-                String backendUrl = "http://localhost:8081";
-                String fullImageUrl = backendUrl + imageUrl;
+            if (!imageUrl.startsWith("http")) {
+                String fullImageUrl = "http://localhost:8081" + imageUrl;
                 userCharacter.setImageUrlUserCharacter(fullImageUrl);
-            }
-        }
-
-        // También transformar la URL de la imagen del personaje base si existe
-        if (userCharacter != null && userCharacter.getBaseCharacter() != null && 
-            userCharacter.getBaseCharacter().getImageUrl() != null) {
-            String imageUrl = userCharacter.getBaseCharacter().getImageUrl();
-            // Si la URL comienza con "/assets", añadir el prefijo del servidor backend
-            if (imageUrl.startsWith("/assets")) {
-                // Usar "http://localhost:8081" como prefijo para el servidor backend
-                String backendUrl = "http://localhost:8081";
-                String fullImageUrl = backendUrl + imageUrl;
-                userCharacter.getBaseCharacter().setImageUrl(fullImageUrl);
             }
         }
     }

@@ -53,25 +53,28 @@ export class CharacterListComponent implements OnInit {
   }
 
   isInCollection(character: Character): boolean {
-    return this.userCollection.some(uc => uc.baseCharacter.idCharacter === character.idCharacter);
+    return this.userCollection.some(uc => uc.baseCharacter?.idCharacter === character.idCharacter);
   }
 
   canAddToCollection(): boolean {
     return this.userCollection.length < 8;
   }
 
-  addToCollection(character: Character) {
+  addToCollection(character: Character): void {
     if (!this.canAddToCollection()) {
       this.feedbackMsg = 'No puedes tener más de 8 personajes en tu colección.';
       return;
     }
+
+    this.loadingCollection = true;
     this.userCharacterService.addCharacterToCollection(character.idCharacter).subscribe({
-      next: () => {
-        this.feedbackMsg = 'Personaje añadido a tu colección.';
+      next: (response) => {
+        this.feedbackMsg = response.message;
         this.loadUserCollection();
       },
-      error: (err) => {
-        this.feedbackMsg = err.error || 'No se pudo añadir el personaje.';
+      error: (error) => {
+        this.feedbackMsg = error.error?.message || 'Error al añadir el personaje a la colección';
+        this.loadingCollection = false;
       }
     });
   }

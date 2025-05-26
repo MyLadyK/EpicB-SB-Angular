@@ -1,6 +1,7 @@
 package com.epicbattle.epicb_api.service;
 
 import com.epicbattle.epicb_api.model.BattleResult;
+import com.epicbattle.epicb_api.model.BattleEvent;
 import com.epicbattle.epicb_api.model.Character;
 import com.epicbattle.epicb_api.model.User;
 import com.epicbattle.epicb_api.model.UserCharacter;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,12 +35,7 @@ public class BattleService {
      * Realiza una batalla avanzada entre dos personajes de usuario y otorga recompensa al ganador.
      * Lanza IllegalArgumentException si algún personaje de usuario no existe.
      */
-    public BattleResult battle(User user1, Character character1, User user2, Character character2, int userCharacter1Id, int userCharacter2Id) {
-        UserCharacter uc1 = userCharacterService.getById(userCharacter1Id)
-                .orElseThrow(() -> new IllegalArgumentException("UserCharacter1 no encontrado"));
-        UserCharacter uc2 = userCharacterService.getById(userCharacter2Id)
-                .orElseThrow(() -> new IllegalArgumentException("UserCharacter2 no encontrado"));
-
+    public BattleResult battle(User user1, UserCharacter uc1, User user2, UserCharacter uc2, int userCharacter1Id, int userCharacter2Id) {
         // Clonar salud para simulación (no modificar objeto real)
         double health1 = uc1.getHealthUserCharacter();
         double health2 = uc2.getHealthUserCharacter();
@@ -47,65 +44,153 @@ public class BattleService {
         int attacks1 = (int) Math.max(1, Math.round(uc1.getSpeedUserCharacter() / Math.max(1, uc2.getSpeedUserCharacter())));
         int attacks2 = (int) Math.max(1, Math.round(uc2.getSpeedUserCharacter() / Math.max(1, uc1.getSpeedUserCharacter())));
 
-        // Simulación de combate por rondas
+        List<BattleEvent> events = new ArrayList<>();
         int round = 1;
-        while (health1 > 0 && health2 > 0 && round <= 50) { // límite de rondas para evitar bucles infinitos
-            // Turnos de uc1
+        String surpriseDesc = null;
+        SurprisePackage surprisePackage = null;
+        User winner = null;
+        UserCharacter winnerCharacter = null;
+
+        // Simulación de combate por rondas
+        while (health1 > 0 && health2 > 0) {
+            // Ataques del personaje 1
             for (int i = 0; i < attacks1 && health2 > 0; i++) {
-                double damage = calcularDanio(uc1, uc2);
-                health2 -= damage;
+                double damage = calculateDamage(uc1, uc2);
+                health2 = Math.max(0, health2 - damage);
+                BattleEvent event = new BattleEvent(
+                    BattleEvent.Target.character2,
+                    damage,
+                    uc1,
+                    uc2,
+                    String.format("El personaje de %s ataca causando %.1f de daño", user1.getNameUser(), damage)
+                );
+                events.add(event);
             }
-            // Turnos de uc2
+
+            // Ataques del personaje 2
             for (int i = 0; i < attacks2 && health1 > 0; i++) {
-                double damage = calcularDanio(uc2, uc1);
-                health1 -= damage;
+                double damage = calculateDamage(uc2, uc1);
+                health1 = Math.max(0, health1 - damage);
+                BattleEvent event = new BattleEvent(
+                    BattleEvent.Target.character1,
+                    damage,
+                    uc2,
+                    uc1,
+                    String.format("El personaje de %s ataca causando %.1f de daño", user2.getNameUser(), damage)
+                );
+                events.add(event);
             }
+
             round++;
+            if (round > 50) break; // Límite de seguridad
         }
 
-        User winner;
-        int winnerUserCharacterId;
+        // Determinar ganador
         if (health1 > health2) {
             winner = user1;
-            winnerUserCharacterId = userCharacter1Id;
+            winnerCharacter = uc1;
+            events.add(new BattleEvent(
+                BattleEvent.Target.character1,
+                0,
+                uc1,
+                uc2,
+                "¡Victoria para " + user1.getNameUser() + "!"
+            ));
         } else {
             winner = user2;
-            winnerUserCharacterId = userCharacter2Id;
+            winnerCharacter = uc2;
+            events.add(new BattleEvent(
+                BattleEvent.Target.character2,
+                0,
+                uc2,
+                uc1,
+                "¡Victoria para " + user2.getNameUser() + "!"
+            ));
         }
 
+        // Aplicar paquete sorpresa al ganador
+        try {
+            surprisePackage = surprisePackageService.getRandomSurprisePackage();
+            if (surprisePackage != null) {
+                surprisePackageService.applyPackageToCharacter(winnerCharacter, surprisePackage);
+                surpriseDesc = String.format("¡%s ha ganado un paquete sorpresa! %s", 
+                    winner.getNameUser(), surprisePackage.getDescription());
+                events.add(new BattleEvent(
+                    winner.equals(user1) ? BattleEvent.Target.character1 : BattleEvent.Target.character2,
+                    0,
+                    winnerCharacter,
+                    winner.equals(user1) ? uc2 : uc1,
+                    surpriseDesc
+                ));
+                
+                // Guardar el personaje actualizado
+                userCharacterService.save(winnerCharacter);
+            }
+        } catch (Exception e) {
+            // Log el error pero permite que la batalla continúe
+            System.err.println("Error al aplicar paquete sorpresa: " + e.getMessage());
+            surpriseDesc = "No se pudo aplicar el paquete sorpresa";
+        }
+
+        // Incrementar veces usado
+        uc1.setTimesUsed(uc1.getTimesUsed() + 1);
+        uc2.setTimesUsed(uc2.getTimesUsed() + 1);
+        userCharacterService.save(uc1);
+        userCharacterService.save(uc2);
+
+        // Actualizar ranking
+        rankingService.updateRanking(user1);
+        rankingService.updateRanking(user2);
+
+        // Crear y guardar el resultado de la batalla
         BattleResult battleResult = new BattleResult();
         battleResult.setUser1(user1);
         battleResult.setUser2(user2);
         battleResult.setWinner(winner);
-        battleResult.setBattleDate(new java.util.Date());
+        battleResult.setBattleDate(new Date());
+        battleResult.setEvents(events);
+        
+        // Establecer los campos transient
+        boolean isUser1Winner = winner.equals(user1);
+        battleResult.setTransientFields(
+            health1,  // Salud final del personaje 1
+            health2,  // Salud final del personaje 2
+            isUser1Winner ? user2.getNameUser() : user1.getNameUser(),  // Nombre del oponente
+            isUser1Winner,  // Si user1 es el ganador
+            surpriseDesc   // Descripción del paquete sorpresa
+        );
 
-        // Otorgar recompensa al personaje ganador
-        userCharacterService.getById(winnerUserCharacterId).ifPresent(userCharacter -> {
-            SurprisePackage surprise = surprisePackageService.getRandomPackage();
-            applySurprisePackageToUserCharacter(userCharacter, surprise);
-            userCharacterService.save(userCharacter);
-        });
-
-        // Sumar puntos al ranking del usuario ganador y restar al perdedor
-        rankingService.addPointsToUser(winner, 20);
-
-        // Determinar el perdedor y restarle puntos
-        User loser = winner.equals(user1) ? user2 : user1;
-        rankingService.addPointsToUser(loser, -8);
-
-        return battleResultRepository.save(battleResult);
+        // Guardar el resultado y manejar posibles errores
+        try {
+            // Asegurarse de que las referencias a los usuarios están establecidas correctamente
+            battleResult.setUser1(user1);
+            battleResult.setUser2(user2);
+            battleResult.setWinner(winner);
+            
+            // Limpiar referencias transient de los eventos antes de guardar
+            for (BattleEvent event : events) {
+                event.setAttacker(null);
+                event.setDefender(null);
+            }
+            battleResult.setEvents(events);
+            
+            // Guardar el resultado
+            BattleResult savedResult = battleResultRepository.save(battleResult);
+            
+            // Recargar el resultado completo con todas sus relaciones
+            return battleResultRepository.findById(savedResult.getIdBattleResult())
+                .orElseThrow(() -> new RuntimeException("Error al recuperar el resultado de la batalla guardado"));
+        } catch (Exception e) {
+            e.printStackTrace(); // Para ver el error en los logs
+            throw new RuntimeException("Error al guardar el resultado de la batalla: " + e.getMessage(), e);
+        }
     }
 
     /**
      * Simula una batalla y devuelve un resumen detallado de las acciones y el resultado.
      * Lanza IllegalArgumentException si algún personaje de usuario no existe.
      */
-    public BattleSummary battleWithSummary(User user1, Character character1, User user2, Character character2, int userCharacter1Id, int userCharacter2Id) {
-        UserCharacter uc1 = userCharacterService.getById(userCharacter1Id)
-                .orElseThrow(() -> new IllegalArgumentException("UserCharacter1 no encontrado"));
-        UserCharacter uc2 = userCharacterService.getById(userCharacter2Id)
-                .orElseThrow(() -> new IllegalArgumentException("UserCharacter2 no encontrado"));
-
+    public BattleSummary battleWithSummary(User user1, UserCharacter uc1, User user2, UserCharacter uc2, int userCharacter1Id, int userCharacter2Id) {
         double health1 = uc1.getHealthUserCharacter();
         double health2 = uc2.getHealthUserCharacter();
         int attacks1 = (int) Math.max(1, Math.round(uc1.getSpeedUserCharacter() / Math.max(1, uc2.getSpeedUserCharacter())));
@@ -117,30 +202,34 @@ public class BattleService {
             events.add("--- Ronda " + round + " ---");
             // Turnos de uc1
             for (int i = 0; i < attacks1 && health2 > 0; i++) {
-                double damage = calcularDanio(uc1, uc2);
-                health2 -= damage;
-                events.add(user1.getNameUser() + " ataca a " + user2.getNameUser() + " por " + damage + " de daño");
+                double damage = calculateDamage(uc1, uc2);
+                health2 = Math.max(0, health2 - damage);
+                events.add(String.format("El personaje de %s ataca causando %.1f de daño",
+                    user1.getNameUser(),
+                    damage));
 
                 // Añadir eventos especiales con probabilidad aleatoria
                 if (Math.random() < 0.2) { // 20% de probabilidad de golpe crítico
-                    events.add(user1.getNameUser() + " realiza un golpe crítico");
+                    events.add("¡" + user1.getNameUser() + " realiza un golpe crítico!");
                 }
                 if (Math.random() < 0.15) { // 15% de probabilidad de habilidad especial
-                    events.add(user1.getNameUser() + " usa habilidad especial");
+                    events.add("¡" + user1.getNameUser() + " usa una habilidad especial!");
                 }
             }
             // Turnos de uc2
             for (int i = 0; i < attacks2 && health1 > 0; i++) {
-                double damage = calcularDanio(uc2, uc1);
-                health1 -= damage;
-                events.add(user2.getNameUser() + " ataca a " + user1.getNameUser() + " por " + damage + " de daño");
+                double damage = calculateDamage(uc2, uc1);
+                health1 = Math.max(0, health1 - damage);
+                events.add(String.format("El personaje de %s ataca causando %.1f de daño",
+                    user2.getNameUser(),
+                    damage));
 
                 // Añadir eventos especiales con probabilidad aleatoria
                 if (Math.random() < 0.2) { // 20% de probabilidad de golpe crítico
-                    events.add(user2.getNameUser() + " realiza un golpe crítico");
+                    events.add("¡" + user2.getNameUser() + " realiza un golpe crítico!");
                 }
                 if (Math.random() < 0.15) { // 15% de probabilidad de habilidad especial
-                    events.add(user2.getNameUser() + " usa habilidad especial");
+                    events.add("¡" + user2.getNameUser() + " usa una habilidad especial!");
                 }
             }
             round++;
@@ -162,12 +251,13 @@ public class BattleService {
         // Otorgar recompensa al personaje ganador
         final String[] surpriseDescription = {null};
         userCharacterService.getById(winnerUserCharacterId).ifPresent(userCharacter -> {
-            SurprisePackage surprise = surprisePackageService.getRandomPackage();
-            applySurprisePackageToUserCharacter(userCharacter, surprise);
-            userCharacterService.save(userCharacter);
-            String desc = "¡" + winner.getNameUser() + " recibe un paquete sorpresa: " + surprise.getDescription() + "!";
-            events.add(desc);
-            surpriseDescription[0] = surprise.getDescription();
+            SurprisePackage surprise = surprisePackageService.getRandomSurprisePackage();
+            if (surprise != null) {
+                surprisePackageService.applyPackageToCharacter(userCharacter, surprise);
+                String desc = "¡" + winner.getNameUser() + " recibe un paquete sorpresa: " + surprise.getDescription() + "!";
+                events.add(desc);
+                surpriseDescription[0] = surprise.getDescription();
+            }
         });
 
         // Sumar puntos al ranking del usuario ganador y restar al perdedor
@@ -201,7 +291,7 @@ public class BattleService {
     /**
      * Calcula el daño de un ataque considerando ataque, defensa, inteligencia y especial.
      */
-    private double calcularDanio(UserCharacter atacante, UserCharacter defensor) {
+    private double calculateDamage(UserCharacter atacante, UserCharacter defensor) {
         // Base: ataque - defensa
         double base = atacante.getAttackUserCharacter() - (defensor.getDefenseUserCharacter() * 0.7);
         base = Math.max(1, base); // Daño mínimo
@@ -222,25 +312,25 @@ public class BattleService {
     private void applySurprisePackageToUserCharacter(UserCharacter userCharacter, SurprisePackage surprise) {
         switch (surprise.getModificationType()) {
             case "attack":
-                userCharacter.setAttackUserCharacter(Math.min(userCharacter.getAttackUserCharacter() + surprise.getModificationValue(), 10));
+                userCharacter.setAttackUserCharacter(userCharacter.getAttackUserCharacter() + surprise.getModificationValue());
                 break;
             case "defense":
-                userCharacter.setDefenseUserCharacter(Math.min(userCharacter.getDefenseUserCharacter() + surprise.getModificationValue(), 10));
+                userCharacter.setDefenseUserCharacter(userCharacter.getDefenseUserCharacter() + surprise.getModificationValue());
                 break;
             case "speed":
-                userCharacter.setSpeedUserCharacter(Math.min(userCharacter.getSpeedUserCharacter() + surprise.getModificationValue(), 10));
+                userCharacter.setSpeedUserCharacter(userCharacter.getSpeedUserCharacter() + surprise.getModificationValue());
                 break;
             case "stamina":
-                userCharacter.setStaminaUserCharacter(Math.min(userCharacter.getStaminaUserCharacter() + surprise.getModificationValue(), 10));
+                userCharacter.setStaminaUserCharacter(userCharacter.getStaminaUserCharacter() + surprise.getModificationValue());
                 break;
             case "intelligence":
-                userCharacter.setIntelligenceUserCharacter(Math.min(userCharacter.getIntelligenceUserCharacter() + surprise.getModificationValue(), 10));
+                userCharacter.setIntelligenceUserCharacter(userCharacter.getIntelligenceUserCharacter() + surprise.getModificationValue());
                 break;
             case "special":
-                userCharacter.setSpecialUserCharacter(Math.min(userCharacter.getSpecialUserCharacter() + surprise.getModificationValue(), 5));
+                userCharacter.setSpecialUserCharacter(userCharacter.getSpecialUserCharacter() + surprise.getModificationValue());
                 break;
             case "health":
-                userCharacter.setHealthUserCharacter(Math.min(userCharacter.getHealthUserCharacter() + surprise.getModificationValue(), 100));
+                userCharacter.setHealthUserCharacter(userCharacter.getHealthUserCharacter() + surprise.getModificationValue());
                 break;
         }
     }

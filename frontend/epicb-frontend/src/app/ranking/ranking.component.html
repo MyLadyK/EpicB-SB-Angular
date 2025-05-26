@@ -25,10 +25,26 @@
           <div class="card battle-character-card">
             <div class="card-header">Tu Personaje</div>
             <div class="card-body">
-              <h6 style="color: #FF69B4;">{{ battleResult.currentUserCharacter.baseCharacter.nameCharacter }}</h6>
+              <div class="base-character-info mb-3">
+                <h6 style="color: #FF69B4;">{{ battleResult.currentUserCharacter.baseCharacter.nameCharacter }}</h6>
+                <p class="text-muted mb-1">
+                  {{ battleResult.currentUserCharacter.baseCharacter.categoryCharacter }} | 
+                  {{ battleResult.currentUserCharacter.baseCharacter.universeCharacter }}
+                </p>
+              </div>
               <img [src]="battleResult.currentUserCharacter.imageUrlUserCharacter"
-                   alt="Tu personaje" class="img-fluid mb-2 battle-character-img">
-              <p>Puntos actuales: <span style="color: #00FF7F; font-weight: bold;">{{ battleResult.currentUserPoints }}</span></p>
+                   alt="Tu personaje" class="img-fluid mb-3 battle-character-img">
+              <div class="user-character-stats">
+                <p>Puntos actuales: <span style="color: #00FF7F; font-weight: bold;">{{ battleResult.currentUserPoints }}</span></p>
+                <div class="stats-grid">
+                  <small class="text-muted">
+                    <span class="stat-label">Salud:</span> <span class="stat-value">{{ battleResult.currentUserCharacter.healthUserCharacter }}</span><br>
+                    <span class="stat-label">Ataque:</span> <span class="stat-value">{{ battleResult.currentUserCharacter.attackUserCharacter }}</span><br>
+                    <span class="stat-label">Defensa:</span> <span class="stat-value">{{ battleResult.currentUserCharacter.defenseUserCharacter }}</span><br>
+                    <span class="stat-label">Velocidad:</span> <span class="stat-value">{{ battleResult.currentUserCharacter.speedUserCharacter }}</span>
+                  </small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -36,10 +52,26 @@
           <div class="card battle-character-card">
             <div class="card-header">Personaje Oponente</div>
             <div class="card-body">
-              <h6 style="color: #FF69B4;">{{ battleResult.opponentCharacter.baseCharacter.nameCharacter }}</h6>
+              <div class="base-character-info mb-3">
+                <h6 style="color: #FF69B4;">{{ battleResult.opponentCharacter.baseCharacter.nameCharacter }}</h6>
+                <p class="text-muted mb-1">
+                  {{ battleResult.opponentCharacter.baseCharacter.categoryCharacter }} | 
+                  {{ battleResult.opponentCharacter.baseCharacter.universeCharacter }}
+                </p>
+              </div>
               <img [src]="battleResult.opponentCharacter.imageUrlUserCharacter"
-                   alt="Personaje oponente" class="img-fluid mb-2 battle-character-img">
-              <p>Puntos actuales: <span style="color: #00FF7F; font-weight: bold;">{{ battleResult.opponentPoints }}</span></p>
+                   alt="Personaje oponente" class="img-fluid mb-3 battle-character-img">
+              <div class="user-character-stats">
+                <p>Puntos actuales: <span style="color: #00FF7F; font-weight: bold;">{{ battleResult.opponentPoints }}</span></p>
+                <div class="stats-grid">
+                  <small class="text-muted">
+                    <span class="stat-label">Salud:</span> <span class="stat-value">{{ battleResult.opponentCharacter.healthUserCharacter }}</span><br>
+                    <span class="stat-label">Ataque:</span> <span class="stat-value">{{ battleResult.opponentCharacter.attackUserCharacter }}</span><br>
+                    <span class="stat-label">Defensa:</span> <span class="stat-value">{{ battleResult.opponentCharacter.defenseUserCharacter }}</span><br>
+                    <span class="stat-label">Velocidad:</span> <span class="stat-value">{{ battleResult.opponentCharacter.speedUserCharacter }}</span>
+                  </small>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -69,17 +69,27 @@
       <div class="card-body">
         <div *ngIf="userCollection.length === 0" class="alert alert-info">No tienes personajes en tu tropa.</div>
         <div class="row">
-          <div *ngFor="let uc of userCollection" class="col-md-6 mb-3">
-            <div class="card battle-character-card">
-              <div class="card-body d-flex align-items-center">
-                <img [src]="uc.baseCharacter.imageUrl" alt="{{ uc.baseCharacter.nameCharacter }}" class="rounded-circle mr-3" style="width: 80px; height: 80px; object-fit: cover;">
-                <div class="flex-grow-1">
-                  <h6 style="color: #FF69B4;">{{ uc.baseCharacter.nameCharacter }}</h6>
-                  <p class="text-muted mb-1">{{ uc.baseCharacter.categoryCharacter }} | {{ uc.baseCharacter.universeCharacter }}</p>
-                  <small class="text-muted">Salud: {{ uc.baseCharacter.healthCharacter }} | Ataque: {{ uc.baseCharacter.attackCharacter }}</small>
+          <div class="character-card" *ngFor="let uc of userCollection">
+            <div class="character-info">
+              <img [src]="uc.imageUrlUserCharacter" [alt]="uc.baseCharacter.nameCharacter" class="rounded-circle mr-3" style="width: 80px; height: 80px; object-fit: cover;">
+              <div class="character-details">
+                <div class="base-character-info" style="border-bottom: 1px solid rgba(255,105,180,0.3); padding-bottom: 8px; margin-bottom: 8px;">
+                  <h6 style="color: #FF69B4; margin-bottom: 4px;">{{ uc.baseCharacter.nameCharacter }}</h6>
+                  <p class="text-muted mb-1" style="font-size: 0.9em;">{{ uc.baseCharacter.categoryCharacter }} | {{ uc.baseCharacter.universeCharacter }}</p>
                 </div>
-                <button class="btn btn-sm btn-danger" (click)="removeFromCollection(uc.baseCharacter)">Eliminar</button>
+                <div class="user-character-stats">
+                  <small class="text-muted d-block mb-2">
+                    <span class="stat-label">Salud:</span> <span class="stat-value">{{ uc.healthUserCharacter }}</span> | 
+                    <span class="stat-label">Ataque:</span> <span class="stat-value">{{ uc.attackUserCharacter }}</span> | 
+                    <span class="stat-label">Defensa:</span> <span class="stat-value">{{ uc.defenseUserCharacter }}</span> |
+                    <span class="stat-label">Velocidad:</span> <span class="stat-value">{{ uc.speedUserCharacter }}</span>
+                  </small>
+                  <p class="text-muted mt-1 mb-0" style="font-size: 0.9em;">Nivel de experiencia: {{ uc.timesUsed }}</p>
+                </div>
               </div>
+            </div>
+            <div class="character-actions">
+              <button class="btn btn-sm btn-danger" (click)="removeFromCollection(uc.baseCharacter)">Eliminar</button>
             </div>
           </div>
 

@@ -28,7 +28,7 @@ export class BattleService {
       map(response => {
         // Asegurarse de que los datos estén en el formato correcto
         const result: BattleResult = {
-          idBattle: response.idBattle,
+          idBattleResult: response.idBattleResult,
           user1: response.user1,
           user2: response.user2,
           winner: response.winner,
@@ -40,7 +40,8 @@ export class BattleService {
           opponentName: response.opponentName,
           result: response.result,
           pointsGained: response.winner.idUser === response.user1.idUser ? 20 : -8,
-          pointsLost: response.winner.idUser === response.user1.idUser ? -8 : 20
+          pointsLost: response.winner.idUser === response.user1.idUser ? -8 : 20,
+          surprisePackageDescription: response.surprisePackageDescription
         };
         return result;
       }),
@@ -86,8 +87,6 @@ export class BattleService {
     console.log('BattleService - fight - opponentId:', opponentId);
     
     const battleData = {
-      character1: character1,
-      character2: character2,
       user1Id: currentUser.idUser,
       user2Id: opponentId,
       userCharacter1Id: character1.idUserCharacter,

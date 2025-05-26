@@ -224,7 +224,13 @@ export class BattleComponent implements OnInit {
   }
 
   getCharacterName(character: UserCharacter | null): string {
-    return character?.baseCharacter?.nameCharacter || 'Desconocido';
+    if (!character?.baseCharacter) return 'Desconocido';
+    return character.baseCharacter.nameCharacter;
+  }
+
+  getCharacterStats(character: UserCharacter | null): string {
+    if (!character) return '';
+    return `Salud: ${character.healthUserCharacter} | Ataque: ${character.attackUserCharacter} | Defensa: ${character.defenseUserCharacter} | Velocidad: ${character.speedUserCharacter}`;
   }
 
   getCharacterImageUrl(character: UserCharacter | null): string {

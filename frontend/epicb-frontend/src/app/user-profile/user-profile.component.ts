@@ -85,6 +85,17 @@ export class UserProfileComponent implements OnInit {
     return this.userCollection.some(uc => uc.baseCharacter.idCharacter === character.idCharacter);
   }
 
+  getCharacterImageUrl(character: Character | null): string {
+    if (!character?.imageUrl) {
+      return '';
+    }
+    // Add the backend URL prefix if it's not already included
+    if (character.imageUrl.startsWith('http')) {
+      return character.imageUrl;
+    }
+    return 'http://localhost:8081' + character.imageUrl;
+  }
+
   addToCollection(character: Character) {
     if (!this.canAddToCollection()) {
       this.feedbackMsg = 'No puedes tener más de 8 personajes en tu colección.';

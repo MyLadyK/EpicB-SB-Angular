@@ -63,6 +63,18 @@ public class UserCharacterController {
             User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             List<UserCharacter> characters = userCharacterService.findByOwner(user);
+            
+            // Transformar las URLs de las imágenes
+            characters.forEach(userCharacter -> {
+                if (userCharacter != null && userCharacter.getImageUrlUserCharacter() != null) {
+                    String imageUrl = userCharacter.getImageUrlUserCharacter();
+                    if (!imageUrl.startsWith("http")) {
+                        String fullImageUrl = "http://localhost:8081" + imageUrl;
+                        userCharacter.setImageUrlUserCharacter(fullImageUrl);
+                    }
+                }
+            });
+            
             return ResponseEntity.ok(characters);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
@@ -87,14 +99,17 @@ public class UserCharacterController {
             return ResponseEntity.badRequest().body(Map.of("error", "Personaje no encontrado"));
         }
         // Evitar duplicados
-        boolean alreadyInCollection = collection.stream().anyMatch(uc -> uc.getBaseCharacter().getIdCharacter() == characterId);
+        boolean alreadyInCollection = collection.stream()
+            .anyMatch(uc -> uc.getBaseCharacter() != null && uc.getBaseCharacter().getIdCharacter() == characterId);
         if (alreadyInCollection) {
             return ResponseEntity.badRequest().body(Map.of("error", "El personaje ya está en tu colección"));
         }
+
+        Character base = characterOpt.get();
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setOwner(user);
-        Character base = characterOpt.get();
         userCharacter.setBaseCharacter(base);
+        // Copiar estadísticas del personaje base
         userCharacter.setHealthUserCharacter(base.getHealthCharacter());
         userCharacter.setAttackUserCharacter(base.getAttackCharacter());
         userCharacter.setDefenseUserCharacter(base.getDefenseCharacter());
@@ -119,7 +134,8 @@ public class UserCharacterController {
         if (user == null) return ResponseEntity.status(401).body(Map.of("error", "Usuario no autenticado"));
         List<UserCharacter> collection = userCharacterService.findByOwner(user);
         Optional<UserCharacter> userCharacterOpt = collection.stream()
-                .filter(uc -> uc.getBaseCharacter().getIdCharacter() == characterId).findFirst();
+                .filter(uc -> uc.getBaseCharacter() != null && uc.getBaseCharacter().getIdCharacter() == characterId)
+                .findFirst();
         if (userCharacterOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "El personaje no está en tu colección"));
         }
