@@ -198,22 +198,23 @@ export class BattleComponent implements OnInit {
         
         // Obtener el evento actual
         const event = this.battleResult!.events[this.currentEventIndex];
-        const description = event.description || '';
         
-        // Actualizar personajes atacante/defensor y sus salud
-        if (description.includes(this.getCharacterName(this.selectedCharacter1))) {
-          this.attackingCharacter = this.selectedCharacter1;
-          this.defendingCharacter = this.selectedCharacter2;
-          // Actualizar la salud del personaje 2 (defensor)
-          if (event.damage) {
-            this.currentHealth2 = Math.round(Math.max(0, this.currentHealth2 - event.damage));
-          }
-        } else if (description.includes(this.getCharacterName(this.selectedCharacter2))) {
+        // Actualizar personajes atacante/defensor y sus salud basado en el target del evento
+        if (event.target === 'character1') {
+          // El personaje 1 está siendo atacado, por lo tanto el 2 es el atacante
           this.attackingCharacter = this.selectedCharacter2;
           this.defendingCharacter = this.selectedCharacter1;
           // Actualizar la salud del personaje 1 (defensor)
           if (event.damage) {
             this.currentHealth1 = Math.round(Math.max(0, this.currentHealth1 - event.damage));
+          }
+        } else if (event.target === 'character2') {
+          // El personaje 2 está siendo atacado, por lo tanto el 1 es el atacante
+          this.attackingCharacter = this.selectedCharacter1;
+          this.defendingCharacter = this.selectedCharacter2;
+          // Actualizar la salud del personaje 2 (defensor)
+          if (event.damage) {
+            this.currentHealth2 = Math.round(Math.max(0, this.currentHealth2 - event.damage));
           }
         }
         
