@@ -1,26 +1,68 @@
 .battle-arena {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
   background: linear-gradient(to right, #ff512f, #dd2476);
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  padding: 2.5rem 2rem;
-  margin-top: 2rem;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  min-height: 100vh;
+  height: auto;
+  color: #FFFFFF;
+  overflow-y: auto;
 }
+
+.battle-title {
+  color: #00FF7F;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .fighters {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 2.5rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
+
 .fighter {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 160px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1.5rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
+
+.fighter.attacking {
+  animation: attack 0.5s ease-in-out;
+  border: 2px solid #FF4444;
+}
+
+.fighter.defending {
+  animation: defend 0.5s ease-in-out;
+  border: 2px solid #00FF7F;
+}
+
+@keyframes attack {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1) rotate(-5deg); }
+  100% { transform: scale(1); }
+}
+
+@keyframes defend {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
 .char-img-large {
   width: 120px;
   height: 120px;
@@ -28,238 +70,243 @@
   border: 3px solid #00FF7F;
   background: #2b2b2b;
   margin-bottom: 0.7rem;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition: all 0.3s ease;
+  object-fit: cover;
 }
-.char-img-large:hover {
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  transform: scale(1.08) rotate(-2deg);
-}
-.health-bar {
-  display: block;
-  background: linear-gradient(90deg, #00FF7F, #FF69B4);
-  color: #333333;
+
+.fighter h3 {
+  color: #00FF7F;
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
   font-weight: bold;
-  padding: 0.4rem 0.7rem;
-  border-radius: 8px;
-  margin-top: 0.3rem;
-  margin-bottom: 0.3rem;
-  min-width: 80px;
-  max-width: 120px;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
+
+.health-bar {
+  background: rgba(0, 0, 0, 0.5);
+  color: #00FF7F;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: bold;
+  min-width: 100px;
+  text-align: center;
+  border: 1px solid #00FF7F;
+}
+
 .vs-large {
-  font-size: 3.2rem;
+  font-size: 2.5rem;
   color: #FF69B4;
   font-weight: bold;
-  margin: 0 2rem;
-  text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
-.battle-summary-block {
-  margin-top: 2rem;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  padding: 1.2rem 1.6rem;
-  color: #CCCCCC;
+
+.battle-controls {
+  margin: 2rem 0;
+  text-align: center;
 }
-.winner-banner {
-  background: rgba(0, 0, 0, 0.7);
-  color: #00FF7F;
-  font-size: 1.3rem;
+
+.battle-button {
+  background: #FF69B4;
+  color: #000000;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 5px;
+  font-size: 1.1rem;
   font-weight: bold;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.battle-button:hover:not(:disabled) {
+  background: #ff85b2;
+  transform: scale(1.05);
+}
+
+.battle-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loader {
+  text-align: center;
+  margin: 2rem 0;
+  color: #00FF7F;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #00FF7F;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background: rgba(255, 68, 68, 0.2);
+  border-left: 4px solid #FF4444;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+.error-content {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  animation: winnerPop 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-  border: 2px solid #00FF7F;
+  gap: 1rem;
 }
-@keyframes winnerPop {
-  0% { opacity: 0; transform: scale(0.85) translateY(-30px); }
-  70% { opacity: 1; transform: scale(1.08) translateY(5px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+
+.error-icon {
+  width: 24px;
+  height: 24px;
+  stroke: #FF4444;
+  stroke-width: 2;
+  fill: none;
 }
+
+.battle-summary-block {
+  width: 100%;
+  max-width: 800px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+.battle-summary-title {
+  color: #00FF7F;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
 .battle-events {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
 }
+
 .battle-events li {
-  margin-bottom: 0.4rem;
-  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  padding: 0.8rem 1rem;
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.7);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.4s;
-  font-size: 1.05rem;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  opacity: 0.7;
-  box-shadow: none;
-  transform: scale(0.97);
-  color: #CCCCCC;
+  background: rgba(43, 43, 43, 0.7);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
 }
+
 .battle-events li.show {
   opacity: 1;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  transform: scale(1.03);
-  animation: popEvent 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: translateY(0);
 }
-@keyframes popEvent {
-  0%   { opacity: 0; transform: scale(0.85) translateY(20px); }
-  70%  { opacity: 1; transform: scale(1.08) translateY(-5px); }
-  100% { opacity: 1; transform: scale(1.03) translateY(0); }
-}
+
 .battle-events li.critico {
-  background: rgba(211, 84, 0, 0.3);
+  background: rgba(255, 68, 68, 0.2);
+  border-left: 4px solid #FF4444;
   color: #FF69B4;
-  font-weight: bold;
-  border-left: 5px solid #FF69B4;
 }
+
 .battle-events li.especial {
-  background: rgba(0, 119, 182, 0.3);
+  background: rgba(0, 255, 127, 0.2);
+  border-left: 4px solid #00FF7F;
   color: #00FF7F;
-  font-weight: bold;
-  border-left: 5px solid #00FF7F;
 }
+
 .battle-events li.victoria {
-  background: rgba(56, 142, 60, 0.3);
+  background: rgba(0, 255, 127, 0.2);
+  border-left: 4px solid #00FF7F;
   color: #00FF7F;
   font-weight: bold;
-  border-left: 5px solid #00FF7F;
 }
-.surprise-banner {
-  background: rgba(0, 0, 0, 0.7);
-  color: #FF69B4;
-  font-weight: bold;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  margin: 1rem 0 0.7rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-size: 1.1rem;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  animation: bannerAppear 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-  border: 2px solid #FF69B4;
+
+.battle-result {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
-.points-banner {
-  background: rgba(0, 0, 0, 0.7);
+
+.winner-banner {
+  background: rgba(0, 255, 127, 0.2);
   color: #00FF7F;
-  font-weight: bold;
-  padding: 0.7rem 1rem;
+  padding: 1rem;
   border-radius: 8px;
-  margin: 0.3rem 0 0.7rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-size: 1.1rem;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  animation: bannerAppear 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-  border: 2px solid #00FF7F;
-}
-@keyframes bannerAppear {
-  0% { opacity: 0; transform: scale(0.85) translateY(30px); }
-  70% { opacity: 1; transform: scale(1.08) translateY(-5px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-@media (max-width: 700px) {
-  .battle-arena {
-    padding: 1rem 0.2rem;
-  }
-  .fighters {
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-  .vs-large {
-    margin: 1.5rem 0;
-  }
-  .battle-summary-block {
-    padding: 0.7rem 0.6rem;
-  }
-}
-.battle-setup {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
 }
-.battle-setup label {
-  display: block;
-  font-weight: bold;
-  margin-top: 0.5rem;
+
+.battle-details {
+  color: #FFFFFF;
+  margin: 1rem 0;
 }
-.char-img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-top: 0.5rem;
+
+.battle-details p {
+  margin: 0.5rem 0;
+}
+
+.battle-details strong {
+  color: #00FF7F;
+}
+
+.surprise-banner {
+  background: rgba(255, 105, 180, 0.2);
+  color: #FF69B4;
+  padding: 1rem;
   border-radius: 8px;
-  border: 2px solid #00FF7F;
-  background: #2b2b2b;
-}
-.vs {
-  font-size: 2.5rem;
+  text-align: center;
   font-weight: bold;
-  color: #FF69B4;
-  margin: 0 1rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }
-button {
-  background: #FF69B4;
-  color: #333333;
-  border: none;
-  padding: 0.7rem 2rem;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
-  transition: background 0.3s;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-}
-button:hover {
-  background: #ff85b2;
-}
-button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.error {
-  color: #e63946;
-  font-weight: bold;
-  margin-top: 1rem;
-}
-ul {
-  list-style: none;
-  padding: 0;
-}
-li {
-  margin-bottom: 0.4rem;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.7);
-  transition: background 0.2s;
-  color: #CCCCCC;
-}
-li.critico {
-  background: rgba(211, 84, 0, 0.3);
-  color: #FF69B4;
-  font-weight: bold;
-  border-left: 5px solid #FF69B4;
-}
-li.especial {
-  background: rgba(0, 119, 182, 0.3);
+
+.points-banner {
+  background: rgba(0, 255, 127, 0.2);
   color: #00FF7F;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
   font-weight: bold;
-  border-left: 5px solid #00FF7F;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }
-li.victoria {
-  background: rgba(56, 142, 60, 0.3);
-  color: #00FF7F;
-  font-weight: bold;
-  border-left: 5px solid #00FF7F;
+
+@media (max-width: 768px) {
+  .battle-arena {
+    padding: 1rem;
+  }
+
+  .fighters {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .vs-large {
+    margin: 1rem 0;
+  }
+
+  .battle-summary-block {
+    padding: 1rem;
+  }
+
+  .battle-events li {
+    font-size: 0.9rem;
+  }
 }
