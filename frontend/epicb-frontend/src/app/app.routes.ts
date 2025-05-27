@@ -12,6 +12,7 @@ import { TermsComponent } from './terms/terms.component';
 import { AboutComponent } from './about/about.component';
 import { AdminGuard } from './guards/admin.guard';
 import { UserGuard } from './guards/user.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent }, // Página de inicio para el logueo
@@ -38,7 +39,7 @@ export const routes: Routes = [
   {
     path: 'characters',
     component: CharacterListComponent,
-    canActivate: [UserGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'ranking',

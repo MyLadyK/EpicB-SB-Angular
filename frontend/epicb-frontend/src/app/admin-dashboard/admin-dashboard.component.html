@@ -44,6 +44,68 @@
   <div class="character-management" *ngIf="showCharacterManagement">
     <h2>Gestión de Personajes</h2>
 
+    <!-- Botón para mostrar formulario de añadir personaje -->
+    <div class="button-group" *ngIf="!isEditMode">
+      <button class="action-button" (click)="showAddCharacterForm = true" *ngIf="!showAddCharacterForm">
+        Añadir Nuevo Personaje
+      </button>
+    </div>
+
+    <!-- Formulario para añadir personaje -->
+    <div class="edit-form" *ngIf="showAddCharacterForm && !isEditMode">
+      <h3>Añadir Nuevo Personaje</h3>
+      <form (ngSubmit)="addCharacter()" class="character-form">
+        <div class="form-group">
+          <label for="newNameCharacter">Nombre:</label>
+          <input type="text" id="newNameCharacter" [(ngModel)]="newCharacter.nameCharacter" name="nameCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newCategoryCharacter">Categoría:</label>
+          <input type="text" id="newCategoryCharacter" [(ngModel)]="newCharacter.categoryCharacter" name="categoryCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newUniverseCharacter">Universo:</label>
+          <input type="text" id="newUniverseCharacter" [(ngModel)]="newCharacter.universeCharacter" name="universeCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newHealthCharacter">Salud:</label>
+          <input type="number" id="newHealthCharacter" [(ngModel)]="newCharacter.healthCharacter" name="healthCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newAttackCharacter">Ataque:</label>
+          <input type="number" id="newAttackCharacter" [(ngModel)]="newCharacter.attackCharacter" name="attackCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newDefenseCharacter">Defensa:</label>
+          <input type="number" id="newDefenseCharacter" [(ngModel)]="newCharacter.defenseCharacter" name="defenseCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newSpeedCharacter">Velocidad:</label>
+          <input type="number" id="newSpeedCharacter" [(ngModel)]="newCharacter.speedCharacter" name="speedCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newStaminaCharacter">Resistencia:</label>
+          <input type="number" id="newStaminaCharacter" [(ngModel)]="newCharacter.staminaCharacter" name="staminaCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newIntelligenceCharacter">Inteligencia:</label>
+          <input type="number" id="newIntelligenceCharacter" [(ngModel)]="newCharacter.intelligenceCharacter" name="intelligenceCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="newSpecialCharacter">Especial:</label>
+          <input type="number" id="newSpecialCharacter" [(ngModel)]="newCharacter.specialCharacter" name="specialCharacter" required>
+        </div>
+        <div class="form-group">
+          <label for="characterImage">Imagen:</label>
+          <input type="file" id="characterImage" (change)="onFileSelected($event)" accept="image/*" required>
+        </div>
+        <div class="button-group">
+          <button type="submit" class="edit-button">Añadir Personaje</button>
+          <button type="button" class="delete-button" (click)="showAddCharacterForm = false">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
     <!-- Formulario de edición -->
     <div class="edit-form" *ngIf="isEditMode && selectedCharacter">
       <h3>Editar Personaje</h3>
