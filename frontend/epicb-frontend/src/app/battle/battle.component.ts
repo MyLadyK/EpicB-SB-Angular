@@ -183,35 +183,58 @@ export class BattleComponent implements OnInit {
   private animateBattle(): void {
     if (!this.battleResult?.events) return;
     
+    // Inicializar arrays de animación y salud
     this.eventAnimations = new Array(this.battleResult.events.length).fill(false);
     this.currentEventIndex = 0;
     
+    // Establecer la salud inicial
+    this.currentHealth1 = Math.round(this.selectedCharacter1?.healthUserCharacter || 0);
+    this.currentHealth2 = Math.round(this.selectedCharacter2?.healthUserCharacter || 0);
+    
     const animateEvent = () => {
       if (this.currentEventIndex < this.battleResult!.events.length) {
+        // Mostrar el evento actual
         this.eventAnimations[this.currentEventIndex] = true;
         
-        // Determinar quién ataca y quién defiende basado en la descripción del evento
+        // Obtener el evento actual
         const event = this.battleResult!.events[this.currentEventIndex];
         const description = event.description || '';
         
+        // Actualizar personajes atacante/defensor y sus salud
         if (description.includes(this.getCharacterName(this.selectedCharacter1))) {
           this.attackingCharacter = this.selectedCharacter1;
           this.defendingCharacter = this.selectedCharacter2;
-        } else {
+          // Actualizar la salud del personaje 2 (defensor)
+          if (event.damage) {
+            this.currentHealth2 = Math.round(Math.max(0, this.currentHealth2 - event.damage));
+          }
+        } else if (description.includes(this.getCharacterName(this.selectedCharacter2))) {
           this.attackingCharacter = this.selectedCharacter2;
           this.defendingCharacter = this.selectedCharacter1;
+          // Actualizar la salud del personaje 1 (defensor)
+          if (event.damage) {
+            this.currentHealth1 = Math.round(Math.max(0, this.currentHealth1 - event.damage));
+          }
         }
         
+        // Programar el siguiente evento
         this.currentEventIndex++;
-        setTimeout(animateEvent, 1500);
+        setTimeout(() => {
+          // Limpiar los estados de ataque/defensa
+          this.attackingCharacter = null;
+          this.defendingCharacter = null;
+          
+          // Continuar con el siguiente evento
+          setTimeout(animateEvent, 500);
+        }, 1500);
       } else {
+        // Finalizar la batalla
         this.battleInProgress = false;
-        this.attackingCharacter = null;
-        this.defendingCharacter = null;
       }
     };
     
-    animateEvent();
+    // Iniciar la animación
+    setTimeout(animateEvent, 500);
   }
 
   // Métodos auxiliares para el template

@@ -1,55 +1,107 @@
-<div class="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-lg p-8">
-  <h2 class="text-2xl font-bold mb-6 text-blue-900">
-    <span>⚔️ Batalla contra {{ opponent?.nameUser || 'Oponente' }} ⚔️</span>
+<div class="max-w-6xl mx-auto mt-10 bg-gradient-to-b from-blue-50 to-white rounded-lg shadow-lg p-8">
+  <h2 class="text-3xl font-bold mb-8 text-center text-blue-900 flex items-center justify-center gap-4">
+    <span class="animate-pulse">⚔️</span>
+    <span>Batalla contra {{ opponent?.nameUser || 'Oponente' }}</span>
+    <span class="animate-pulse">⚔️</span>
   </h2>
+
+  <!-- Contenedor de personajes -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-    <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center"
+    <!-- Personaje 1 -->
+    <div class="battle-character-card bg-white rounded-xl p-6 shadow-lg transform hover:scale-105 transition-transform"
          [ngClass]="{
            'ring-4 ring-red-500 animate-pulse': battleInProgress && attackingCharacter === selectedCharacter1,
            'ring-4 ring-blue-500': battleInProgress && defendingCharacter === selectedCharacter1
          }">
-      <img *ngIf="getCharacter1()" [src]="getCharacterImageUrl(getCharacter1())" alt="Personaje 1" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
-           [ngClass]="{
-             'border-red-500 border-4': battleInProgress && attackingCharacter === selectedCharacter1,
-             'border-blue-500 border-4': battleInProgress && defendingCharacter === selectedCharacter1
-           }">
-      <p class="font-semibold text-blue-800">{{ getCharacterName(getCharacter1()) }}</p>
-      <div class="w-full mt-2">
-        <div class="h-4 bg-gray-200 rounded-full">
-          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getCharacter1()?.healthUserCharacter || '100%'">
+      <div class="flex flex-col items-center">
+        <img *ngIf="getCharacter1()" [src]="getCharacterImageUrl(getCharacter1())" 
+             alt="Personaje 1" 
+             class="w-32 h-32 object-cover rounded-full border-4 border-blue-300 mb-4 shadow-md"
+             [ngClass]="{
+               'border-red-500': battleInProgress && attackingCharacter === selectedCharacter1,
+               'border-blue-500': battleInProgress && defendingCharacter === selectedCharacter1
+             }">
+        <h3 class="text-xl font-bold text-blue-900 mb-3">{{ getCharacterName(getCharacter1()) }}</h3>
+        <div class="w-full">
+          <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+              <div>
+                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                  Salud
+                </span>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-semibold inline-block text-blue-600">
+                  {{ battleInProgress ? currentHealth1 : getCharacter1()?.healthUserCharacter || 0 }}
+                </span>
+              </div>
+            </div>
+            <div class="flex h-4 mb-4 overflow-hidden bg-gray-200 rounded-full">
+              <div class="transition-all duration-500 flex flex-col justify-center overflow-hidden bg-gradient-to-r from-green-400 to-blue-500 text-xs text-white text-center"
+                   [style.width.%]="(battleInProgress ? currentHealth1 : getCharacter1()?.healthUserCharacter || 0) / (getCharacter1()?.healthUserCharacter || 1) * 100">
+              </div>
+            </div>
+          </div>
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth1 : getCharacter1()?.healthUserCharacter || 0 }}</span>
       </div>
     </div>
-    <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col items-center"
+
+    <!-- Personaje 2 -->
+    <div class="battle-character-card bg-white rounded-xl p-6 shadow-lg transform hover:scale-105 transition-transform"
          [ngClass]="{
            'ring-4 ring-red-500 animate-pulse': battleInProgress && attackingCharacter === selectedCharacter2,
            'ring-4 ring-blue-500': battleInProgress && defendingCharacter === selectedCharacter2
          }">
-      <img *ngIf="getCharacter2()" [src]="getCharacterImageUrl(getCharacter2())" alt="Personaje 2" class="w-24 h-24 object-cover rounded-full border-2 border-blue-300 mb-2"
-           [ngClass]="{
-             'border-red-500 border-4': battleInProgress && attackingCharacter === selectedCharacter2,
-             'border-blue-500 border-4': battleInProgress && defendingCharacter === selectedCharacter2
-           }">
-      <p class="font-semibold text-blue-800">{{ getCharacterName(getCharacter2()) }}</p>
-      <div class="w-full mt-2">
-        <div class="h-4 bg-gray-200 rounded-full">
-          <div class="h-4 bg-green-500 rounded-full transition-all duration-500" [style.width]="getCharacter2()?.healthUserCharacter || '100%'">
+      <div class="flex flex-col items-center">
+        <img *ngIf="getCharacter2()" [src]="getCharacterImageUrl(getCharacter2())" 
+             alt="Personaje 2" 
+             class="w-32 h-32 object-cover rounded-full border-4 border-blue-300 mb-4 shadow-md"
+             [ngClass]="{
+               'border-red-500': battleInProgress && attackingCharacter === selectedCharacter2,
+               'border-blue-500': battleInProgress && defendingCharacter === selectedCharacter2
+             }">
+        <h3 class="text-xl font-bold text-blue-900 mb-3">{{ getCharacterName(getCharacter2()) }}</h3>
+        <div class="w-full">
+          <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+              <div>
+                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                  Salud
+                </span>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-semibold inline-block text-blue-600">
+                  {{ battleInProgress ? currentHealth2 : getCharacter2()?.healthUserCharacter || 0 }}
+                </span>
+              </div>
+            </div>
+            <div class="flex h-4 mb-4 overflow-hidden bg-gray-200 rounded-full">
+              <div class="transition-all duration-500 flex flex-col justify-center overflow-hidden bg-gradient-to-r from-green-400 to-blue-500 text-xs text-white text-center"
+                   [style.width.%]="(battleInProgress ? currentHealth2 : getCharacter2()?.healthUserCharacter || 0) / (getCharacter2()?.healthUserCharacter || 1) * 100">
+              </div>
+            </div>
+          </div>
         </div>
-        <span class="text-xs text-gray-700">Salud: {{ battleInProgress ? currentHealth2 : getCharacter2()?.healthUserCharacter || 0 }}</span>
       </div>
     </div>
   </div>
 
-  <div class="flex justify-center mb-6">
-    <button (click)="fight()" [disabled]="loading" class="btn bg-blue-700 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-900 transition-colors">Iniciar Batalla</button>
+  <!-- Botón de batalla -->
+  <div class="flex justify-center mb-8">
+    <button (click)="fight()" 
+            [disabled]="loading || battleInProgress" 
+            class="btn bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold px-8 py-3 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-900 transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+      {{ loading ? 'Batalla en progreso...' : battleInProgress ? 'Batalla en curso...' : 'Iniciar Batalla' }}
+    </button>
   </div>
 
+  <!-- Loader -->
   <div *ngIf="loading" class="text-center p-4">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto"></div>
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-700 mx-auto"></div>
     <p class="mt-2 text-gray-600">Cargando resumen de batalla...</p>
   </div>
-  
+
+  <!-- Error -->
   <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 my-4 rounded shadow-md">
     <div class="flex items-center">
       <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,50 +111,91 @@
     </div>
   </div>
 
+  <!-- Resultados de la batalla -->
   <div *ngIf="battleResult" class="mt-8">
-    <h3 class="text-xl font-bold mb-4 text-blue-900">Desarrollo de la Batalla</h3>
-    <div class="bg-blue-50 rounded-lg p-4 shadow mb-4">
-      <div *ngFor="let event of battleResult.events; let i = index" class="mb-2 text-gray-800"
-           [ngClass]="{'font-bold': i === currentEventIndex - 1, 'opacity-50': !eventAnimations[i]}">
-        <span [ngClass]="{
-          'font-bold text-red-600': event.description?.includes('Golpe crítico'),
-          'font-bold text-purple-600': event.description?.includes('Habilidad especial'),
-          'font-bold text-green-600': event.description?.includes('Victoria'),
-          'animate-pulse': i === currentEventIndex - 1 && battleInProgress
-        }">
-          {{ event.description || 'Evento de batalla' }}
-        </span>
+    <h3 class="text-2xl font-bold mb-6 text-center text-blue-900">Desarrollo de la Batalla</h3>
+    <div class="bg-white rounded-xl p-6 shadow-lg">
+      <!-- Log de eventos -->
+      <div class="grid grid-cols-1 gap-4 mb-6">
+        <div *ngFor="let event of battleResult.events; let i = index" 
+             class="p-3 rounded-lg transition-all duration-300"
+             [class.hidden]="!eventAnimations[i]"
+             [ngClass]="{
+               'bg-blue-50': i % 2 === 0,
+               'bg-gray-50': i % 2 !== 0,
+               'animate-fadeIn': eventAnimations[i]
+             }">
+          <span [ngClass]="{
+            'text-red-600 font-bold': event.description?.includes('Golpe crítico'),
+            'text-purple-600 font-bold': event.description?.includes('Habilidad especial'),
+            'text-green-600 font-bold': event.description?.includes('Victoria'),
+            'animate-pulse': i === currentEventIndex - 1 && battleInProgress
+          }">
+            {{ event.description || 'Evento de batalla' }}
+          </span>
+        </div>
       </div>
 
-      <!-- Mostrar el resultado final solo cuando la batalla ha terminado -->
-      <div *ngIf="!battleInProgress && battleResult" class="mt-4 border-t pt-4 border-gray-300">
-        <div class="mt-2">
-          <span class="font-semibold text-green-700">{{ battleResult?.result || 'Resultado desconocido' }}</span>
-        </div>
-        
-        <!-- Mostrar el paquete sorpresa con animación -->
-        <div *ngIf="battleResult.events" class="surprise-banner">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a4 4 0 00-4-4H5.5A2.5 2.5 0 003 4.5v0A2.5 2.5 0 005.5 7H8m4-3h3a4 4 0 014 4v0a4 4 0 01-4 4H8"/>
-          </svg>
-          <span>¡Paquete Sorpresa Obtenido!</span>
-        </div>
+      <!-- Resultado final -->
+      <div *ngIf="!battleInProgress && battleResult" 
+           class="mt-6 border-t pt-6 border-gray-200 animate-fadeIn">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Columna izquierda -->
+          <div>
+            <div class="mb-4">
+              <span class="inline-block px-4 py-2 rounded-full font-bold text-lg"
+                    [ngClass]="{
+                      'bg-green-100 text-green-700': battleResult?.result === 'WIN',
+                      'bg-red-100 text-red-700': battleResult?.result === 'LOSE'
+                    }">
+                {{ battleResult?.result === 'WIN' ? '¡Victoria!' : 'Derrota' }}
+              </span>
+            </div>
+            <div class="text-gray-700">
+              <p><span class="font-semibold">Oponente:</span> {{ opponent?.nameUser }}</p>
+              <p><span class="font-semibold">Fecha:</span> {{ battleResult?.date }}</p>
+            </div>
+          </div>
 
-        <!-- Mostrar los puntos ganados/perdidos -->
-        <div class="points-banner">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-          </svg>
-          <span>{{ battleResult.pointsGained > 0 ? '+' + battleResult.pointsGained : battleResult.pointsLost }} puntos de ranking</span>
-        </div>
+          <!-- Columna derecha -->
+          <div>
+            <!-- Paquete sorpresa -->
+            <div *ngIf="battleResult.events" 
+                 class="mb-4 p-4 bg-yellow-100 rounded-lg border border-yellow-200 shadow-sm">
+              <div class="flex items-center gap-2 text-yellow-700">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a4 4 0 00-4-4H5.5A2.5 2.5 0 003 4.5v0A2.5 2.5 0 005.5 7H8m4-3h3a4 4 0 014 4v0a4 4 0 01-4 4H8"/>
+                </svg>
+                <span class="font-semibold">¡Paquete Sorpresa Obtenido!</span>
+              </div>
+            </div>
 
-        <div class="mt-2 text-blue-700">
-          <span class="font-semibold">Oponente:</span> {{ opponent?.nameUser || 'Oponente desconocido' }}
-        </div>
-        <div class="mt-2 text-gray-700">
-          <span class="font-semibold">Fecha:</span> {{ battleResult?.date || 'Fecha desconocida' }}
+            <!-- Puntos -->
+            <div class="p-4 bg-blue-100 rounded-lg border border-blue-200 shadow-sm">
+              <div class="flex items-center gap-2 text-blue-700">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+                <span class="font-semibold">
+                  {{ battleResult.pointsGained > 0 ? '+' + battleResult.pointsGained : battleResult.pointsLost }} 
+                  puntos de ranking
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+</style>

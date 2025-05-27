@@ -36,13 +36,17 @@ public class BattleService {
      * Lanza IllegalArgumentException si algún personaje de usuario no existe.
      */
     public BattleResult battle(User user1, UserCharacter uc1, User user2, UserCharacter uc2, int userCharacter1Id, int userCharacter2Id) {
-        // Clonar salud para simulación (no modificar objeto real)
+        // Clonar salud para simulación
         double health1 = uc1.getHealthUserCharacter();
         double health2 = uc2.getHealthUserCharacter();
 
-        // Determinar número de ataques por ronda según velocidad
-        int attacks1 = (int) Math.max(1, Math.round(uc1.getSpeedUserCharacter() / Math.max(1, uc2.getSpeedUserCharacter())));
-        int attacks2 = (int) Math.max(1, Math.round(uc2.getSpeedUserCharacter() / Math.max(1, uc1.getSpeedUserCharacter())));
+        // Calcular velocidad relativa y ataques por turno
+        double speedRatio1 = uc1.getSpeedUserCharacter() / Math.max(1, uc2.getSpeedUserCharacter());
+        double speedRatio2 = uc2.getSpeedUserCharacter() / Math.max(1, uc1.getSpeedUserCharacter());
+        
+        // Probabilidad de ataque extra basada en la velocidad
+        double extraAttackChance1 = Math.min(0.5, speedRatio1 - 1);
+        double extraAttackChance2 = Math.min(0.5, speedRatio2 - 1);
 
         List<BattleEvent> events = new ArrayList<>();
         int round = 1;
@@ -52,37 +56,164 @@ public class BattleService {
         UserCharacter winnerCharacter = null;
 
         // Simulación de combate por rondas
-        while (health1 > 0 && health2 > 0) {
+        while (health1 > 0 && health2 > 0 && round <= 50) {
+            events.add(new BattleEvent(
+                BattleEvent.Target.character1,
+                0,
+                null,
+                null,
+                "=== Ronda " + round + " ==="
+            ));
+
             // Ataques del personaje 1
+            int attacks1 = 1;
+            if (Math.random() < extraAttackChance1) attacks1++;
+            
             for (int i = 0; i < attacks1 && health2 > 0; i++) {
-                double damage = calculateDamage(uc1, uc2);
+                // Calcular efectos especiales y daño
+                double baseDamage = uc1.getAttackUserCharacter();
+                double defenseFactor = Math.max(0.2, 1 - (uc2.getDefenseUserCharacter() / 25.0));
+                double criticalChance = (uc1.getSpeedUserCharacter() + uc1.getIntelligenceUserCharacter()) / 200.0;
+                boolean isCritical = Math.random() < criticalChance;
+                double intelligenceBonus = 1.0 + (uc1.getIntelligenceUserCharacter() / 100.0);
+                double staminaFactor = 0.7 + (uc1.getStaminaUserCharacter() / 100.0);
+                
+                // Habilidad especial
+                boolean specialActivated = false;
+                double specialMultiplier = 1.0;
+                if (uc1.getSpecialUserCharacter() > 0) {
+                    double specialChance = uc1.getSpecialUserCharacter() / 200.0;
+                    specialActivated = Math.random() < specialChance;
+                    if (specialActivated) {
+                        specialMultiplier = 1.0 + (uc1.getSpecialUserCharacter() / 50.0);
+                    }
+                }
+
+                // Calcular daño final
+                double damage = baseDamage * defenseFactor * intelligenceBonus * staminaFactor;
+                if (isCritical) damage *= 1.5;
+                if (specialActivated) damage *= specialMultiplier;
+                double randomFactor = 0.8 + (Math.random() * 0.4);
+                damage *= randomFactor;
+                damage = Math.max(0.5, damage);
+                
+                // Aplicar daño
                 health2 = Math.max(0, health2 - damage);
-                BattleEvent event = new BattleEvent(
+                
+                // Construir mensaje descriptivo
+                StringBuilder description = new StringBuilder();
+                
+                if (attacks1 > 1 && i == 1) {
+                    description.append("¡Ataque extra por velocidad! ");
+                }
+                
+                description.append(String.format("%s ataca a %s", 
+                    uc1.getBaseCharacter().getNameCharacter(),
+                    uc2.getBaseCharacter().getNameCharacter()));
+                
+                if (isCritical) {
+                    description.append(" ¡GOLPE CRÍTICO!");
+                }
+                
+                if (specialActivated) {
+                    description.append(String.format(" ¡HABILIDAD ESPECIAL ACTIVADA (x%.1f)!", specialMultiplier));
+                }
+                
+                if (intelligenceBonus > 1.2) {
+                    description.append(" ¡Ataque calculado con precisión!");
+                }
+                
+                if (staminaFactor > 0.9) {
+                    description.append(" ¡Golpe potente!");
+                }
+                
+                description.append(String.format(" (%.1f de daño)", damage));
+                
+                events.add(new BattleEvent(
                     BattleEvent.Target.character2,
                     damage,
                     uc1,
                     uc2,
-                    String.format("El personaje de %s ataca causando %.1f de daño", user1.getNameUser(), damage)
-                );
-                events.add(event);
+                    description.toString()
+                ));
             }
 
-            // Ataques del personaje 2
-            for (int i = 0; i < attacks2 && health1 > 0; i++) {
-                double damage = calculateDamage(uc2, uc1);
-                health1 = Math.max(0, health1 - damage);
-                BattleEvent event = new BattleEvent(
-                    BattleEvent.Target.character1,
-                    damage,
-                    uc2,
-                    uc1,
-                    String.format("El personaje de %s ataca causando %.1f de daño", user2.getNameUser(), damage)
-                );
-                events.add(event);
+            // Ataques del personaje 2 (si aún está vivo)
+            if (health2 > 0) {
+                int attacks2 = 1;
+                if (Math.random() < extraAttackChance2) attacks2++;
+                
+                for (int i = 0; i < attacks2 && health1 > 0; i++) {
+                    // Calcular efectos especiales y daño
+                    double baseDamage = uc2.getAttackUserCharacter();
+                    double defenseFactor = Math.max(0.2, 1 - (uc1.getDefenseUserCharacter() / 25.0));
+                    double criticalChance = (uc2.getSpeedUserCharacter() + uc2.getIntelligenceUserCharacter()) / 200.0;
+                    boolean isCritical = Math.random() < criticalChance;
+                    double intelligenceBonus = 1.0 + (uc2.getIntelligenceUserCharacter() / 100.0);
+                    double staminaFactor = 0.7 + (uc2.getStaminaUserCharacter() / 100.0);
+                    
+                    // Habilidad especial
+                    boolean specialActivated = false;
+                    double specialMultiplier = 1.0;
+                    if (uc2.getSpecialUserCharacter() > 0) {
+                        double specialChance = uc2.getSpecialUserCharacter() / 200.0;
+                        specialActivated = Math.random() < specialChance;
+                        if (specialActivated) {
+                            specialMultiplier = 1.0 + (uc2.getSpecialUserCharacter() / 50.0);
+                        }
+                    }
+
+                    // Calcular daño final
+                    double damage = baseDamage * defenseFactor * intelligenceBonus * staminaFactor;
+                    if (isCritical) damage *= 1.5;
+                    if (specialActivated) damage *= specialMultiplier;
+                    double randomFactor = 0.8 + (Math.random() * 0.4);
+                    damage *= randomFactor;
+                    damage = Math.max(0.5, damage);
+                    
+                    // Aplicar daño
+                    health1 = Math.max(0, health1 - damage);
+                    
+                    // Construir mensaje descriptivo
+                    StringBuilder description = new StringBuilder();
+                    
+                    if (attacks2 > 1 && i == 1) {
+                        description.append("¡Ataque extra por velocidad! ");
+                    }
+                    
+                    description.append(String.format("%s ataca a %s", 
+                        uc2.getBaseCharacter().getNameCharacter(),
+                        uc1.getBaseCharacter().getNameCharacter()));
+                    
+                    if (isCritical) {
+                        description.append(" ¡GOLPE CRÍTICO!");
+                    }
+                    
+                    if (specialActivated) {
+                        description.append(String.format(" ¡HABILIDAD ESPECIAL ACTIVADA (x%.1f)!", specialMultiplier));
+                    }
+                    
+                    if (intelligenceBonus > 1.2) {
+                        description.append(" ¡Ataque calculado con precisión!");
+                    }
+                    
+                    if (staminaFactor > 0.9) {
+                        description.append(" ¡Golpe potente!");
+                    }
+                    
+                    description.append(String.format(" (%.1f de daño)", damage));
+                    
+                    events.add(new BattleEvent(
+                        BattleEvent.Target.character1,
+                        damage,
+                        uc2,
+                        uc1,
+                        description.toString()
+                    ));
+                }
             }
 
             round++;
-            if (round > 50) break; // Límite de seguridad
         }
 
         // Determinar ganador
@@ -94,7 +225,8 @@ public class BattleService {
                 0,
                 uc1,
                 uc2,
-                "¡Victoria para " + user1.getNameUser() + "!"
+                String.format("¡Victoria para %s! Salud restante: %.1f", 
+                    user1.getNameUser(), health1)
             ));
         } else {
             winner = user2;
@@ -104,7 +236,8 @@ public class BattleService {
                 0,
                 uc2,
                 uc1,
-                "¡Victoria para " + user2.getNameUser() + "!"
+                String.format("¡Victoria para %s! Salud restante: %.1f", 
+                    user2.getNameUser(), health2)
             ));
         }
 
@@ -127,7 +260,6 @@ public class BattleService {
                 userCharacterService.save(winnerCharacter);
             }
         } catch (Exception e) {
-            // Log el error pero permite que la batalla continúe
             System.err.println("Error al aplicar paquete sorpresa: " + e.getMessage());
             surpriseDesc = "No se pudo aplicar el paquete sorpresa";
         }
@@ -160,7 +292,6 @@ public class BattleService {
             surpriseDesc   // Descripción del paquete sorpresa
         );
 
-        // Guardar el resultado y manejar posibles errores
         try {
             // Asegurarse de que las referencias a los usuarios están establecidas correctamente
             battleResult.setUser1(user1);
@@ -181,7 +312,7 @@ public class BattleService {
             return battleResultRepository.findById(savedResult.getIdBattleResult())
                 .orElseThrow(() -> new RuntimeException("Error al recuperar el resultado de la batalla guardado"));
         } catch (Exception e) {
-            e.printStackTrace(); // Para ver el error en los logs
+            e.printStackTrace();
             throw new RuntimeException("Error al guardar el resultado de la batalla: " + e.getMessage(), e);
         }
     }
@@ -289,21 +420,58 @@ public class BattleService {
     }
 
     /**
-     * Calcula el daño de un ataque considerando ataque, defensa, inteligencia y especial.
+     * Calcula el daño de un ataque considerando todos los atributos del personaje.
      */
     private double calculateDamage(UserCharacter atacante, UserCharacter defensor) {
-        // Base: ataque - defensa
-        double base = atacante.getAttackUserCharacter() - (defensor.getDefenseUserCharacter() * 0.7);
-        base = Math.max(1, base); // Daño mínimo
-        // Crítico por inteligencia
-        boolean critico = Math.random() < (atacante.getIntelligenceUserCharacter() / 30.0); // máx 33% si inteligencia=10
-        if (critico) base *= 1.5;
-        // Bonus especial
-        boolean especial = Math.random() < (atacante.getSpecialUserCharacter() / 20.0); // máx 25% si especial=5
-        if (especial) base *= 1.3;
-        // Aguante del defensor reduce daño si es alto
-        base *= (1 - (defensor.getStaminaUserCharacter() / 50.0)); // máx -20% si stamina=10
-        return Math.round(base * 10.0) / 10.0;
+        // 1. Daño base basado en el ataque
+        double baseDamage = atacante.getAttackUserCharacter();
+        
+        // 2. Factor de defensa mejorado
+        double defenseFactor = Math.max(0.2, 1 - (defensor.getDefenseUserCharacter() / 25.0));
+        
+        // 3. Probabilidad y daño de golpe crítico basado en velocidad e inteligencia
+        double criticalChance = (atacante.getSpeedUserCharacter() + atacante.getIntelligenceUserCharacter()) / 200.0;
+        boolean isCritical = Math.random() < criticalChance;
+        
+        // 4. Bonificación por inteligencia (mejora la precisión y reduce la defensa enemiga)
+        double intelligenceBonus = 1.0 + (atacante.getIntelligenceUserCharacter() / 100.0);
+        defenseFactor *= (1 + (atacante.getIntelligenceUserCharacter() / 150.0));
+        
+        // 5. Factor de stamina (afecta la consistencia del daño)
+        double staminaFactor = 0.7 + (atacante.getStaminaUserCharacter() / 100.0);
+        
+        // 6. Habilidad especial
+        boolean specialActivated = false;
+        double specialMultiplier = 1.0;
+        if (atacante.getSpecialUserCharacter() > 0) {
+            // Probabilidad de activar especial basada en el valor del atributo
+            double specialChance = atacante.getSpecialUserCharacter() / 200.0;
+            specialActivated = Math.random() < specialChance;
+            if (specialActivated) {
+                // El multiplicador depende del valor del atributo especial
+                specialMultiplier = 1.0 + (atacante.getSpecialUserCharacter() / 50.0);
+            }
+        }
+        
+        // 7. Calcular daño final
+        double damage = baseDamage * defenseFactor * intelligenceBonus * staminaFactor;
+        
+        // Aplicar crítico si corresponde
+        if (isCritical) {
+            damage *= 1.5;
+        }
+        
+        // Aplicar especial si se activó
+        if (specialActivated) {
+            damage *= specialMultiplier;
+        }
+        
+        // 8. Añadir variación aleatoria (±20%)
+        double randomFactor = 0.8 + (Math.random() * 0.4);
+        damage *= randomFactor;
+        
+        // 9. Asegurar daño mínimo
+        return Math.max(0.5, damage);
     }
 
     /**
