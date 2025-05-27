@@ -25,6 +25,8 @@ export class AdminDashboardComponent implements OnInit {
   // Gestión de personajes
   showAddCharacterForm = false;
   newCharacter: Partial<Character> = {};
+  selectedCharacter: Character | null = null;
+  isEditMode = false;
   selectedFile: File | null = null;
 
   constructor(private userService: UserService, private router: Router, private characterService: CharacterService) { }
@@ -97,8 +99,31 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   editCharacter(character: Character): void {
-    // Implementar lógica de edición de personaje
-    console.log('Editing character:', character);
+    this.selectedCharacter = { ...character };
+    this.isEditMode = true;
+    this.showCharacterManagement = true;
+  }
+
+  updateCharacter(): void {
+    if (this.selectedCharacter) {
+      this.characterService.updateCharacter(this.selectedCharacter).subscribe({
+        next: () => {
+          alert('Personaje actualizado con éxito');
+          this.resetForm();
+          this.loadCharacters();
+        },
+        error: (error: Error) => {
+          alert('Error al actualizar');
+          console.error('Error al actualizar personaje:', error);
+        }
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.selectedCharacter = null;
+    this.isEditMode = false;
+    this.showAddCharacterForm = false;
   }
 
   deleteCharacter(character: Character): void {
