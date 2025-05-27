@@ -115,7 +115,16 @@
         </div>
       </div>
 
-      <app-user-profile-battles [userId]="userId"></app-user-profile-battles>
+      <!-- Sección de Batallas -->
+      <div class="card mt-4">
+        <div class="card-header" style="background-color: #FF69B4; color: white;">
+          Historial de Batallas
+        </div>
+        <div class="card-body">
+          <app-user-profile-battles *ngIf="user?.idUser" [userId]="user.idUser"></app-user-profile-battles>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

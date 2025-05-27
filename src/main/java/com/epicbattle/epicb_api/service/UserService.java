@@ -120,4 +120,11 @@ public class UserService {
             throw new com.epicbattle.epicb_api.exception.ResourceNotFoundException("Usuario no encontrado");
         }
     }
+
+    /**
+     * Guarda o actualiza un usuario
+     */
+    public User save(User user) {
+        return userRepository.save(user);
+    }
 }

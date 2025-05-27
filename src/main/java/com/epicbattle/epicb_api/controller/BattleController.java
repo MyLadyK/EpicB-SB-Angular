@@ -90,23 +90,6 @@ public class BattleController {
         // Determinar el ganador basado en las estadísticas de los personajes
         boolean currentUserWins = determineWinner(currentUserCharacter, opponentCharacter);
 
-        // Actualizar los puntos de los usuarios
-        if (currentUserWins) {
-            // El usuario actual gana
-            currentUser.setPointsUser(currentUser.getPointsUser() + 20);
-            // El oponente pierde puntos pero no puede tener menos de 0
-            opponent.setPointsUser(Math.max(0, opponent.getPointsUser() - 8));
-        } else {
-            // El oponente gana
-            opponent.setPointsUser(opponent.getPointsUser() + 20);
-            // El usuario actual pierde puntos pero no puede tener menos de 0
-            currentUser.setPointsUser(Math.max(0, currentUser.getPointsUser() - 8));
-        }
-
-        // Guardar los cambios en los usuarios
-        userRepository.save(currentUser);
-        userRepository.save(opponent);
-
         // Crear y guardar el resultado de la batalla
         BattleResult battleResult = new BattleResult();
         battleResult.setUser1(currentUser);
@@ -200,23 +183,44 @@ public class BattleController {
      */
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getBattlesByUser(@PathVariable int userId) {
-        // Verificar que el usuario existe
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Usuario no encontrado"));
+        try {
+            // Verificar que el usuario existe
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Usuario no encontrado"));
+            }
+
+            // Obtener todas las batallas donde el usuario participó
+            List<BattleResult> allBattles = battleResultService.getAllBattleResults();
+            List<BattleResult> userBattles = allBattles.stream()
+                .filter(battle -> 
+                    battle.getUser1().getIdUser() == userId || 
+                    battle.getUser2().getIdUser() == userId)
+                .peek(battle -> {
+                    // Establecer el nombre del oponente si no está establecido
+                    if (battle.getOpponentName() == null || battle.getOpponentName().isEmpty()) {
+                        User opponent = battle.getUser1().getIdUser() == userId ? battle.getUser2() : battle.getUser1();
+                        battle.setOpponentName(opponent.getNameUser());
+                    }
+                    // Establecer el resultado si no está establecido
+                    if (battle.getResult() == null || battle.getResult().isEmpty()) {
+                        boolean isWinner = battle.getWinner().getIdUser() == userId;
+                        battle.setResult(isWinner ? "WIN" : "LOSE");
+                    }
+                    // Establecer los puntos si no están establecidos
+                    if (battle.getBattlePoints() == 0) {
+                        boolean isWinner = battle.getWinner().getIdUser() == userId;
+                        battle.setBattlePoints(isWinner ? 20 : -8);
+                    }
+                })
+                .sorted((b1, b2) -> b2.getBattleDate().compareTo(b1.getBattleDate()))
+                .toList();
+
+            return ResponseEntity.ok(userBattles);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Error al obtener las batallas: " + e.getMessage()));
         }
-
-        // Obtener todas las batallas donde el usuario participó
-        List<BattleResult> allBattles = battleResultService.getAllBattleResults();
-        List<BattleResult> userBattles = allBattles.stream()
-            .filter(battle -> 
-                battle.getUser1().getIdUser() == userId || 
-                battle.getUser2().getIdUser() == userId)
-            .toList();
-
-
-
-        return ResponseEntity.ok(userBattles);
     }
 
     /**

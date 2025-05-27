@@ -1,20 +1,49 @@
 <div class="battles-container">
-  <h3>Historial de batallas</h3>
-  <ul *ngIf="battles.length > 0; else emptyBattles">
-    <li *ngFor="let battle of battles">
-      <span class="date">{{ battle.date | date:'short' }}</span>
-      <span class="vs">VS</span>
-      <span class="opponent">{{ battle.opponentName }}</span>
-      <span class="result" [ngClass]="{
+  <div class="header">
+    <h3>Historial de batallas</h3>
+    <button *ngIf="!loading" 
+            (click)="reloadBattles()" 
+            class="reload-button">
+      🔄 Recargar
+    </button>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando batallas...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="reloadBattles()">Intentar de nuevo</button>
+  </div>
+
+  <!-- Battle list -->
+  <ul *ngIf="!loading && !error && battles.length > 0; else emptyBattles" class="battle-list">
+    <li *ngFor="let battle of battles" class="battle-item">
+      <div class="battle-header">
+        <span class="date">{{ formatBattleDate(battle) }}</span>
+        <span class="vs">VS</span>
+        <span class="opponent">{{ battle.opponentName }}</span>
+      </div>
+      <div class="battle-result" [ngClass]="{
         'win': battle.result === 'WIN',
-        'lose': battle.result === 'LOSE',
-        'draw': battle.result === 'DRAW'
+        'lose': battle.result === 'LOSE'
       }">
-        {{ battle.result }}
-      </span>
+        <span class="result-text">{{ battle.result === 'WIN' ? '¡Victoria!' : 'Derrota' }}</span>
+        <span class="points">
+          <span class="points-value">{{ battle.result === 'WIN' ? '+' : ''}}{{ battle.battlePoints }}</span>
+          <span class="points-label">puntos</span>
+        </span>
+      </div>
     </li>
   </ul>
+
   <ng-template #emptyBattles>
-    <p>No hay batallas recientes.</p>
+    <div *ngIf="!loading && !error" class="empty-state">
+      <p>No hay batallas recientes.</p>
+    </div>
   </ng-template>
 </div>

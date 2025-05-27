@@ -41,10 +41,10 @@ public class BattleResult {
 
     @Column(name = "battleDate")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date battleDate;
+    private Date battleDate = new Date();
 
     @Column(name = "battle_points")
-    private int battlePoints;
+    private int battlePoints = 0;
 
     @ElementCollection
     @CollectionTable(
@@ -54,25 +54,25 @@ public class BattleResult {
     private List<BattleEvent> events = new ArrayList<>();
 
     @Column(name = "final_health1")
-    private double finalHealth1;
+    private double finalHealth1 = 100.0;
 
     @Column(name = "final_health2")
-    private double finalHealth2;
+    private double finalHealth2 = 100.0;
 
     @Column(name = "opponent_name")
-    private String opponentName;
+    private String opponentName = "";
 
     @Column(name = "result")
-    private String result;
+    private String result = "";
 
     @Column(name = "points_gained")
-    private int pointsGained;
+    private int pointsGained = 0;
 
     @Column(name = "points_lost")
-    private int pointsLost;
+    private int pointsLost = 0;
 
-    @Column(name = "surprise_package_description", length = 1000)
-    private String surprisePackageDescription;
+    @Column(name = "surprise_package_description")
+    private String surprisePackageDescription = "";
 
     @Transient
     private String date;
@@ -104,5 +104,109 @@ public class BattleResult {
 
     public void setIdBattleResult(int idBattleResult) {
         this.idBattleResult = idBattleResult;
+    }
+
+    public User getUser1() {
+        return user1;
+    }
+
+    public void setUser1(User user1) {
+        this.user1 = user1;
+    }
+
+    public User getUser2() {
+        return user2;
+    }
+
+    public void setUser2(User user2) {
+        this.user2 = user2;
+    }
+
+    public User getWinner() {
+        return winner;
+    }
+
+    public void setWinner(User winner) {
+        this.winner = winner;
+    }
+
+    public Date getBattleDate() {
+        return battleDate;
+    }
+
+    public void setBattleDate(Date battleDate) {
+        this.battleDate = battleDate != null ? battleDate : new Date();
+    }
+
+    public int getBattlePoints() {
+        return battlePoints;
+    }
+
+    public void setBattlePoints(int battlePoints) {
+        this.battlePoints = battlePoints;
+    }
+
+    public double getFinalHealth1() {
+        return finalHealth1;
+    }
+
+    public void setFinalHealth1(double finalHealth1) {
+        this.finalHealth1 = finalHealth1;
+    }
+
+    public double getFinalHealth2() {
+        return finalHealth2;
+    }
+
+    public void setFinalHealth2(double finalHealth2) {
+        this.finalHealth2 = finalHealth2;
+    }
+
+    public String getOpponentName() {
+        return opponentName;
+    }
+
+    public void setOpponentName(String opponentName) {
+        this.opponentName = opponentName != null ? opponentName : "";
+    }
+
+    public int getPointsGained() {
+        return pointsGained;
+    }
+
+    public void setPointsGained(int pointsGained) {
+        this.pointsGained = pointsGained;
+    }
+
+    public int getPointsLost() {
+        return pointsLost;
+    }
+
+    public void setPointsLost(int pointsLost) {
+        this.pointsLost = pointsLost;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result != null ? result : "";
+    }
+
+    public String getSurprisePackageDescription() {
+        return surprisePackageDescription;
+    }
+
+    public void setSurprisePackageDescription(String surprisePackageDescription) {
+        this.surprisePackageDescription = surprisePackageDescription != null ? surprisePackageDescription : "";
+    }
+
+    public List<BattleEvent> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<BattleEvent> events) {
+        this.events = events != null ? events : new ArrayList<>();
     }
 }

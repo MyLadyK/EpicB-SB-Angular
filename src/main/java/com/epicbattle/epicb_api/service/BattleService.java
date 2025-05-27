@@ -31,6 +31,9 @@ public class BattleService {
     @Autowired
     private RankingService rankingService;
 
+    @Autowired
+    private UserService userService;
+
     /**
      * Realiza una batalla avanzada entre dos personajes de usuario y otorga recompensa al ganador.
      * Lanza IllegalArgumentException si algún personaje de usuario no existe.
@@ -270,9 +273,22 @@ public class BattleService {
         userCharacterService.save(uc1);
         userCharacterService.save(uc2);
 
-        // Actualizar ranking
-        rankingService.updateRanking(user1);
-        rankingService.updateRanking(user2);
+        // Actualizar puntos en el ranking y en los usuarios
+        int pointsWinner = 20;
+        int pointsLoser = -8;
+        
+        // Actualizar puntos del ganador
+        winner.setPointsUser(winner.getPointsUser() + pointsWinner);
+        rankingService.addPointsToUser(winner, pointsWinner);
+        
+        // Actualizar puntos del perdedor
+        User loser = winner.equals(user1) ? user2 : user1;
+        loser.setPointsUser(Math.max(0, loser.getPointsUser() + pointsLoser));
+        rankingService.addPointsToUser(loser, pointsLoser);
+
+        // Guardar los cambios en los usuarios
+        userService.save(winner);
+        userService.save(loser);
 
         // Crear y guardar el resultado de la batalla
         BattleResult battleResult = new BattleResult();
@@ -413,10 +429,21 @@ public class BattleService {
     }
 
     /**
-     * Devuelve el historial de batallas donde el usuario participó (como user1 o user2), ordenadas por fecha descendente.
+     * Obtiene todas las batallas de un usuario específico
+     * @param userId ID del usuario
+     * @return Lista de resultados de batalla
      */
     public List<BattleResult> getBattlesByUser(int userId) {
-        return battleResultRepository.findByUser1_IdUserOrUser2_IdUserOrderByBattleDateDesc(userId, userId);
+        return battleResultRepository.findUserBattles(userId);
+    }
+
+    /**
+     * Obtiene todas las batallas ganadas por un usuario
+     * @param userId ID del usuario
+     * @return Lista de resultados de batalla ganadas
+     */
+    public List<BattleResult> getWonBattles(int userId) {
+        return battleResultRepository.findWonBattles(userId);
     }
 
     /**

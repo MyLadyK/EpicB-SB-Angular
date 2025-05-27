@@ -36,7 +36,7 @@ export class BattleService {
           finalHealth1: response.finalHealth1 || 100,
           finalHealth2: response.finalHealth2 || 100,
           battleDate: response.battleDate,
-          date: response.date,
+          battlePoints: response.battlePoints || 0,
           opponentName: response.opponentName,
           result: response.result,
           pointsGained: response.winner.idUser === response.user1.idUser ? 20 : -8,
@@ -63,8 +63,29 @@ export class BattleService {
    * Obtiene las batallas de un usuario específico
    * @param userId ID del usuario
    */
-  getBattlesByUser(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/${userId}`);
+  getBattlesByUser(userId: number): Observable<BattleResult[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`).pipe(
+      map(battles => battles.map(battle => ({
+        idBattleResult: battle.idBattleResult,
+        user1: battle.user1,
+        user2: battle.user2,
+        winner: battle.winner || (battle.winnerId ? (battle.winnerId === battle.user1Id ? battle.user1 : battle.user2) : null),
+        events: battle.events || [],
+        finalHealth1: battle.final_health1 || battle.finalHealth1 || 0,
+        finalHealth2: battle.final_health2 || battle.finalHealth2 || 0,
+        battleDate: new Date(battle.battleDate),
+        battlePoints: battle.battle_points || battle.battlePoints || 0,
+        opponentName: battle.opponent_name || battle.opponentName || '',
+        result: battle.result || (battle.winner?.idUser === battle.user1?.idUser ? 'WIN' : 'LOSE'),
+        pointsGained: battle.points_gained || battle.pointsGained || 0,
+        pointsLost: battle.points_lost || battle.pointsLost || 0,
+        surprisePackageDescription: battle.surprise_package_description || battle.surprisePackageDescription
+      }))),
+      catchError(error => {
+        console.error('Error al obtener las batallas:', error);
+        return throwError(() => new Error('Error al cargar las batallas'));
+      })
+    );
   }
 
   /**
