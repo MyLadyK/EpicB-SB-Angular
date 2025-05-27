@@ -18,30 +18,52 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminDashboardComponent implements OnInit {
   users: User[] = [];
-  isUserManagementVisible = false;
-  isCharacterManagementVisible = false;
+  characters: Character[] = [];
+  showUserManagement: boolean = true;
+  showCharacterManagement: boolean = false;
 
   // Gestión de personajes
   showAddCharacterForm = false;
   newCharacter: Partial<Character> = {};
-  characters: Character[] = [];
   selectedFile: File | null = null;
 
   constructor(private userService: UserService, private router: Router, private characterService: CharacterService) { }
 
   ngOnInit(): void {
     this.loadUsers();
+    this.loadCharacters();
+  }
+
+  toggleUserManagement(): void {
+    this.showUserManagement = true;
+    this.showCharacterManagement = false;
+  }
+
+  toggleCharacterManagement(): void {
+    this.showUserManagement = false;
+    this.showCharacterManagement = true;
   }
 
   loadUsers(): void {
-    this.userService.getUsers().subscribe(
-      (response: User[]) => {
-        this.users = response;
+    this.userService.getUsers().subscribe({
+      next: (data: User[]) => {
+        this.users = data;
       },
-      (error: Error) => {
-        console.error('Error al cargar usuarios', error);
+      error: (error: Error) => {
+        console.error('Error loading users:', error);
       }
-    );
+    });
+  }
+
+  loadCharacters(): void {
+    this.characterService.getCharacters().subscribe({
+      next: (data: Character[]) => {
+        this.characters = data;
+      },
+      error: (error: Error) => {
+        console.error('Error loading characters:', error);
+      }
+    });
   }
 
   banUser(userId: number, duration: string): void {
@@ -56,15 +78,40 @@ export class AdminDashboardComponent implements OnInit {
     );
   }
 
-  navigateToCharacterManagement(): void {
-    this.isUserManagementVisible = false;
-    this.isCharacterManagementVisible = true;
-    this.loadCharacters();
+  editUser(user: User): void {
+    // Implementar lógica de edición de usuario
+    console.log('Editing user:', user);
   }
 
-  navigateToUserManagement(): void {
-    this.isCharacterManagementVisible = false;
-    this.isUserManagementVisible = true;
+  deleteUser(user: User): void {
+    if (confirm(`¿Estás seguro de que quieres eliminar al usuario ${user.nameUser}?`)) {
+      this.userService.eliminateUser(user.idUser).subscribe({
+        next: () => {
+          this.users = this.users.filter(u => u.idUser !== user.idUser);
+        },
+        error: (error: Error) => {
+          console.error('Error deleting user:', error);
+        }
+      });
+    }
+  }
+
+  editCharacter(character: Character): void {
+    // Implementar lógica de edición de personaje
+    console.log('Editing character:', character);
+  }
+
+  deleteCharacter(character: Character): void {
+    if (confirm(`¿Estás seguro de que quieres eliminar al personaje ${character.nameCharacter}?`)) {
+      this.characterService.deleteCharacter(character.idCharacter).subscribe({
+        next: () => {
+          this.characters = this.characters.filter(c => c.idCharacter !== character.idCharacter);
+        },
+        error: (error: Error) => {
+          console.error('Error deleting character:', error);
+        }
+      });
+    }
   }
 
   // NUEVO: Cambiar rol de usuario
@@ -78,18 +125,6 @@ export class AdminDashboardComponent implements OnInit {
       },
       (error: Error) => {
         console.error('Error al cambiar el rol del usuario', error);
-      }
-    );
-  }
-
-  // --- Gestión de personajes ---
-  loadCharacters(): void {
-    this.characterService.getCharacters().subscribe(
-      (response: Character[]) => {
-        this.characters = response;
-      },
-      (error: Error) => {
-        console.error('Error al cargar personajes', error);
       }
     );
   }

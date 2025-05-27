@@ -5,7 +5,7 @@
 
 .user-profile-background {
   min-height: 100vh;
-  background: linear-gradient(135deg, #2C3E50, #4CA1AF) !important;
+  background: linear-gradient(to right, #ff512f, #dd2476) !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,11 +81,26 @@
 
 /* Asegurar que los textos sean visibles */
 .text-white {
-  color: white !important;
+  color: #FFFFFF !important;
 }
 
 .text-pink {
-  color: #FF69B4 !important;
+  color: #00FF7F !important;
+  font-weight: bold;
+}
+
+.profile-details .label {
+  color: #00FF7F;
+  font-weight: bold;
+}
+
+.profile-details .value {
+  color: #FFFFFF;
+}
+
+.profile-email {
+  color: #FFFFFF;
+  font-weight: normal;
 }
 
 .user-profile-container {
@@ -117,7 +132,7 @@
   font-size: 18px;
   line-height: 1.5;
   margin: 10px 0;
-  color: #CCCCCC;
+  color: #FFFFFF;
 }
 
 .profile-details strong {
@@ -155,4 +170,35 @@
 
 .character-image:hover {
   transform: scale(1.05);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item span:first-child {
+  color: #00FF7F;
+  font-weight: bold;
+}
+
+.stat-item span:last-child {
+  color: #FFFFFF;
+}
+
+.battles-section {
+  padding: 20px;
+  background: transparent !important;
 }

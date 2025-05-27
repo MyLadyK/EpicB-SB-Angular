@@ -6,22 +6,45 @@
       <div class="flip-card-inner">
         <!-- Front -->
         <div class="flip-card-front" (click)="toggleFlip(i)">
-          <span class="character-name text-xl font-bold mb-2 text-blue-900">{{ character.nameCharacter }}</span>
+          <span class="character-name text-xl font-bold mb-2">{{ character.nameCharacter }}</span>
           <img [src]="getImageUrl(character.imageUrl)" alt="{{ character.nameCharacter }}" class="character-img w-32 h-32 object-cover rounded-full border-4 border-blue-300 shadow-lg cursor-pointer mb-2">
-          <div class="character-meta text-base mt-1 text-gray-700">
-            <p><span class="font-semibold">Categoría:</span> {{ character.categoryCharacter }}</p>
-            <p><span class="font-semibold">Universo:</span> {{ character.universeCharacter }}</p>
+          <div class="character-meta">
+            <p><span class="label">Categoría:</span> <span class="value">{{ character.categoryCharacter }}</span></p>
+            <p><span class="label">Universo:</span> <span class="value">{{ character.universeCharacter }}</span></p>
           </div>
         </div>
         <!-- Back -->
         <div class="flip-card-back" (click)="toggleFlip(i)">
-          <p><span class="font-semibold">Salud:</span> {{ character.healthCharacter }}</p>
-          <p><span class="font-semibold">Ataque:</span> {{ character.attackCharacter }}</p>
-          <p><span class="font-semibold">Defensa:</span> {{ character.defenseCharacter }}</p>
-          <p><span class="font-semibold">Velocidad:</span> {{ character.speedCharacter }}</p>
-          <p><span class="font-semibold">Resistencia:</span> {{ character.staminaCharacter }}</p>
-          <p><span class="font-semibold">Inteligencia:</span> {{ character.intelligenceCharacter }}</p>
-          <p><span class="font-semibold">Especial:</span> {{ character.specialCharacter }}</p>
+          <div class="character-stats">
+            <div>
+              <span class="stat-label">Salud:</span>
+              <span class="stat-value">{{ character.healthCharacter }}</span>
+            </div>
+            <div>
+              <span class="stat-label">Ataque:</span>
+              <span class="stat-value">{{ character.attackCharacter }}</span>
+            </div>
+            <div>
+              <span class="stat-label">Defensa:</span>
+              <span class="stat-value">{{ character.defenseCharacter }}</span>
+            </div>
+            <div>
+              <span class="stat-label">Velocidad:</span>
+              <span class="stat-value">{{ character.speedCharacter }}</span>
+            </div>
+            <div>
+              <span class="stat-label">Resistencia:</span>
+              <span class="stat-value">{{ character.staminaCharacter }}</span>
+            </div>
+            <div>
+              <span class="stat-label">Inteligencia:</span>
+              <span class="stat-value">{{ character.intelligenceCharacter }}</span>
+            </div>
+            <div>
+              <span class="stat-label">Especial:</span>
+              <span class="stat-value">{{ character.specialCharacter }}</span>
+            </div>
+          </div>
           <div class="mt-3 flex flex-col gap-2">
             <button *ngIf="!isInCollection(character)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded disabled:opacity-50" [disabled]="!canAddToCollection()" (click)="$event.stopPropagation(); addToCollection(character)">
               Añadir a mi tropa

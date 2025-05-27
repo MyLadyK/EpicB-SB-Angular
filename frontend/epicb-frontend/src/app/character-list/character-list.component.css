@@ -5,7 +5,7 @@
   background: linear-gradient(to right, #ff512f, #dd2476);
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  color: #333333;
+  color: #FFFFFF;
 }
 
 .character-list-container h2 {
@@ -83,8 +83,6 @@
   text-align: center;
 }
 
-
-
 .flip-card-back {
   background: rgba(0, 0, 0, 0.7);
   color: #CCCCCC;
@@ -113,8 +111,6 @@
   flex-direction: column;
 }
 
-
-
 .character-details p {
   margin: 5px 0;
 }
@@ -123,7 +119,35 @@
   color: #00FF7F;
 }
 
+.character-name {
+  color: #00FF7F;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
 
+.character-category {
+  color: #FF69B4;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.character-stats {
+  color: #FFFFFF;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.stat-label {
+  color: #00FF7F;
+  font-weight: bold;
+}
+
+.stat-value {
+  color: #FFFFFF;
+}
 
 @media (max-width: 800px) {
   .character-img {
@@ -131,16 +155,6 @@
     height: 140px;
     min-height: 90px;
   }
-}
-
-
-.character-name {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #00FF7F;
-  margin-bottom: 0.5rem;
-  width: 100%;
-  text-align: center;
 }
 
 .flip-card-back p {
@@ -167,14 +181,27 @@
   }
 }
 
-
-
-
-
 .character-details p {
   margin: 5px 0;
 }
 
 .character-details strong {
   color: #00FF7F;
+}
+
+.character-meta {
+  margin-top: 0.5rem;
+}
+
+.character-meta p {
+  margin: 0.25rem 0;
+}
+
+.character-meta .label {
+  color: #00FF7F;
+  font-weight: bold;
+}
+
+.character-meta .value {
+  color: #FFFFFF;
 }

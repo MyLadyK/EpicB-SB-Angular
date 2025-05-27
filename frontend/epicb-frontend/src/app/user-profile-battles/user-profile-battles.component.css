@@ -1,0 +1,92 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .card-body {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.battles-container {
+  padding: 0;
+  width: 100%;
+}
+
+.battles-list {
+  background: rgba(0, 0, 0, 0.7) !important;
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  color: #FFFFFF !important;
+}
+
+.battle-card {
+  background: rgba(43, 43, 43, 0.9) !important;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.battle-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.battle-date {
+  color: #FFFFFF !important;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.battle-opponent {
+  color: #00FF7F !important;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.battle-result {
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.battle-result.victory {
+  background: linear-gradient(135deg, #00FF7F, #32CD32) !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+.battle-result.defeat {
+  background: linear-gradient(135deg, #FF4444, #CC0000) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+}
+
+.battle-points {
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.alert {
+  background: rgba(43, 43, 43, 0.9) !important;
+  color: #FFFFFF !important;
+  border: 1px solid #FF69B4 !important;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  width: 100%;
+  margin: 0 !important;
+} 

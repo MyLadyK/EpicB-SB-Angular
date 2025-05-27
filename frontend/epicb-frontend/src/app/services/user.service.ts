@@ -47,6 +47,11 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  eliminateUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${userId}`)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMsg = 'Error desconocido';
     if (error.error instanceof ErrorEvent) {

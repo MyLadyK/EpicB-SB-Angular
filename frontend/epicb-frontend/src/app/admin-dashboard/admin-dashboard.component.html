@@ -1,78 +1,86 @@
 <div class="admin-dashboard-container">
-  <h1>Admin Dashboard</h1>
+  <h1>Panel de Administración</h1>
+
   <div class="button-group">
-    <button class="action-button" (click)="navigateToUserManagement()">Gestionar Usuarios</button>
-    <button class="action-button" (click)="navigateToCharacterManagement()">Gestionar Personajes</button>
-  </div>
-
-  <!-- Componente de gestión de usuarios -->
-  <div *ngIf="isUserManagementVisible" class="user-management">
-    <h2>Gestión de Usuario</h2>
-    <table class="styled-table">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Correo</th>
-        <th>Rol</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{user.idUser}}</td>
-        <td>{{user.nameUser}}</td>
-        <td>{{user.mailUser}}</td>
-        <td>
-          <select [ngModel]="user.roleUser" (change)="changeUserRole(user, $event)">
-            <option [value]="'USER'">USER</option>
-            <option [value]="'ADMIN'">ADMIN</option>
-          </select>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Componente de gestión de personajes -->
-  <div *ngIf="isCharacterManagementVisible" class="character-management">
-    <h2>Gestión de Personajes</h2>
-    <button class="action-button mb-4" (click)="showAddCharacterForm = !showAddCharacterForm">
-      {{ showAddCharacterForm ? 'Cancelar alta' : 'Añadir Personaje' }}
+    <button class="action-button" (click)="toggleUserManagement()">
+      Gestión de Usuarios
     </button>
-    <div *ngIf="showAddCharacterForm">
-      <form (ngSubmit)="addCharacter()" #characterForm="ngForm" class="add-character-form">
-        <input type="text" placeholder="Nombre" [(ngModel)]="newCharacter.nameCharacter" name="nameCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="number" placeholder="Salud" [(ngModel)]="newCharacter.healthCharacter" name="healthCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="number" placeholder="Ataque" [(ngModel)]="newCharacter.attackCharacter" name="attackCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="number" placeholder="Defensa" [(ngModel)]="newCharacter.defenseCharacter" name="defenseCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="number" placeholder="Velocidad" [(ngModel)]="newCharacter.speedCharacter" name="speedCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="number" placeholder="Resistencia" [(ngModel)]="newCharacter.staminaCharacter" name="staminaCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="number" placeholder="Inteligencia" [(ngModel)]="newCharacter.intelligenceCharacter" name="intelligenceCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="number" placeholder="Especial" [(ngModel)]="newCharacter.specialCharacter" name="specialCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="text" placeholder="Categoría" [(ngModel)]="newCharacter.categoryCharacter" name="categoryCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="text" placeholder="Universo" [(ngModel)]="newCharacter.universeCharacter" name="universeCharacter" required class="input input-bordered rounded mb-2 text-black">
-        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="input input-bordered rounded mb-2 text-black">
-        <button class="action-button w-full" type="submit">Guardar Personaje</button>
-      </form>
+    <button class="action-button" (click)="toggleCharacterManagement()">
+      Gestión de Personajes
+    </button>
+  </div>
+
+  <div class="user-management" *ngIf="showUserManagement">
+    <h2>Gestión de Usuarios</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Puntos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.idUser }}</td>
+            <td>{{ user.nameUser }}</td>
+            <td>{{ user.mailUser }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.pointsUser }}</td>
+            <td class="table-actions">
+              <button class="edit-button" (click)="editUser(user)">Editar</button>
+              <button class="delete-button" (click)="deleteUser(user)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <h3 class="mt-6 mb-2">Listado de Personajes</h3>
-    <table class="styled-table w-full">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Universo</th>
-          <th>Categoría</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let character of characters">
-          <td>{{character.idCharacter}}</td>
-          <td>{{character.nameCharacter}}</td>
-          <td>{{character.universeCharacter}}</td>
-          <td>{{character.categoryCharacter}}</td>
-        </tr>
-      </tbody>
-    </table>
+  </div>
+
+  <div class="character-management" *ngIf="showCharacterManagement">
+    <h2>Gestión de Personajes</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Universo</th>
+            <th>Salud</th>
+            <th>Ataque</th>
+            <th>Defensa</th>
+            <th>Velocidad</th>
+            <th>Resistencia</th>
+            <th>Inteligencia</th>
+            <th>Especial</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let character of characters">
+            <td>{{ character.idCharacter }}</td>
+            <td>{{ character.nameCharacter }}</td>
+            <td>{{ character.categoryCharacter }}</td>
+            <td>{{ character.universeCharacter }}</td>
+            <td>{{ character.healthCharacter }}</td>
+            <td>{{ character.attackCharacter }}</td>
+            <td>{{ character.defenseCharacter }}</td>
+            <td>{{ character.speedCharacter }}</td>
+            <td>{{ character.staminaCharacter }}</td>
+            <td>{{ character.intelligenceCharacter }}</td>
+            <td>{{ character.specialCharacter }}</td>
+            <td class="table-actions">
+              <button class="edit-button" (click)="editCharacter(character)">Editar</button>
+              <button class="delete-button" (click)="deleteCharacter(character)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

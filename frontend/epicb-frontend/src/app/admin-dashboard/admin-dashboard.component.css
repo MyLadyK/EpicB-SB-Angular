@@ -4,13 +4,16 @@
   align-items: center;
   padding: 20px;
   background: linear-gradient(to right, #ff512f, #dd2476);
-  height: 100vh;
-  color: #333333;
+  min-height: 100vh;
+  height: auto;
+  color: #FFFFFF;
+  overflow-y: auto;
 }
 
 h1 {
   color: #00FF7F;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .button-group {
@@ -18,6 +21,7 @@ h1 {
   justify-content: center;
   gap: 20px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .action-button {
@@ -42,32 +46,103 @@ h1 {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  margin-bottom: 30px;
+  overflow-x: auto;
 }
 
 h2 {
   color: #00FF7F;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
   margin-bottom: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
 }
 
 th, td {
-  padding: 10px;
+  padding: 12px;
   text-align: left;
   border: 1px solid #575757;
+  color: #FFFFFF;
+  white-space: nowrap;
 }
 
 th {
   background: #2b2b2b;
+  color: #00FF7F;
+  font-weight: bold;
+}
+
+tbody tr {
+  background: rgba(43, 43, 43, 0.7);
 }
 
 tbody tr:nth-child(even) {
-  background: #2b2b2b;
+  background: rgba(59, 59, 59, 0.7);
 }
 
 tbody tr:hover {
   background: #414141;
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.edit-button, .delete-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.edit-button {
+  background: #00FF7F;
+  color: #000000;
+}
+
+.edit-button:hover {
+  background: #00cc63;
+}
+
+.delete-button {
+  background: #FF4444;
+  color: #FFFFFF;
+}
+
+.delete-button:hover {
+  background: #cc0000;
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard-container {
+    padding: 10px;
+  }
+
+  .user-management, .character-management {
+    padding: 15px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-button {
+    width: 100%;
+  }
 }
