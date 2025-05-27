@@ -26,8 +26,8 @@ export class AuthService {
   }
 
   isAdmin(user: User): boolean {
-  return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'ADMIN');
-}
+    return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'ADMIN');
+  }
 
   isUser(user: User): boolean {
     return !!(user && user.roleUser && typeof user.roleUser === 'string' && user.roleUser.toUpperCase() === 'USER');

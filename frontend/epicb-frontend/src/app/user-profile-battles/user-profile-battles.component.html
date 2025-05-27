@@ -1,0 +1,38 @@
+<div class="battles-container">
+  <div class="battles-list" style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px;">
+    <div *ngIf="battles.length === 0" class="alert" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid #FF69B4;">
+      No hay batallas registradas.
+    </div>
+
+    <div *ngFor="let battle of battles" class="battle-card mb-3" 
+         style="background: rgba(255,255,255,0.1); 
+                border-radius: 10px; 
+                padding: 15px;
+                border: 1px solid rgba(255,255,255,0.2);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <span style="color: #FF69B4; font-weight: bold;">Oponente:</span>
+          <span style="color: white; margin-left: 5px;">{{ battle.opponentName }}</span>
+        </div>
+        <div>
+          <span [class]="'badge ' + (battle.result === 'WIN' ? 'bg-success' : 'bg-danger')"
+                style="padding: 8px 15px; 
+                       border-radius: 20px;
+                       font-weight: bold;
+                       {{ battle.result === 'WIN' ? 
+                         'background: linear-gradient(135deg, #00FF7F, #32CD32) !important;' : 
+                         'background: linear-gradient(135deg, #FF4444, #CC0000) !important;' }}">
+            {{ battle.result === 'WIN' ? 'Victoria' : 'Derrota' }}
+            <span style="margin-left: 5px;">
+              {{ battle.battlePoints > 0 ? '+' + battle.battlePoints : battle.battlePoints }}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="mt-2" style="color: rgba(255,255,255,0.7);">
+        <small>{{ battle.battleDate | date:'dd/MM/yyyy HH:mm' }}</small>
+      </div>
+    </div>
+  </div>
+</div> 
