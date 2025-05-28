@@ -1,8 +1,126 @@
-<p>battle works!</p>
+<div class="battle-arena">
+  <h2 class="battle-title">
+    <span>⚔️</span>
+    Batalla contra {{ opponent?.nameUser || 'Oponente' }}
+    <span>⚔️</span>
+  </h2>
 
-<button (click)="fight()">Start Battle</button>
+  <!-- Contenedor de personajes -->
+  <div class="fighters">
+    <!-- Personaje 1 -->
+    <div class="fighter"
+         [ngClass]="{
+           'attacking': battleInProgress && attackingCharacter === selectedCharacter1,
+           'defending': battleInProgress && defendingCharacter === selectedCharacter1
+         }">
+      <img *ngIf="getCharacter1()" [src]="getCharacterImageUrl(getCharacter1())" 
+           [alt]="getCharacterName(getCharacter1())"
+           class="char-img-large">
+      <h3>{{ getCharacterName(getCharacter1()) }}</h3>
+      <div class="health-bar">
+        <div class="health-bar-fill" [style.width.%]="(battleInProgress ? currentHealth1 : getCharacter1()?.healthUserCharacter || 0) / (getCharacter1()?.healthUserCharacter || 1) * 100">
+          {{ battleInProgress ? currentHealth1 : getCharacter1()?.healthUserCharacter || 0 }} HP
+        </div>
+      </div>
+    </div>
 
-<div *ngIf="battleResult">
-  <p>Winner: {{battleResult.winner.nameUser}}</p>
-  <p>Battle Date: {{battleResult.battleDate | date}}</p>
+    <div class="vs-large">VS</div>
+
+    <!-- Personaje 2 -->
+    <div class="fighter"
+         [ngClass]="{
+           'attacking': battleInProgress && attackingCharacter === selectedCharacter2,
+           'defending': battleInProgress && defendingCharacter === selectedCharacter2
+         }">
+      <img *ngIf="getCharacter2()" [src]="getCharacterImageUrl(getCharacter2())" 
+           [alt]="getCharacterName(getCharacter2())"
+           class="char-img-large">
+      <h3>{{ getCharacterName(getCharacter2()) }}</h3>
+      <div class="health-bar">
+        <div class="health-bar-fill" [style.width.%]="(battleInProgress ? currentHealth2 : getCharacter2()?.healthUserCharacter || 0) / (getCharacter2()?.healthUserCharacter || 1) * 100">
+          {{ battleInProgress ? currentHealth2 : getCharacter2()?.healthUserCharacter || 0 }} HP
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de batalla -->
+  <div class="battle-controls">
+    <button (click)="fight()" 
+            [disabled]="loading || battleInProgress" 
+            class="battle-button">
+      {{ loading ? 'Batalla en progreso...' : battleInProgress ? 'Batalla en curso...' : 'Iniciar Batalla' }}
+    </button>
+  </div>
+
+  <!-- Loader -->
+  <div *ngIf="loading" class="loader">
+    <div class="loader-spinner"></div>
+    <p>Cargando resumen de batalla...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error-message">
+    <div class="error-content">
+      <svg class="error-icon" viewBox="0 0 24 24">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <p>{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Resultados de la batalla -->
+  <div *ngIf="battleResult" class="battle-summary-block">
+    <h3 class="battle-summary-title">Desarrollo de la Batalla</h3>
+    
+    <!-- Log de eventos -->
+    <ul class="battle-events">
+      <li *ngFor="let event of battleResult.events; let i = index" 
+          [class.show]="eventAnimations[i]"
+          [class.critico]="event.description?.includes('Golpe crítico')"
+          [class.especial]="event.description?.includes('Habilidad especial')"
+          [class.victoria]="event.description?.includes('Victoria')">
+        {{ event.description || 'Evento de batalla' }}
+      </li>
+    </ul>
+
+    <!-- Resultado final -->
+    <div *ngIf="!battleInProgress && battleResult" class="battle-result">
+      <!-- Banner de victoria/derrota -->
+      <div class="winner-banner" *ngIf="battleResult.result">
+        <span class="trophy-icon">🏆</span>
+        {{ battleResult.result === 'WIN' ? '¡Victoria!' : 'Derrota' }}
+      </div>
+
+      <!-- Detalles de la batalla -->
+      <div class="battle-details">
+        <p><strong>Oponente:</strong> {{ opponent?.nameUser }}</p>
+        <p><strong>Fecha:</strong> {{ battleResult.battleDate | date:'short' }}</p>
+      </div>
+
+      <!-- Paquete sorpresa -->
+      <div *ngIf="battleResult.events" class="surprise-banner">
+        <span class="gift-icon">🎁</span>
+        ¡Paquete Sorpresa Obtenido!
+      </div>
+
+      <!-- Puntos -->
+      <div class="points-banner">
+        <span class="points-icon">⭐</span>
+        {{ battleResult.pointsGained > 0 ? '+' + battleResult.pointsGained : battleResult.pointsLost }} 
+        puntos de ranking
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+</style>

@@ -1,14 +1,14 @@
 package com.epicbattle.epicb_api.service;
 
-import com.epicbattle.epicb_api.exception.GlobalExceptionHandler;
 import com.epicbattle.epicb_api.model.Character;
 import com.epicbattle.epicb_api.repository.CharacterRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
+/**
+ * Servicio para gestión de personajes.
+ */
 @Service
 public class CharacterService {
 
@@ -18,20 +18,31 @@ public class CharacterService {
         this.characterRepository = characterRepository;
     }
 
-    // Implementar paginación, lo que solicita resultados en "páginas" y no todos a la vez.
-    public Page<Character> getAllCharacters(Pageable pageable) {
-        return characterRepository.findAll(pageable);
+    /**
+     * Devuelve todos los personajes sin paginación.
+     */
+    public List<Character> getAllCharacters() {
+        return characterRepository.findAll();
     }
 
+    /**
+     * Crea un nuevo personaje.
+     */
     public Character createCharacter(Character character) {
         return characterRepository.save(character);
     }
 
+    /**
+     * Obtiene un personaje por su ID. Lanza excepción si no existe.
+     */
     public Character getCharacterById(int id) {
         return characterRepository.findById(id)
-                .orElseThrow(() -> new GlobalExceptionHandler.ResourceNotFoundException("Personaje no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Personaje no encontrado con id: " + id));
     }
 
+    /**
+     * Actualiza los datos de un personaje existente.
+     */
     public Character updateCharacter(int id, Character characterDetails) {
         Character character = getCharacterById(id);
 
@@ -50,10 +61,11 @@ public class CharacterService {
         return characterRepository.save(character);
     }
 
-    public ResponseEntity<String> deleteCharacter(int idCharacter) {
+    /**
+     * Elimina un personaje por su ID. Lanza excepción si no existe.
+     */
+    public void deleteCharacter(int idCharacter) {
         Character character = getCharacterById(idCharacter);
         characterRepository.delete(character);
-        return ResponseEntity.ok("Personaje eliminado");
     }
 }
-

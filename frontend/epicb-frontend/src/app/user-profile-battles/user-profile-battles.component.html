@@ -1,0 +1,22 @@
+<div class="battles-container">
+  <div class="battles-list">
+    <div *ngIf="battles.length === 0" class="alert">
+      No hay batallas registradas.
+    </div>
+
+    <div *ngFor="let battle of battles" class="battle-card">
+      <div class="battle-info">
+        <span class="battle-opponent">{{ battle.opponentName }}</span>
+        <span class="battle-date">{{ battle.battleDate | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div>
+        <span class="battle-result" [class.victory]="battle.result === 'WIN'" [class.defeat]="battle.result !== 'WIN'">
+          {{ battle.result === 'WIN' ? 'Victoria' : 'Derrota' }}
+          <span class="battle-points">
+            {{ battle.battlePoints > 0 ? '+' + battle.battlePoints : battle.battlePoints }}
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div> 

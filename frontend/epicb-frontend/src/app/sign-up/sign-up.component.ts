@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
 
 @Component({
-  selector: 'app-sign-up',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
+  selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
 })
@@ -23,17 +24,22 @@ export class SignUpComponent {
     pointUser: 0
   };
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   register() {
+    if (!this.user.nameUser || !this.user.mailUser || !this.user.passwordHash) {
+      alert('Por favor, completa todos los campos.');
+      return;
+    }
+
     this.userService.register(this.user).subscribe(
-      response => {
-        console.log('Usuario registrado con éxito', response);
-        alert('Usuario Registrado')
-        // Redirigir a algún sitio
+      (response) => {
+        alert('¡Registro exitoso!');
+        this.router.navigate(['/login']);
       },
-      error => {
-        console.error('Error al registrar nuevo usuario', error);
+      (error) => {
+        console.error('Error en el registro:', error);
+        alert('Error en el registro. Por favor, intenta de nuevo.');
       }
     );
   }

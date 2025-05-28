@@ -1,0 +1,106 @@
+:host {
+  display: block;
+  padding: 2rem 0;
+  background: linear-gradient(to right, #ff512f, #dd2476);
+}
+
+.max-w-4xl {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  color: #CCCCCC;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.pl-6 {
+  padding-left: 1.5rem;
+}
+
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+.text-blue-900 {
+  color: #00FF7F;
+}
+
+.text-blue-800 {
+  color: #00FF7F;
+}
+
+.text-gray-700 {
+  color: #CCCCCC;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.list-disc {
+  list-style-type: none;
+}
+
+.list-disc li {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  transition: background 0.2s;
+}
+
+.list-disc li:hover {
+  background: rgba(43, 43, 43, 0.7);
+}
+
+.rounded-lg {
+  border-radius: 10px;
+}
+
+.shadow-lg {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}

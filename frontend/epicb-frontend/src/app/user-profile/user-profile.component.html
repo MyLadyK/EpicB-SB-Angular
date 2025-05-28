@@ -1,0 +1,165 @@
+<div class="user-profile-background">
+  <div class="profile-overlay"></div>
+  
+  <div class="profile-container">
+    <div class="text-center mb-4">
+      <h1 style="color: #00FF7F; font-size: 2.5rem; text-shadow: 0 0 10px rgba(0,255,127,0.5);">Perfil de Héroe</h1>
+      <p class="text-pink">Tu identidad en Epic Battle</p>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <div class="avatar-container">
+          <div class="profile-avatar" 
+               style="width: 250px; 
+                      height: 250px; 
+                      background: linear-gradient(135deg, #FF69B4, #FF1493);
+                      border-radius: 50%;
+                      margin: 0 auto;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      border: 4px solid #00FF7F;
+                      box-shadow: 0 0 20px rgba(0,255,127,0.5);">
+            <span style="font-size: 4rem; color: white;">
+              {{ user.nameUser.charAt(0).toUpperCase() }}
+            </span>
+          </div>
+        </div>
+        <h2 class="text-white mt-4" style="text-shadow: 0 0 10px rgba(255,105,180,0.5);">{{ user.nameUser }}</h2>
+        <p class="text-pink">{{ user.mailUser }}</p>
+        <div class="mt-2">
+          <span class="badge" style="background-color: #00FF7F !important; color: black;">
+            Puntos: {{ user.pointsUser }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="col-md-8">
+        <div class="profile-details">
+          <h3 style="color: #00FF7F; margin-bottom: 20px; border-bottom: 2px solid #FF69B4; padding-bottom: 10px;">
+            Detalles del Héroe
+          </h3>
+          
+          <div class="row mb-3">
+            <div class="col-4 text-pink fw-bold">Nombre</div>
+            <div class="col-8 text-white">{{ user.nameUser }}</div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-4 text-pink fw-bold">Correo</div>
+            <div class="col-8 text-white">{{ user.mailUser }}</div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-4 text-pink fw-bold">Rol</div>
+            <div class="col-8 text-white">{{ user.role }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mi Tropa Section -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3 class="mb-0 text-white">Mi Tropa ({{ userCollection.length }}/8)</h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="userCollection.length === 0" class="alert">
+          No tienes personajes en tu tropa.
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-4" *ngFor="let uc of userCollection">
+            <div class="character-card">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="character-image-container">
+                    <img [src]="uc.imageUrlUserCharacter" 
+                         [alt]="uc.baseCharacter.nameCharacter" 
+                         class="character-image">
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="character-info">
+                    <h4 class="text-pink mb-3">{{ uc.baseCharacter.nameCharacter }}</h4>
+                    <p class="text-white-50 mb-2">{{ uc.baseCharacter.categoryCharacter }} | {{ uc.baseCharacter.universeCharacter }}</p>
+                    
+                    <div class="stats-grid">
+                      <div class="stat-item">
+                        <span class="text-pink">Salud:</span>
+                        <span class="text-white">{{ uc.healthUserCharacter }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="text-pink">Ataque:</span>
+                        <span class="text-white">{{ uc.attackUserCharacter }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="text-pink">Defensa:</span>
+                        <span class="text-white">{{ uc.defenseUserCharacter }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="text-pink">Velocidad:</span>
+                        <span class="text-white">{{ uc.speedUserCharacter }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="text-pink">Resistencia:</span>
+                        <span class="text-white">{{ uc.staminaUserCharacter }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="text-pink">Inteligencia:</span>
+                        <span class="text-white">{{ uc.intelligenceUserCharacter }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="text-pink">Especial:</span>
+                        <span class="text-white">{{ uc.specialUserCharacter }}</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="text-pink">Exp:</span>
+                        <span class="text-white">{{ uc.timesUsed }}</span>
+                      </div>
+                    </div>
+                    
+                    <button class="btn btn-delete mt-3" (click)="removeFromCollection(uc.baseCharacter)">
+                      <i class="fas fa-trash-alt"></i> Eliminar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-4 rounded" style="background: rgba(255,255,255,0.1);">
+          <div class="input-group">
+            <select class="form-select" [(ngModel)]="selectedCharacterId">
+              <option [ngValue]="null">Selecciona un personaje para añadir</option>
+              <option *ngFor="let char of allCharacters" 
+                      [ngValue]="char.idCharacter" 
+                      [disabled]="isInCollection(char)">
+                {{ char.nameCharacter }} ({{ char.categoryCharacter }})
+              </option>
+            </select>
+            <button class="btn btn-add" 
+                    [disabled]="!selectedCharacterId || !canAddToCollection()" 
+                    (click)="addToCollectionById()">
+              Añadir
+            </button>
+          </div>
+          <div *ngIf="feedbackMsg" class="alert mt-3">
+            {{ feedbackMsg }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Batallas -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3 class="mb-0 text-white">Historial de Batallas</h3>
+      </div>
+      <div class="battles-section">
+        <app-user-profile-battles *ngIf="user?.idUser" [userId]="user.idUser"></app-user-profile-battles>
+      </div>
+    </div>
+  </div>
+</div>

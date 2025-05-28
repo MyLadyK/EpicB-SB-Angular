@@ -1,0 +1,146 @@
+.battles-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.reload-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.reload-button:hover {
+  background: #f7fafc;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #edf2f7;
+  transition: background-color 0.2s;
+}
+
+li:hover {
+  background-color: #f7fafc;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.date {
+  font-size: 0.875rem;
+  color: #718096;
+  min-width: 100px;
+}
+
+.vs {
+  color: #a0aec0;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.opponent {
+  flex: 1;
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 120px;
+}
+
+.result.win {
+  color: #48bb78;
+}
+
+.result.lose {
+  color: #f56565;
+}
+
+.points {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  color: #718096;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e2e8f0;
+  border-top-color: #4299e1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  text-align: center;
+  color: #e53e3e;
+  padding: 1rem;
+}
+
+.error-message button {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.error-message button:hover {
+  background: #c53030;
+}
+
+.empty-state {
+  text-align: center;
+  color: #718096;
+  padding: 2rem;
+}

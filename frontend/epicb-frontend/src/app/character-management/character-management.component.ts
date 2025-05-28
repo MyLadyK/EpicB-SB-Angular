@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Asegúrate de importar FormsModule
+import { FormsModule } from '@angular/forms';
 import { CharacterFormComponent } from '../character-form/character-form.component';
 import { CharacterService } from '../services/character.service';
 import { Character } from '../model/character';
@@ -16,7 +16,7 @@ import { Character } from '../model/character';
 export class CharacterManagementComponent implements OnInit {
   characters: Character[] = [];
   selectedCharacter: Character | null = null;
-  isEditMode: boolean = false;
+  isEditMode = false;
 
   constructor(private characterService: CharacterService) { }
 
@@ -44,9 +44,11 @@ export class CharacterManagementComponent implements OnInit {
     if (characterId !== undefined) {
       this.characterService.deleteCharacter(characterId).subscribe(
         response => {
+          alert('Personaje eliminado con éxito');
           this.loadCharacters();
         },
         error => {
+          alert('Error al eliminar')
           console.error('Error al eliminar personaje', error);
         }
       );
@@ -62,10 +64,12 @@ export class CharacterManagementComponent implements OnInit {
     if (this.selectedCharacter) {
       this.characterService.updateCharacter(this.selectedCharacter).subscribe(
         response => {
+          alert('Personaje actualizado con éxito');
           this.resetForm();
           this.loadCharacters();
         },
         error => {
+          alert('Error al actualizar')
           console.error('Error al actualizar personaje', error);
         }
       );

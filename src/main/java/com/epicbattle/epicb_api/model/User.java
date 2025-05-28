@@ -1,5 +1,7 @@
 package com.epicbattle.epicb_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -10,15 +12,15 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.List;
 
-
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "idUser"
+)
 public class User {
 
     @Id
@@ -37,7 +39,7 @@ public class User {
     @Size(min = 8, max = 20, message = "La contraseña debe tener entre 8 y 20 caracteres")
     private String passwordHash;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "role")
     private String role;
 
     private int energy;
@@ -45,14 +47,20 @@ public class User {
     private int pointsUser;
 
     @OneToMany(mappedBy = "owner")
-    private List<UserCharacter> character;
+    private List<UserCharacter> characters;
 
     @OneToMany(mappedBy = "user")
-    private List<Message> messageSent;
+    private List<Message> messagesSent;
 
     @OneToMany(mappedBy = "user")
-    private List<Message> messageReceived;
+    private List<Message> messagesReceived;
+
+    @OneToMany(mappedBy = "user1")
+    private List<BattleResult> battlesAsUser1;
+
+    @OneToMany(mappedBy = "user2")
+    private List<BattleResult> battlesAsUser2;
 
     @OneToMany(mappedBy = "winner")
-    private List<BattleResult> battleResult;
+    private List<BattleResult> battlesWon;
 }

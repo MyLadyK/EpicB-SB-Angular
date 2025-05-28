@@ -1,20 +1,48 @@
-<nav>
-  <ul>
-    <li><a routerLink="/">Inicio</a></li>
-    <li><a routerLink="/rankings">Rankings</a></li>
-    <li><a routerLink="/sign-up">Sign Up</a></li>
-    <li><a routerLink="/terms">Términos y Condiciones</a></li>
-    <li><a routerLink="/about">About Us</a></li>
+<nav class="bg-gradient-to-r from-gray-900 to-blue-900 text-white shadow-lg">
+  <ul class="flex flex-wrap gap-3 px-4 py-2 items-center justify-center text-base">
+    <li><a routerLink="/" class="hover:text-yellow-300 transition-colors">Inicio</a></li>
+    <li *ngIf="user"><a routerLink="/characters" class="hover:text-yellow-300 transition-colors">Tropas</a></li>
+    <li *ngIf="user"><a routerLink="/ranking" class="hover:text-yellow-300 transition-colors">Ranking</a></li>
+    <li *ngIf="!user"><a routerLink="/sign-up" class="hover:text-yellow-300 transition-colors">Registrarse</a></li>
+    <li><a routerLink="/terms" class="hover:text-yellow-300 transition-colors">Términos</a></li>
+    <li><a routerLink="/about" class="hover:text-yellow-300 transition-colors">Sobre Nosotros</a></li>
+    <li><a routerLink="/help" class="hover:text-yellow-300 transition-colors">Ayuda</a></li>
+    <li *ngIf="user && authService.isUser(user)">
+      <a [routerLink]="['/profile', user.idUser]" class="hover:text-yellow-300 transition-colors">Mi Perfil</a>
+    </li>
+    <li *ngIf="user && authService.isAdmin(user)">
+      <a routerLink="/admin-dashboard" class="hover:text-yellow-300 transition-colors">Panel Admin</a>
+    </li>
+    <li *ngIf="user">
+      <a (click)="logout()" class="hover:text-yellow-300 transition-colors cursor-pointer">Cerrar sesión</a>
+    </li>
+    <li *ngIf="!user">
+      <a routerLink="/login" class="hover:text-yellow-300 transition-colors">Iniciar sesión</a>
+    </li>
   </ul>
 </nav>
 
-<router-outlet></router-outlet>
+<!-- Feedback visual -->
+<div *ngIf="feedbackMsg" class="feedback-banner px-4 py-2 rounded shadow text-center font-semibold mt-2" [ngClass]="feedbackType">{{ feedbackMsg }}</div>
 
-<footer>
-  <div class="social-icons">
-    <a href="https://www.facebook.com" target="_blank">Facebook</a>
-    <a href="https://www.twitter.com" target="_blank">Twitter</a>
-    <a href="https://www.instagram.com" target="_blank">Instagram</a>
+<!-- Banner Demo Mode -->
+<div *ngIf="demoMode" class="demo-banner bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-2 rounded-lg shadow my-2 text-center">
+  <strong>Modo Demo:</strong> El backend no está disponible. Se están mostrando datos simulados para pruebas y demostraciones.
+</div>
+
+<div class="wrapper min-h-screen flex flex-col justify-between bg-gradient-to-br from-gray-50 to-blue-100">
+  <div class="main-content flex-1">
+    <router-outlet></router-outlet>
   </div>
-  <p>&copy; 2024 KuroKami. Todos los derechos reservados.</p>
-</footer>
+
+  <footer class="bg-gray-900 text-gray-200 py-4 mt-8">
+    <div class="social-icons flex gap-4 justify-center mb-2">
+      <a href="https://www.facebook.com" target="_blank" class="hover:text-blue-400">Facebook</a>
+      <a href="https://www.twitter.com" target="_blank" class="hover:text-blue-400">Twitter</a>
+      <a href="https://www.instagram.com" target="_blank" class="hover:text-pink-400">Instagram</a>
+    </div>
+    <p class="text-center text-xs">&copy; 2024 KuroKami. Todos los derechos reservados.</p>
+  </footer>
+</div>
+
+<app-error-toast></app-error-toast>

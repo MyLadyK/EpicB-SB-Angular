@@ -20,5 +20,7 @@ public class Ranking {
     private User user;
 
     private int userPoints;
+
+
 }
 

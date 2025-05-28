@@ -1,45 +1,73 @@
 /* Barra de navegación */
 nav ul {
-  list-style-type: none;
-  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
   padding: 0;
-  overflow: hidden;
+  margin: 0 0 1.5rem 0;
   background-color: #333;
 }
 
-nav ul p {
-  padding: 14px 16px;
-  color: white;
-  text-align: center;
-}
-
-nav ul li {
-  float: left;
-}
-
 nav ul li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
+  color: #222;
+  background: #f2f2f2;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
   text-decoration: none;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background 0.2s, color 0.2s;
+  font-weight: 500;
 }
 
 nav ul li a:hover {
-  background-color: #575757;
-  color: #00FF7F;
+  background: #222;
+  color: #CCCCCC;
+}
+
+/* Contenedor principal */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to right, #ff512f, #dd2476); /* Fondo degradado */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.main-content {
+  width: 100vw;
+  max-width: 1100px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 18px #00000022;
 }
 
 /* Pie de página */
 footer {
   background: #333;
-  color: #FFF;
+  color: #CCCCCC;
   text-align: center;
-  padding: 10px 0;
-  position: fixed;
-  bottom: 0;
+  padding: 20px 0;
   width: 100%;
+  position: relative; /* Parte del flujo del documento */
+  flex-shrink: 0;
+  z-index: 1; /* Asegura que el footer esté en la parte superior */
 }
 
 footer .social-icons {
@@ -48,7 +76,7 @@ footer .social-icons {
 
 footer .social-icons a {
   margin: 0 10px;
-  color: #FFF;
+  color: #CCCCCC;
   text-decoration: none;
   font-size: 20px;
   transition: color 0.3s;
@@ -56,4 +84,55 @@ footer .social-icons a {
 
 footer .social-icons a:hover {
   color: #00FF7F;
+}
+
+/* Estilos adicionales */
+.feedback-banner {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  min-width: 250px;
+  max-width: 80vw;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 1.5rem;
+  box-shadow: 0 2px 14px #22222244;
+  font-weight: bold;
+}
+
+.feedback-banner.success {
+  background: #4caf50;
+  color: #333333;
+}
+
+.feedback-banner.error {
+  background: #ff5252;
+  color: #333333;
+}
+
+.demo-banner {
+  background: #ffb703;
+  color: #222;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.6rem;
+  border-radius: 8px;
+  margin: 1rem 0 2rem 0;
+  box-shadow: 0 2px 10px #ffb70333;
+  font-size: 1.1rem;
+}
+
+/* Responsividad */
+@media (max-width: 700px) {
+  .main-content {
+    padding: 1rem;
+  }
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

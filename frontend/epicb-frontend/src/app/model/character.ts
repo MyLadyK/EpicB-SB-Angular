@@ -1,6 +1,5 @@
-
 export interface Character {
-  idCharacter: number;  // Asegúrate de que idCharacter es de tipo number y no puede ser undefined
+  idCharacter: number;
   nameCharacter: string;
   healthCharacter: number;
   attackCharacter: number;

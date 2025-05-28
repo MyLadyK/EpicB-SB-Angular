@@ -1,0 +1,16 @@
+.fixed {
+  position: fixed;
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

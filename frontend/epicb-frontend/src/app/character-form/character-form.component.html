@@ -1,47 +1,47 @@
-<form (ngSubmit)="addCharacter()">
-  <div>
-    <label for="nameCharacter">Nombre</label>
-    <input type="text" id="nameCharacter" [(ngModel)]="character.nameCharacter" name="nameCharacter" required>
+<form (ngSubmit)="addCharacter()" class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-lg space-y-4 mt-8">
+  <div class="flex flex-col">
+    <label for="nameCharacter" class="font-semibold text-blue-900 mb-1">Nombre</label>
+    <input type="text" id="nameCharacter" [(ngModel)]="character.nameCharacter" name="nameCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="healthCharacter">Salud</label>
-    <input type="number" id="healthCharacter" [(ngModel)]="character.healthCharacter" name="healthCharacter" required>
+  <div class="flex flex-col">
+    <label for="healthCharacter" class="font-semibold text-blue-900 mb-1">Salud</label>
+    <input type="number" id="healthCharacter" [(ngModel)]="character.healthCharacter" name="healthCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="attackCharacter">Ataque</label>
-    <input type="number" id="attackCharacter" [(ngModel)]="character.attackCharacter" name="attackCharacter" required>
+  <div class="flex flex-col">
+    <label for="attackCharacter" class="font-semibold text-blue-900 mb-1">Ataque</label>
+    <input type="number" id="attackCharacter" [(ngModel)]="character.attackCharacter" name="attackCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="defenseCharacter">Defensa</label>
-    <input type="number" id="defenseCharacter" [(ngModel)]="character.defenseCharacter" name="defenseCharacter" required>
+  <div class="flex flex-col">
+    <label for="defenseCharacter" class="font-semibold text-blue-900 mb-1">Defensa</label>
+    <input type="number" id="defenseCharacter" [(ngModel)]="character.defenseCharacter" name="defenseCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="speedCharacter">Velocidad</label>
-    <input type="number" id="speedCharacter" [(ngModel)]="character.speedCharacter" name="speedCharacter" required>
+  <div class="flex flex-col">
+    <label for="speedCharacter" class="font-semibold text-blue-900 mb-1">Velocidad</label>
+    <input type="number" id="speedCharacter" [(ngModel)]="character.speedCharacter" name="speedCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="staminaCharacter">Resistencia</label>
-    <input type="number" id="staminaCharacter" [(ngModel)]="character.staminaCharacter" name="staminaCharacter" required>
+  <div class="flex flex-col">
+    <label for="staminaCharacter" class="font-semibold text-blue-900 mb-1">Resistencia</label>
+    <input type="number" id="staminaCharacter" [(ngModel)]="character.staminaCharacter" name="staminaCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="intelligenceCharacter">Inteligencia</label>
-    <input type="number" id="intelligenceCharacter" [(ngModel)]="character.intelligenceCharacter" name="intelligenceCharacter" required>
+  <div class="flex flex-col">
+    <label for="intelligenceCharacter" class="font-semibold text-blue-900 mb-1">Inteligencia</label>
+    <input type="number" id="intelligenceCharacter" [(ngModel)]="character.intelligenceCharacter" name="intelligenceCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="specialCharacter">Especial</label>
-    <input type="number" id="specialCharacter" [(ngModel)]="character.specialCharacter" name="specialCharacter" required>
+  <div class="flex flex-col">
+    <label for="specialCharacter" class="font-semibold text-blue-900 mb-1">Especial</label>
+    <input type="number" id="specialCharacter" [(ngModel)]="character.specialCharacter" name="specialCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="categoryCharacter">Categoría</label>
-    <input type="text" id="categoryCharacter" [(ngModel)]="character.categoryCharacter" name="categoryCharacter" required>
+  <div class="flex flex-col">
+    <label for="categoryCharacter" class="font-semibold text-blue-900 mb-1">Categoría</label>
+    <input type="text" id="categoryCharacter" [(ngModel)]="character.categoryCharacter" name="categoryCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="universeCharacter">Universo</label>
-    <input type="text" id="universeCharacter" [(ngModel)]="character.universeCharacter" name="universeCharacter" required>
+  <div class="flex flex-col">
+    <label for="universeCharacter" class="font-semibold text-blue-900 mb-1">Universo</label>
+    <input type="text" id="universeCharacter" [(ngModel)]="character.universeCharacter" name="universeCharacter" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <div>
-    <label for="imageUrl">URL de Imagen</label>
-    <input type="text" id="imageUrl" [(ngModel)]="character.imageUrl" name="imageUrl" required>
+  <div class="flex flex-col">
+    <label for="imageUrl" class="font-semibold text-blue-900 mb-1">URL de Imagen</label>
+    <input type="text" id="imageUrl" [(ngModel)]="character.imageUrl" name="imageUrl" required class="input input-bordered rounded border-blue-300 focus:ring-2 focus:ring-blue-400">
   </div>
-  <button type="submit">Añadir Personaje</button>
+  <button type="submit" class="btn bg-blue-700 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-900 transition-colors">Añadir Personaje</button>
 </form>

@@ -2,23 +2,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Ocupa toda la altura de la ventana */
-  background: linear-gradient(to right, #ff512f, #dd2476); /* Fondo degradado */
+  min-height: 100vh; /* Cambiado de height a min-height para asegurar que se expanda */
+  background: linear-gradient(to right, #ff512f, #dd2476);
 }
 
 .sign-up-form {
   max-width: 400px;
   width: 100%;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.7); /* Fondo del formulario */
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
-  color: white;
+  color: #CCCCCC;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .sign-up-form h2 {
   text-align: center;
-  color: #61dafb;
+  color: #00FF7F;
   margin-bottom: 20px;
 }
 
@@ -29,21 +29,21 @@
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  color: #61dafb;
+  color: #CCCCCC;
 }
 
 .form-group input {
-  width: calc(100% - 20px); /* Ajustar el ancho para que no se salga del contenedor */
+  width: calc(100% - 20px);
   padding: 10px;
-  border: 2px solid #61dafb;
+  border: 2px solid #575757;
   border-radius: 5px;
   background: #1c1e22;
-  color: white;
-  box-sizing: border-box; /* Asegurar que el padding no afecta el ancho total */
+  color: #CCCCCC;
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
-  border-color: #21a1f1;
+  border-color: #00FF7F;
   outline: none;
 }
 
@@ -52,13 +52,13 @@ button {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background: #61dafb;
-  color: white;
+  background: #FF69B4;
+  color: #333333;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s;
 }
 
 button:hover {
-  background: #21a1f1;
+  background: #ff85b2;
 }
