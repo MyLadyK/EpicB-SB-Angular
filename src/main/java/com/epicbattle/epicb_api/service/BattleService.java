@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class BattleService {
@@ -528,5 +529,29 @@ public class BattleService {
                 userCharacter.setHealthUserCharacter(userCharacter.getHealthUserCharacter() + surprise.getModificationValue());
                 break;
         }
+    }
+
+    /**
+     * Ejecuta una batalla entre dos usuarios seleccionando personajes aleatorios
+     * @param user1 Primer usuario
+     * @param user2 Segundo usuario
+     * @return Resultado de la batalla
+     */
+    public BattleResult executeBattle(User user1, User user2) {
+        // Obtener personajes aleatorios para cada usuario
+        List<UserCharacter> user1Characters = userCharacterService.findByOwner(user1);
+        List<UserCharacter> user2Characters = userCharacterService.findByOwner(user2);
+
+        if (user1Characters.isEmpty() || user2Characters.isEmpty()) {
+            throw new IllegalStateException("Ambos usuarios deben tener al menos un personaje");
+        }
+
+        // Seleccionar personajes aleatorios
+        Random random = new Random();
+        UserCharacter uc1 = user1Characters.get(random.nextInt(user1Characters.size()));
+        UserCharacter uc2 = user2Characters.get(random.nextInt(user2Characters.size()));
+
+        // Ejecutar la batalla
+        return battle(user1, uc1, user2, uc2, uc1.getIdUserCharacter(), uc2.getIdUserCharacter());
     }
 }

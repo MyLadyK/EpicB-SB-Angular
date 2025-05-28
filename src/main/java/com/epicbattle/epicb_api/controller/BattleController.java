@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * Controlador que maneja todas las operaciones relacionadas con las batallas
+ */
 @RestController
 @RequestMapping("/api/battles")
 public class BattleController {
@@ -44,74 +47,71 @@ public class BattleController {
     /**
      * Inicia una batalla entre el usuario autenticado y otro usuario seleccionado.
      * Selecciona aleatoriamente un personaje de cada usuario y determina un ganador.
-     * El ganador recibe 20 puntos y el perdedor pierde 8 puntos (mínimo 0).
+     * El ganador recibe puntos y el perdedor pierde puntos (mínimo 0).
+     *
+     * @param opponentId ID del usuario oponente
+     * @return ResponseEntity con el resultado de la batalla o error si algo falla
      */
     @PostMapping("/start/{opponentId}")
     public ResponseEntity<?> startBattle(@PathVariable int opponentId) {
-        // Obtener el usuario autenticado
+        // Obtener usuario autenticado
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByNameUser(username);
+        
         if (currentUser == null) {
-            currentUser = userRepository.findByMailUser(username);
-        }
-        if (currentUser == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Usuario no autenticado"));
+            return ResponseEntity.badRequest().body("Usuario no encontrado");
         }
 
-        // Obtener el oponente
+        // Validar que el oponente existe
         Optional<User> opponentOpt = userRepository.findById(opponentId);
         if (opponentOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Oponente no encontrado"));
+            return ResponseEntity.badRequest().body("Oponente no encontrado");
         }
         User opponent = opponentOpt.get();
 
-        // Verificar que no se está enfrentando a sí mismo
+        // Validar que no es el mismo usuario
         if (currentUser.getIdUser() == opponent.getIdUser()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "No puedes enfrentarte a ti mismo"));
+            return ResponseEntity.badRequest().body("No puedes luchar contra ti mismo");
         }
 
-        // Obtener los personajes de ambos usuarios
-        List<UserCharacter> currentUserCharacters = userCharacterService.findByOwner(currentUser);
-        List<UserCharacter> opponentCharacters = userCharacterService.findByOwner(opponent);
-
-        // Verificar que ambos usuarios tienen personajes
-        if (currentUserCharacters.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "No tienes personajes para batallar"));
+        try {
+            BattleResult result = battleService.executeBattle(currentUser, opponent);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error en la batalla: " + e.getMessage());
         }
-        if (opponentCharacters.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El oponente no tiene personajes para batallar"));
+    }
+
+    /**
+     * Obtiene el historial de batallas de un usuario específico
+     *
+     * @param userId ID del usuario
+     * @return Lista de resultados de batalla del usuario
+     */
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<?> getBattleHistory(@PathVariable int userId) {
+        try {
+            List<BattleResult> history = battleResultService.getBattleHistoryForUser(userId);
+            return ResponseEntity.ok(history);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al obtener historial: " + e.getMessage());
         }
+    }
 
-        // Seleccionar aleatoriamente un personaje de cada usuario
-        Random random = new Random();
-        UserCharacter currentUserCharacter = currentUserCharacters.get(random.nextInt(currentUserCharacters.size()));
-        UserCharacter opponentCharacter = opponentCharacters.get(random.nextInt(opponentCharacters.size()));
-
-        // Determinar el ganador basado en las estadísticas de los personajes
-        boolean currentUserWins = determineWinner(currentUserCharacter, opponentCharacter);
-
-        // Crear y guardar el resultado de la batalla
-        BattleResult battleResult = new BattleResult();
-        battleResult.setUser1(currentUser);
-        battleResult.setUser2(opponent);
-        battleResult.setWinner(currentUserWins ? currentUser : opponent);
-        battleResult.setBattleDate(new Date());
-        // Guardar el resultado de la batalla
-        battleResultService.saveBattleResult(battleResult);
-
-        // Transformar las URLs de las imágenes para que apunten al servidor backend
-        transformImageUrl(currentUserCharacter);
-        transformImageUrl(opponentCharacter);
-
-        // Preparar la respuesta
-        Map<String, Object> response = new HashMap<>();
-        response.put("winner", currentUserWins ? currentUser.getNameUser() : opponent.getNameUser());
-        response.put("currentUserCharacter", currentUserCharacter);
-        response.put("opponentCharacter", opponentCharacter);
-        response.put("currentUserPoints", currentUser.getPointsUser());
-        response.put("opponentPoints", opponent.getPointsUser());
-
-        return ResponseEntity.ok(response);
+    /**
+     * Obtiene un resumen de las estadísticas de batalla de un usuario
+     *
+     * @param userId ID del usuario
+     * @return Resumen de batallas del usuario
+     */
+    @GetMapping("/summary/{userId}")
+    public ResponseEntity<?> getBattleSummary(@PathVariable int userId) {
+        try {
+            BattleSummary summary = battleResultService.getBattleSummaryForUser(userId);
+            return ResponseEntity.ok(summary);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al obtener resumen: " + e.getMessage());
+        }
     }
 
     /**

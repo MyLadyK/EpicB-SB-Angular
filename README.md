@@ -1,74 +1,201 @@
-# Epic Battle Application
+# Epic Battle - Juego de Batallas de Personajes
 
-This is a full-stack application with a Spring Boot backend and Angular frontend.
+## Descripción del Proyecto
 
-## Prerequisites
+Epic Battle es una aplicación web full-stack que permite a los usuarios participar en batallas épicas con personajes únicos. El proyecto está desarrollado como Trabajo de Fin de Grado, utilizando tecnologías modernas tanto en el frontend como en el backend.
 
-- Java 17 or higher
-- Node.js and npm
-- MySQL database
+## Arquitectura
 
-You can check if you have all the prerequisites installed by running:
-- Windows: `check_prerequisites.bat`
-- Linux/Mac: `chmod +x check_prerequisites.sh && ./check_prerequisites.sh`
+### Frontend (Angular)
+- **Framework**: Angular 16+
+- **Características principales**:
+  - Sistema de autenticación con JWT
+  - Gestión de estado con servicios
+  - Componentes reactivos
+  - Diseño responsive con CSS moderno
+  - Animaciones y transiciones fluidas
+  - Interceptores HTTP para manejo de tokens
+  - Guards para protección de rutas
 
-## Database Setup
+### Backend (Spring Boot)
+- **Framework**: Spring Boot 3
+- **Características principales**:
+  - API REST
+  - Seguridad con Spring Security y JWT
+  - JPA/Hibernate para persistencia
+  - Validación de datos
+  - Manejo de excepciones global
+  - Documentación con Swagger/OpenAPI
 
-1. Ensure MySQL is running on localhost:3306
-2. Create a database named `epicb_db` using one of these methods:
-   - Run the provided SQL script: `mysql -u root -p < initialize_database.sql`
-   - Or manually create the database in MySQL
-3. The application will automatically create the necessary tables when it starts
+### Base de Datos
+- **Motor**: MySQL 8
+- **Características**:
+  - Relaciones entre entidades
+  - Índices optimizados
+  - Constraints y claves foráneas
+  - Triggers para actualizaciones automáticas
 
-## Starting the Applications
+## Características Principales
 
-### Option 1: Using the Scripts
+### Sistema de Usuarios
+- Registro y autenticación
+- Perfiles de usuario
+- Roles (Usuario/Administrador)
+- Gestión de puntuación
 
-#### Windows
-1. Run the `start_applications.bat` file by double-clicking it
-2. This will start both the backend and frontend applications
+### Sistema de Personajes
+- Creación y gestión de personajes
+- Atributos únicos (salud, ataque, defensa)
+- Imágenes personalizadas
+- Sistema de niveles
 
-#### Linux/Mac
-1. Make the script executable: `chmod +x start_applications.sh`
-2. Run the script: `./start_applications.sh`
-3. This will attempt to start both the backend and frontend applications in separate terminal windows
+### Sistema de Batallas
+- Batallas en tiempo real
+- Animaciones de combate
+- Cálculo de daño basado en estadísticas
+- Historial de batallas
+- Sistema de puntuación
 
-### Option 2: Manual Start
+### Panel de Administración
+- Gestión de usuarios
+- Gestión de personajes
+- Monitoreo de batallas
+- Estadísticas del sistema
 
-#### Backend (Spring Boot)
+### Ranking Global
+- Clasificación por puntos
+- Estadísticas de jugadores
+- Historial de victorias/derrotas
 
-1. Open a command prompt in the project root directory
-2. Run: `mvnw spring-boot:run`
-3. The backend will start on port 8081
+## Requisitos Técnicos
 
-#### Frontend (Angular)
+### Frontend
+- Node.js 18+
+- npm 9+
+- Angular CLI 16+
 
-1. Open a command prompt in the `frontend/epicb-frontend` directory
-2. Run: `npm install` (first time only, to install dependencies)
-3. Run: `npm start`
-4. The frontend will start on port 4200
+### Backend
+- Java 17+
+- Maven 3.8+
+- MySQL 8+
 
-## Accessing the Application
+## Configuración del Entorno
 
-- Backend API: http://localhost:8081/api
-- Frontend: http://localhost:4200
+### Base de Datos
+1. Instalar MySQL 8
+2. Crear base de datos:
+   ```sql
+   CREATE DATABASE epicb_db;
+   ```
+3. Configurar usuario y contraseña en application.properties
 
-## Project Scope
+### Backend
+1. Clonar el repositorio
+2. Configurar application.properties:
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/epicb_db
+   spring.datasource.username=tu_usuario
+   spring.datasource.password=tu_contraseña
+   ```
+3. Ejecutar:
+   ```bash
+   mvn clean install
+   mvn spring-boot:run
+   ```
 
-### Implemented Features
-- Battle System
-- User Authentication
-- Character Management
-- Global Ranking
-- Battle History
+### Frontend
+1. Navegar al directorio frontend:
+   ```bash
+   cd frontend/epicb-frontend
+   ```
+2. Instalar dependencias:
+   ```bash
+   npm install
+   ```
+3. Iniciar servidor de desarrollo:
+   ```bash
+   ng serve
+   ```
 
-### Out of Scope
-- Social Media Integration
-- Native Mobile Application
-- Payment System or Online Store
+## Acceso a la Aplicación
 
-## Troubleshooting
+- **Frontend**: http://localhost:4200
+- **Backend API**: http://localhost:8081/api
+- **Swagger/OpenAPI**: http://localhost:8081/swagger-ui.html
 
-- If the backend fails to start, ensure MySQL is running and the database `epicb_db` exists
-- If the frontend fails to start, ensure Node.js and npm are installed correctly
-- Check the console output for any error messages
+## Estructura del Proyecto
+
+```
+epicb-api-Front/
+├── backend/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   ├── controllers/
+│   │   │   │   ├── models/
+│   │   │   │   ├── services/
+│   │   │   │   └── security/
+│   │   │   └── resources/
+│   │   └── test/
+│   └── pom.xml
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/
+│   │   │   ├── services/
+│   │   │   ├── guards/
+│   │   │   └── models/
+│   │   ├── assets/
+│   │   └── environments/
+│   ├── package.json
+│   └── angular.json
+└── README.md
+```
+
+## Características de Seguridad
+
+- Autenticación JWT
+- Protección CSRF
+- Encriptación de contraseñas
+- Validación de datos
+- Protección contra XSS
+- Rate limiting
+- Sanitización de entrada
+
+## Mantenimiento y Soporte
+
+### Logs
+- Los logs del backend se encuentran en `/logs/epicb.log`
+- Los logs del frontend se muestran en la consola del navegador
+
+### Monitoreo
+- Endpoints de health check
+- Métricas de Spring Actuator
+- Monitoreo de rendimiento
+
+## Solución de Problemas
+
+### Problemas Comunes
+1. Error de conexión a la base de datos:
+   - Verificar credenciales en application.properties
+   - Comprobar que MySQL está ejecutándose
+
+2. Error al iniciar el frontend:
+   - Limpiar caché: `npm clean-cache`
+   - Reinstalar dependencias: `npm install`
+
+3. Problemas de autenticación:
+   - Verificar token JWT en localStorage
+   - Comprobar cookies de sesión
+
+## Contribución
+
+1. Fork del repositorio
+2. Crear rama feature: `git checkout -b feature/nueva-caracteristica`
+3. Commit cambios: `git commit -am 'Añadir nueva característica'`
+4. Push a la rama: `git push origin feature/nueva-caracteristica`
+5. Crear Pull Request
+
+## Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE.md para más detalles.
